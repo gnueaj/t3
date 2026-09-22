@@ -1,0 +1,46 @@
+{
+  "checked_at": "2026-09-23",
+  "status": "proposal_only",
+  "original_files_checked": 75,
+  "original_files_changed": 0,
+  "slides": 12,
+  "changed_slides": [
+    8,
+    10
+  ],
+  "initial_page": 8,
+  "missing_images": 0,
+  "text_overflow": 0,
+  "page_errors": [],
+  "fonts": [
+    {
+      "family": "Inter",
+      "weight": "400"
+    },
+    {
+      "family": "Inter",
+      "weight": "500"
+    },
+    {
+      "family": "Inter",
+      "weight": "600"
+    },
+    {
+      "family": "Inter",
+      "weight": "700"
+    },
+    {
+      "family": "Noto Sans KR",
+      "weight": "400"
+    },
+    {
+      "family": "Noto Sans KR",
+      "weight": "500"
+    },
+    {
+      "family": "Noto Sans KR",
+      "weight": "600"
+    }
+  ],
+  "checks": "Chromium local rendering with external HTTPS blocked; draft differs only on pages 8 and 10; no PDF/PPTX export or changes to existing presentation files."
+}
