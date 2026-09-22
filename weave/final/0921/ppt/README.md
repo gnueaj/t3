@@ -1,6 +1,6 @@
 # Weave Assist 발표자료 · 2026-09-22
 
-## 기준본 · 12장
+## 최종 발표본 · 12장
 
 - [HTML 발표 화면](index.html)
 - [PDF — HTML 기준](Weave-Assist.pdf)
@@ -8,14 +8,16 @@
 - [PPTX 재렌더링 확인용 PDF](Weave-Assist-12slides-fixed-preview.pdf)
 - [검수 범위 및 편집 안내](PPTX-validation.md)
 
-## 사진 표지 실험본 · 별도 12장
+최신 티저 사진 표지를 기본 발표자료에 적용했습니다. `index.html`, `Weave-Assist.pdf`, `Weave-Assist-12slides-fixed.pptx`를 열면 모두 같은 사진 표지가 나옵니다. 2~12쪽의 내용과 배치는 유지했습니다.
 
-- [HTML 실험본](index-experimental.html)
-- [PDF 실험본](Weave-Assist-experimental-cover.pdf)
-- [PowerPoint 실험본](Weave-Assist-experimental-cover.pptx)
+## 기존 파일명 · 최종본과 동일
+
+- [HTML — 기존 experimental 파일명](index-experimental.html)
+- [PDF — 기존 experimental-cover 파일명](Weave-Assist-experimental-cover.pdf)
+- [PowerPoint — 기존 experimental-cover 파일명](Weave-Assist-experimental-cover.pptx)
 - [표지 PNG 미리보기](cover-experimental.png)
 
-실험본은 1쪽만 다릅니다. 티저 사진을 오른쪽 약 68%에 배치하고, 사진 속 제목·하단 문구를 제거한 뒤 기억 카드 두 장을 위로 올렸습니다. 발표 제목은 이미지가 아닌 선명한 텍스트로 남겼습니다. 사진은 내장 imagegen으로 편집했으며, 기준 티저와 픽셀 단위로 동일한 자산은 아닙니다.
+이전 링크를 계속 사용할 수 있도록 기존 파일명도 남겼으며, 최종 발표본과 12장 모두 동일합니다. 표지는 티저 사진을 오른쪽 약 68%에 배치하고, 사진 속 제목·하단 문구를 제거한 뒤 기억 카드 두 장을 위로 올린 구성입니다. 발표 제목은 이미지가 아닌 선명한 텍스트로 남겼습니다. 사진은 앞선 작업에서 내장 imagegen으로 편집했으며, 이번에는 이미 검수한 표지를 기본 발표본에 적용했습니다.
 
 ‘나’ 프로필과 두 UI 실타래 수정은 유지했습니다. 사진 표지의 오른쪽은 직전보다 43px(약 3%) 더 보여 카드 옆 여백을 확보했습니다. 사진이 나타나는 시작 위치는 그대로 두고, 해당 부분을 조금 더 어둡게 해서 점진적으로 밝아지게 조정했습니다. 첫 장 상단 영문 설명과 전 페이지의 반복 영문 푸터는 삭제 상태로 유지했습니다.
 
@@ -39,7 +41,7 @@ PPTX에는 브라우저에서 측정한 줄 위치와 자간을 적용했습니�
 
 ## 검수
 
-기준본·실험본 각 12장을 오프라인 Chromium에서 열어 폰트·이미지 로드와 텍스트 경계를 확인했습니다. PPTX는 LibreOffice에서 다시 PDF로 렌더링해 추가 줄바꿈·텍스트 누락·오른쪽 경계 초과를 검사했습니다. 실제 Microsoft PowerPoint에서 직접 실행한 검수는 아닙니다.
+사진 표지가 적용된 최종본 12장을 오프라인 Chromium에서 열어 폰트·이미지 로드와 텍스트 경계를 확인했습니다. PPTX는 LibreOffice에서 다시 PDF로 렌더링해 추가 줄바꿈·텍스트 누락·오른쪽 경계 초과를 검사했습니다. 기존 experimental 파일명도 동일한 결과물로 맞췄습니다. 실제 Microsoft PowerPoint에서 직접 실행한 검수는 아닙니다.
 
 ## 자산 출처
 
@@ -52,4 +54,4 @@ Flaticon 작가·라이선스 상세는 원본 페이지에서 확인해 주세�
 
 ## 다운로드와 공유
 
-이번 버전부터 `weave/final/0921` 전체를 `gnueaj/t3` Git 저장소로 공유합니다. 임시 ZIP 링크는 새로 만들지 않으며, 과거 ZIP·Presenton 링크는 이번 수정본을 가리키지 않습니다. 사진 표지를 사용하려면 `index-experimental.html` 또는 `Weave-Assist-experimental-cover.pdf` / `.pptx`를 선택하세요.
+공유 위치는 [gnueaj/t3 · main · weave/final/0921](https://github.com/gnueaj/t3/tree/main/weave/final/0921)입니다. 임시 ZIP 링크는 새로 만들지 않으며, 과거 ZIP·Presenton 링크는 이번 수정본을 가리키지 않습니다. 기본 `index.html`과 `Weave-Assist.pdf` / `Weave-Assist-12slides-fixed.pptx`를 사용하세요.
