@@ -1,0 +1,43 @@
+{
+  "baseline": "0920/before-0922-background-fix/teaser-final.png",
+  "dimensions": [
+    1672,
+    941
+  ],
+  "regions": [
+    {
+      "x": 1055,
+      "y": 85,
+      "w": 617,
+      "h": 240
+    },
+    {
+      "x": 10,
+      "y": 640,
+      "w": 355,
+      "h": 301
+    }
+  ],
+  "changedPixels": {
+    "inside": 223957,
+    "outside": 0
+  },
+  "preserved": "Actual-font title/signature positions, all UI, icons, avatars, cards, person and remaining photograph",
+  "method": "Built-in imagegen background restoration; continuous rectangular patches with smooth edge blending; existing Chromium typography overlay",
+  "signatureShade": {
+    "x": 28,
+    "y": 640,
+    "width": 296,
+    "height": 296,
+    "opacity": 0.12,
+    "edgeFeatherPx": 24
+  },
+  "coverCrop": {
+    "previousWidth": 1420,
+    "newWidth": 1463,
+    "height": 1010,
+    "extraRightPx": 43,
+    "extraRightPercent": 3.028
+  },
+  "coverGradient": "Same stop positions (26,32,39,50,61%); beginning darker, gradually brightening; no horizontal shift"
+}

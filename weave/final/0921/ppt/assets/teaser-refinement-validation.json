@@ -1,0 +1,125 @@
+{
+  "baseline": "0920/before-0922-refinement",
+  "main": {
+    "dimensions": [
+      1672,
+      941
+    ],
+    "regions": [
+      {
+        "x": 1077,
+        "y": 106,
+        "w": 560,
+        "h": 181,
+        "kind": "real-font headline"
+      },
+      {
+        "x": 38,
+        "y": 786,
+        "w": 311,
+        "h": 122,
+        "kind": "real-font lower-left signature"
+      },
+      {
+        "x": 651,
+        "y": 322,
+        "w": 48,
+        "h": 44,
+        "kind": "reply-card spool"
+      },
+      {
+        "x": 600,
+        "y": 552,
+        "w": 39,
+        "h": 33,
+        "kind": "keyboard spool"
+      },
+      {
+        "x": 1168,
+        "y": 600,
+        "w": 54,
+        "h": 54,
+        "kind": "self avatar"
+      }
+    ],
+    "changedPixels": {
+      "inside": 64754,
+      "outside": 0
+    }
+  },
+  "cover": {
+    "sourceDimensions": [
+      1557,
+      1010
+    ],
+    "regions": [
+      {
+        "x": 604,
+        "y": 339,
+        "w": 42,
+        "h": 41,
+        "kind": "reply-card spool"
+      },
+      {
+        "x": 555,
+        "y": 561,
+        "w": 39,
+        "h": 35,
+        "kind": "keyboard spool"
+      },
+      {
+        "x": 1068,
+        "y": 437,
+        "w": 55,
+        "h": 55,
+        "kind": "self avatar"
+      }
+    ],
+    "changedPixels": {
+      "inside": 4953,
+      "outside": 0
+    },
+    "crop": {
+      "left": 0,
+      "top": 0,
+      "width": 1420,
+      "height": 1010,
+      "removedRightPx": 137
+    }
+  },
+  "uiSpools": {
+    "purple": "#8B65D9",
+    "alphaExpansionMasterPx": 2,
+    "cardSizeBefore": 32,
+    "cardSizeAfter": 27,
+    "toolbarSizeBefore": 23,
+    "toolbarSizeAfter": 20
+  },
+  "typography": {
+    "korean": "Noto Sans KR",
+    "english": "Inter",
+    "method": "Local TTF font files rendered by Chromium; no generated letterforms",
+    "loadedFonts": [
+      {
+        "family": "Inter",
+        "weight": "400",
+        "status": "loaded"
+      },
+      {
+        "family": "Inter",
+        "weight": "700",
+        "status": "loaded"
+      },
+      {
+        "family": "Noto Sans KR",
+        "weight": "400",
+        "status": "loaded"
+      },
+      {
+        "family": "Noto Sans KR",
+        "weight": "700",
+        "status": "loaded"
+      }
+    ]
+  }
+}
