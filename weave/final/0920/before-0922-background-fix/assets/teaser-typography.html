@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <title>Weave teaser — Noto Sans KR / Inter typography</title>
+  <style>
+    @font-face{font-family:Inter;src:url('../ppt/assets/fonts/Inter-400.ttf');font-weight:400}
+    @font-face{font-family:Inter;src:url('../ppt/assets/fonts/Inter-700.ttf');font-weight:700}
+    @font-face{font-family:'Noto Sans KR';src:url('../ppt/assets/fonts/NotoSansKR-400.ttf');font-weight:400}
+    @font-face{font-family:'Noto Sans KR';src:url('../ppt/assets/fonts/NotoSansKR-700.ttf');font-weight:700}
+    *{box-sizing:border-box}html,body{margin:0;width:1672px;height:941px;overflow:hidden}
+    body{font-family:Inter,'Noto Sans KR',sans-serif;color:#fff;-webkit-font-smoothing:antialiased}
+    p{margin:0}.photo{position:absolute;inset:0;width:1672px;height:941px}
+    .headline{position:absolute;left:1085px;top:102px;white-space:nowrap}
+    .question{font-family:'Noto Sans KR';font-size:72px;font-weight:700;line-height:1.18;letter-spacing:-3.4px}
+    .answer{display:flex;align-items:center;gap:11px;margin-top:1px;font-family:Inter;font-size:78px;font-weight:700;line-height:1.12;letter-spacing:-3.1px}
+    .weave{color:#C6A9F5}.spool{width:62px;height:62px;object-fit:contain;flex-shrink:0;margin:0 1px}
+    .signature{position:absolute;left:46px;top:785px}
+    .name{font-family:Inter;font-size:40px;line-height:1.2;font-weight:700;letter-spacing:-1.7px}
+    .tagline{font-family:Inter,'Noto Sans KR',sans-serif;font-size:22px;line-height:1.48;font-weight:400;letter-spacing:-.7px;margin-top:10px}
+  </style>
+</head>
+<body>
+  <img class="photo" src="teaser-retouched-base.png" alt="Weave 티저 사진">
+  <div class="headline">
+    <p class="question">그때 그거?</p>
+    <div class="answer"><span class="weave">Weave</span><img class="spool" src="icons/weave-spool-filled.png" alt=""><span>got it!</span></div>
+  </div>
+  <div class="signature"><p class="name">Weave Assist</p><p class="tagline">흩어진 기억과 우리의 대화,<br>Weave가 잇습니다.</p></div>
+</body>
+</html>

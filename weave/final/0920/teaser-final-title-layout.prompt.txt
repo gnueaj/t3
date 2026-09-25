@@ -1,0 +1,6 @@
+Use case: text-localization.
+Image 1 is the edit target, an existing Weave Assist teaser. Preserve the original 1672 x 941 landscape composition.
+Change only the top-right headline block, bounded approximately x=1065..1650, y=85..311.
+1. DELETE the smaller subtitle line "흩어진 기억을 엮어, 필요한 순간 건네다" beneath the headline. Restore its softly blurred cafe and greenery background naturally.
+2. Enlarge only the two-line headline by about 5%, and move it subtly about 15 pixels left and 16 pixels down. Keep its existing exact typeface, weight, line breaks, lettering, colors, and the original yarn spool mark: first line "그때 그거?" in white; second line "Weave" in its existing pale lavender, the existing purple yarn spool mark, and "got it!" in solid white. The headline must remain entirely above y=295 and within the right-hand area. Do not redesign.
+ABSOLUTE INVARIANTS: keep Samsung logo at top-right unchanged. Keep every other part pixel-identical: woman, phone, chat text, keyboard, lower-left copy, memory cards at y>=325, purple connecting thread, cafe, lighting and Galaxy AI logo. Do not change anything outside the small headline region. No new elements. No extra words.

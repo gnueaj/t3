@@ -1,0 +1,11 @@
+Mode: built-in image_gen edit
+Source: teaser-edited.png
+Final: teaser-final.png
+Only the two local text regions were composited onto the source. All pixels outside those regions are identical to the source.
+
+Use case: text-localization.
+Input image 1 is the EDIT TARGET: the already corrected Weave Assist teaser. Preserve its 1672 x 941 size, composition, existing solid white "got it!" title and bottom-left "Weave가 잇습니다.".
+Make exactly TWO local text changes:
+1. In the white assistant card inside the phone's KakaoTalk chat screen, the small purple title currently says "기억 제안". Replace this title only with "Weave" (capital W, lowercase eave), retaining its purple color, original position beside the purple thread symbol, visual weight, size and slight phone perspective. Do not change the adjacent symbol or any other UI.
+2. In the subtitle under the upper-right main title, the full line currently reads "흩어진 기억을 엮어, 필요한 순간 건네 주다". Change ONLY its final phrase "건네 주다" to "건네다". The resulting full line must read exactly "흩어진 기억을 엮어, 필요한 순간 건네다". Keep the preceding words, font, size, white color, left alignment and baseline fixed.
+Preserve absolutely every other part of the image: all portraits, face, hands, physical phone, chat messages, keyboard keys, floating cards, cake, map, background, logos, purple thread motif, lighting, shadows, typography and all other text. No resizing, reframing, reflow, style changes, redrawing or added elements. Match the original pixel geometry. Return the complete image with only these two text corrections.

@@ -1,0 +1,6 @@
+Mode: built-in image_gen
+Asset: wine-label.png
+
+Use case: product-mockup.
+Asset type: a small illustrative gallery photo to be used inside a Weave Assist presentation slide about finding a wine name from a photo.
+A natural close-up photograph of a single dark green glass white-wine bottle on a warm neutral dining table, with only the bottle neck and upper body in the frame, and a softly blurred cream wall behind it. The front wine label must be large, straight enough to read, in an elegant cream-and-black design with exact text "BABICH" on the main line and "SAUVIGNON BLANC" below. A simple black screw cap. Restrained photographic style, believable table texture. One bottle only; no people, hands, food, extra props, chat UI, graphic callouts or watermarks. Landscape 4:3 image. This is a concept illustration of a gallery record, not a product specification image.

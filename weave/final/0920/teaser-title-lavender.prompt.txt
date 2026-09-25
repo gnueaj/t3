@@ -1,0 +1,14 @@
+Mode: built-in image_gen edit, with exact-glyph color compositing to preserve all other pixels.
+Source: teaser-final-before-lavender-title.png
+Final asset: teaser-final.png
+Requested large headline word Weave color: #D5C2FF (RGB 213, 194, 255).
+Adjacent saturated purple spool icon: unchanged.
+Generated edit: /home/jaeung/.codex/generated_images/01a0c02b-85e2-7411-b311-b94395f0a6c9/exec-3b2c19b6-5a95-402e-a79f-16968ed699e5.png
+Validation: 1672 x 941 unchanged; 7,631 recolored word pixels; 0 changed pixels outside the title word; 0 changed spool-icon pixels.
+Preservation: current photo and icon copied exactly; existing glyph mask and antialiasing retained; generated lavender normalized to requested #D5C2FF.
+
+Use case: precise-object-edit
+Asset type: existing Korean Weave Assist teaser image, exact pixel-preserving single-word color correction.
+Input images: Image 1 is the edit target.
+Primary request: Change ONLY the large headline word "Weave" (W-e-a-v-e) near the upper right, immediately left of the purple spool icon and white "got it!", from saturated purple to a brighter, less saturated lavender #D5C2FF (RGB 213, 194, 255). This is a flat fill color replacement, not a text redesign.
+Constraints: Keep the existing word's exact glyph shapes, font, size, stroke weight, spacing, antialiasing, and placement. Keep the adjacent purple spool icon completely unchanged, including its currently increased saturation. Keep "got it!" solid white and unchanged. Keep every other pixel of the photo, person, background, phone UI, all other text including small phone UI "Weave", subtitle, lower-left tagline, logos, thread effects, colors, framing, and dimensions unchanged. Do not brighten the background. No gradients, outline, drop shadow, halo, extra text, or new objects. Change only the large headline word "Weave" to #D5C2FF. Preserve the entire rest of the supplied image.

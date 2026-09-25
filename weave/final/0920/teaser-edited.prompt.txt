@@ -1,0 +1,12 @@
+Mode: built-in image_gen edit
+Final asset: teaser-edited.png
+Source: image.png (kept unchanged)
+The generated text regions were composited onto the original; pixels outside those two regions were verified identical.
+
+Use case: text-localization.
+Asset type: existing Korean Weave Assist teaser slide.
+Input image 1 is the EDIT TARGET, not a style reference. Preserve its existing native 1672 x 941 composition, framing and every detail.
+Make EXACTLY TWO local changes:
+1. At the bottom-left, the final line currently reads "Weave가 이어줍니다." Change ONLY the Korean verb "이어줍니다." to "잇습니다.", making the line read exactly "Weave가 잇습니다." Preserve "Weave가", its location, the line's left alignment, font, font size, weight, white color and baseline. Preserve the line above "흩어진 기억과 우리의 대화," and the heading "Weave Assist" completely unchanged.
+2. At the upper-right title, change ONLY the letters and punctuation "got it!" from lavender/purple gradient to solid pure white (#FFFFFF). Keep their exact glyph shapes, size, position, spacing and weight. Keep the adjacent purple thread/spool symbol purple and unchanged; keep "Weave" and "그때 그거?" unchanged.
+Absolute invariants: do not regenerate, redraw, restyle, retouch, recolor, resize, crop, sharpen, or change ANY other area or element. Keep the woman's face/hair/clothes/hands, smartphone, every UI element and Korean message (including "기억 제안"), cake, floating conversation/map cards, purple connecting lines, Samsung and Galaxy AI logos, background, shadows and lighting exactly as in the input. Do not add or remove any other text, decorations or objects. The image should be identical to the input except for the two requested local text edits.

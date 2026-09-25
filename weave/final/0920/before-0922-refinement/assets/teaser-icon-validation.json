@@ -1,0 +1,30 @@
+{
+  "dimensions": [
+    1672,
+    941
+  ],
+  "regions": [
+    {
+      "x": 651,
+      "y": 322,
+      "w": 48,
+      "h": 44
+    },
+    {
+      "x": 600,
+      "y": 552,
+      "w": 39,
+      "h": 33
+    },
+    {
+      "x": 1333,
+      "y": 197,
+      "w": 82,
+      "h": 70
+    }
+  ],
+  "changedInside": 8281,
+  "changedOutside": 0,
+  "color": "#8B65D9",
+  "iconGeometry": "Original Flaticon alpha retained; no redraw"
+}

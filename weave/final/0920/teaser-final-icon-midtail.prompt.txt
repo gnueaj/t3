@@ -1,0 +1,11 @@
+Use case: precise-object-edit.
+Image 1 is the exact edit target: an existing 1672 × 941 Weave Assist teaser.
+Edit ONLY the THREE PURPLE SPOOL-OF-THREAD BRAND ICONS, not any words and not any other icon:
+(1) large purple spool between "Weave" and "got it!" in the upper-right headline, around x=1340..1406, y=201..275;
+(2) purple spool at the left of the Weave UI card on the phone, around x=658..689, y=328..364;
+(3) tiny purple spool in the lower keyboard toolbar on the phone, around x=607..632, y=556..584.
+For ALL THREE instances, preserve their original purple color, stacked horizontal elliptical coils, visual style, scale relationships, perspective and center position. Do NOT turn the mark into a round yarn ball, cylinder with flanges, or new brand logo.
+Make each spool slightly shorter vertically (about 10–12 percent) while retaining its width.
+Most importantly, MOVE the outgoing thread so it EMERGES FROM THE RIGHT EDGE OF THE MIDDLE-LOWER COIL, around 60–65 percent down the spool body, NOT from the bottom. There must still be one or two complete visible coils BELOW the outgoing thread's origin. Let this delicate short strand extend slightly to the right with a gentle curve. The outgoing strand should be THIN and graceful, notably thinner than a coil band, not a thick tail. Remove the previous bottom-origin tail completely. The three instances must clearly share this same new structure.
+Restore only the tiny background areas revealed by the old tails and the slightly reduced icon height. Preserve nearby light UI surface/button halo and the blurred cafe background.
+ABSOLUTE INVARIANTS: Every letter, every text position, Weave lavender headline lettering, white "got it!", Samsung logo, woman, skin, face, phone outline, all chat text and UI spacing, avatars, other toolbar icons, bottom-left wording, memory cards, cake, location card, all LONG PURPLE CONNECTING THREADS, lighting, framing, colors, photo background and Galaxy AI logo remain unchanged. Do not modify anything except the three spool icons and the tiny immediately underlying background needed to erase old icon pixels. Do not add a fourth icon. Keep output framing and dimensions identical.

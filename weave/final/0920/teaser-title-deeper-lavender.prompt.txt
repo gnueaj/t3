@@ -1,0 +1,13 @@
+Mode: built-in image_gen edit, followed by exact-glyph color compositing to preserve all other pixels.
+Source: teaser-final-before-deeper-lavender-title.png
+Final asset: teaser-final.png
+Color adjustment: large headline word Weave only, #D5C2FF -> #C8B0FA (RGB 200, 176, 250).
+Adjacent purple spool and all other elements: unchanged.
+Validation: dimensions remain 1672 x 941; 7,631 word pixels recolored; 0 changed pixels outside the title word, including the spool icon.
+Generated edit: /home/jaeung/.codex/generated_images/01a0c02b-85e2-7411-b311-b94395f0a6c9/exec-ce9e66bf-73fe-4858-afd5-1002030a34e9.png
+
+Use case: precise-object-edit
+Asset type: existing Weave Assist teaser raster image.
+Input images: Image 1 is the edit target.
+Primary request: Make ONLY the large upper-right headline word "Weave" (immediately before the purple spool and white "got it!") one small step darker and richer lavender: change its current #D5C2FF fill to #C8B0FA, RGB 200,176,250. Keep it visibly light lavender, not the previous dark saturated purple.
+Constraints: This is a flat text fill color-only correction. Retain the exact existing glyphs, font, size, weight, placement, kerning, edges, antialiasing, and dimensions (1672 x 941). The adjacent purple spool must remain completely unchanged in geometry, hue, saturation and brightness. Keep white "got it!", the subtitle, all other text including smaller phone UI "Weave", every photo/background pixel, person, phone screen, thread, map, cake, logos and layout unchanged. Do not add gradients, outlines, shadows, glows, or text. Do not recolor anything except this one large headline word. Preserve everything else exactly.

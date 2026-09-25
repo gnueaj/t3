@@ -1,0 +1,331 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Weave Assist — 흩어진 기억을 잇다</title>
+  <meta name="description" content="Weave Assist Galaxy AI concept presentation. 11 slides. Noto Sans KR and Inter." />
+  <style>
+    @font-face{font-family:Inter;font-style:normal;font-weight:400;font-display:block;src:url('assets/fonts/Inter-400.ttf')}
+    @font-face{font-family:Inter;font-style:normal;font-weight:500;font-display:block;src:url('assets/fonts/Inter-500.ttf')}
+    @font-face{font-family:Inter;font-style:normal;font-weight:600;font-display:block;src:url('assets/fonts/Inter-600.ttf')}
+    @font-face{font-family:Inter;font-style:normal;font-weight:700;font-display:block;src:url('assets/fonts/Inter-700.ttf')}
+    @font-face{font-family:'Noto Sans KR';font-style:normal;font-weight:400;font-display:block;src:url('assets/fonts/NotoSansKR-400.ttf')}
+    @font-face{font-family:'Noto Sans KR';font-style:normal;font-weight:500;font-display:block;src:url('assets/fonts/NotoSansKR-500.ttf')}
+    @font-face{font-family:'Noto Sans KR';font-style:normal;font-weight:600;font-display:block;src:url('assets/fonts/NotoSansKR-600.ttf')}
+    @font-face{font-family:'Noto Sans KR';font-style:normal;font-weight:700;font-display:block;src:url('assets/fonts/NotoSansKR-700.ttf')}
+  </style>
+  <script src="assets/tailwind.min.js"></script>
+
+  <meta name="theme-color" content="#0B1224" />
+</head>
+<body class="m-0 p-0 bg-[#0B1224] font-['Inter','Noto_Sans_KR',sans-serif] antialiased overflow-hidden">
+<div id="deck-stage" class="fixed overflow-hidden">
+<main id="presentation-slides-wrapper" class="m-0 w-[1280px] p-0">
+<section id="slide-1" aria-label="Teaser · experimental photo cover" class="relative w-[1280px] h-[720px] overflow-hidden bg-[#0B1224] text-[#F7F7FF]">
+<img src="assets/teaser-cover-experimental.png" alt="대화 화면과 과거 기억, 현재 위치가 실로 이어진 Weave 티저" class="absolute left-[408px] top-0 w-[872px] h-[720px] object-cover object-right" width="872" height="720" />
+<div class="absolute inset-0" style="background:linear-gradient(90deg,#0B1224 0%,#0B1224 26%,rgba(11,18,36,.98) 32%,rgba(11,18,36,.85) 39%,rgba(11,18,36,.26) 50%,rgba(11,18,36,0) 61%)"></div>
+<div class="absolute inset-0" style="background:linear-gradient(0deg,rgba(11,18,36,.74),transparent 17%,transparent 85%,rgba(11,18,36,.38))"></div>
+<p class="absolute top-[39px] left-[64px] text-[16px] tracking-[-0.04em] font-semibold">Weave Assist</p>
+<p class="absolute top-[43px] right-[43px] text-[10px] tracking-[0.12em] text-[#E4E6EF]">ON-DEVICE AI · CONCEPT PROPOSAL</p>
+<div class="absolute left-[64px] top-[191px]">
+<p class="text-[50px] leading-[1.24] tracking-[-0.06em] font-semibold">그때 그거?</p>
+<div class="mt-[12px] flex items-center gap-[9px]"><h1 class="text-[63px] leading-[1.18] tracking-[-0.06em] font-bold text-[#C5B2FF]">Weave</h1><img src="assets/icons/weave-spool-filled.png" alt="Weave 실타래" class="h-[48px] w-[48px] object-contain" width="48" height="48" /><p class="text-[63px] leading-[1.18] tracking-[-0.06em] font-bold">got it!</p></div>
+<p class="mt-[35px] text-[25px] leading-[1.65] tracking-[-0.03em] text-[#D9DFEB]">흩어진 기억을 엮어,<br/>필요한 순간 건넵니다.</p>
+<p class="mt-[44px] text-[14px] tracking-[-0.02em] text-[#9EABC2]">내 기록과 지금의 대화 사이, Weave.</p>
+</div>
+<footer class="absolute bottom-[25px] left-[64px] right-[43px] flex items-center justify-between text-[10px] tracking-[0.19em] text-[#A6B0C4]"><span>WEAVE ASSIST / GALAXY AI CONCEPT</span><span>01 / 11</span></footer></section>
+
+<section id="slide-2" aria-label="Motivation" class="relative w-[1280px] h-[720px] overflow-hidden bg-[#0B1224] text-[#F7F7FF]"><div class="absolute left-[64px] top-[38px] text-[11px] font-semibold tracking-[0.18em] text-[#B8A2FF]">02 / MOTIVATION</div><h1 class="absolute left-[64px] top-[75px] text-[40px] leading-[1.25] tracking-[-0.05em] font-semibold">수많은 기록이 잠들어 있지만,<br/>필요한 순간엔 다시 찾습니다.</h1>
+<div class="absolute left-[65px] top-[236px]">
+<p class="text-[19px] leading-[1.8] tracking-[-0.025em] text-[#9CAAC3]">방대한 기록을 곁에 두고도,<br/>정작 필요한 순간에는 이렇게 말하곤 하죠.</p>
+<p class="mt-[26px] text-[46px] leading-[1.3] tracking-[-0.055em] font-medium text-[#D3C3FF]">“잠깐만, 찾아볼게.”</p>
+</div>
+<div class="absolute left-[64px] top-[472px] flex items-center gap-[23px] border-t border-[#2B3550] pt-[20px] w-[557px]"><p class="text-[49px] font-semibold tracking-[-0.06em] text-[#C5B2FF]">62%</p><p class="text-[16px] leading-[1.6] text-[#B8C3D6]">업무 중 정보를 찾는 데<br/>너무 많은 시간을 쓴다고 답한 비율</p></div>
+<div class="absolute left-[716px] top-[206px] w-[451px] border-t border-[#3D4761]">
+<div class="py-[20px] flex gap-[22px] items-center border-b border-[#2B3550]"><span class="inline-flex shrink-0 items-center justify-center w-[52px] h-[52px] rounded-[12px] bg-[#F0DD96]"><img src="assets/icons/chat-light.svg" alt="chat" width="28" height="28" class="w-[28px] h-[28px] object-contain" /></span><div><p class="text-[12px] text-[#94A3BC]">지난 대화</p><p class="text-[30px] font-semibold tracking-[-0.04em]">5<span class="text-[19px] ml-[4px]">년 치</span></p></div><p class="ml-auto text-[16px] text-[#9CAAC3]">약속과 지나간 한마디</p></div>
+<div class="py-[20px] flex gap-[22px] items-center border-b border-[#2B3550]"><span class="inline-flex shrink-0 items-center justify-center w-[52px] h-[52px] rounded-[12px] bg-[#E6D7F7]"><img src="assets/icons/images-light.svg" alt="gallery" width="28" height="28" class="w-[28px] h-[28px] object-contain" /></span><div><p class="text-[12px] text-[#94A3BC]">갤러리</p><p class="text-[30px] font-semibold tracking-[-0.04em]">10,000<span class="text-[19px] ml-[4px]">장</span></p></div><p class="ml-auto text-[16px] text-[#9CAAC3]">다시 보고 싶던 순간</p></div>
+<div class="py-[20px] flex gap-[22px] items-center border-b border-[#2B3550]"><span class="inline-flex shrink-0 items-center justify-center w-[52px] h-[52px] rounded-[12px] bg-[#C9DAE7]"><img src="assets/icons/note-pencil-light.svg" alt="note" width="28" height="28" class="w-[28px] h-[28px] object-contain" /></span><div><p class="text-[12px] text-[#94A3BC]">삼성노트</p><p class="text-[30px] font-semibold tracking-[-0.04em]">500<span class="text-[19px] ml-[4px]">개</span></p></div><p class="ml-auto text-[16px] text-[#9CAAC3]">놓치지 않으려 적은 내용</p></div>
+<p class="mt-[10px] text-[11px] text-[#6F7E97]">예시 사용자의 기록량 · 서비스 성과 수치가 아닙니다.</p>
+</div>
+<div class="absolute left-[64px] right-[64px] top-[590px] border-t border-[#2B3550] pt-[25px]"><p class="text-[22px] tracking-[-0.035em]">세상의 지식은 AI에게 묻는데, <span class="text-[#B8A2FF]">내 기록은 아직 직접 찾아다닙니다.</span></p></div>
+<p class="absolute left-[64px] top-[651px] text-[10px] text-[#71809C]"><a href="https://www.microsoft.com/en-us/worklab/work-trend-index/will-ai-fix-work">Microsoft Work Trend Index 2023 · 31개 시장, 취업자·자영업자 31,000명</a> / 업무 정보 탐색 설문, 스마트폰만의 조사·Weave 성과가 아님</p><footer class="absolute bottom-[25px] left-[64px] right-[64px] flex items-center justify-between text-[10px] tracking-[0.19em] text-[#71809C]"><span>WEAVE ASSIST / GALAXY AI CONCEPT</span><span>02 / 11</span></footer></section>
+
+<section id="slide-3" aria-label="Pain Points" class="relative w-[1280px] h-[720px] overflow-hidden bg-[#0B1224] text-[#F7F7FF]"><div class="absolute left-[64px] top-[38px] text-[11px] font-semibold tracking-[0.18em] text-[#B8A2FF]">03 / PAIN POINTS</div><h1 class="absolute left-[64px] top-[75px] text-[40px] leading-[1.25] tracking-[-0.05em] font-semibold">기록을 꺼내 쓰지 못하는 세 순간.</h1><p class="absolute left-[64px] top-[139px] text-[17px] leading-[1.6] text-[#9CAAC3]">어디에 있는지, 무엇이었는지, 기억이 있었다는 사실까지.</p>
+<div class="absolute top-[207px] left-[64px] right-[64px]"><div class="flex items-center h-[111px] border-t border-[#2B3550] "><p class="w-[83px] text-[35px] font-medium text-[#485573]">01</p><p class="w-[330px] text-[27px] font-semibold tracking-[-0.05em] ">어디에 적었더라?</p><div><p class="text-[19px] tracking-[-0.025em]">찾을 내용은 알지만, 어느 앱에 있는지 모릅니다.</p><p class="mt-[9px] text-[14px] text-[#8D9DB7]">노트 · 메일 · 나와의 채팅을 하나씩 확인</p></div></div><div class="flex items-center h-[111px] border-t border-[#2B3550] "><p class="w-[83px] text-[35px] font-medium text-[#485573]">02</p><p class="w-[330px] text-[27px] font-semibold tracking-[-0.05em] ">이름이 뭐였더라?</p><div><p class="text-[19px] tracking-[-0.025em]">정확한 이름이 떠오르지 않아, 검색부터 막힙니다.</p><p class="mt-[9px] text-[14px] text-[#8D9DB7]">일정에서 날짜를 찾고, 갤러리에서 사진을 확인</p></div></div><div class="flex items-center h-[111px] border-t border-[#2B3550] border-b"><p class="w-[83px] text-[35px] font-medium text-[#485573]">03</p><p class="w-[330px] text-[27px] font-semibold tracking-[-0.05em] text-[#C9B6FF]">그 얘길 했었는데.</p><div><p class="text-[19px] tracking-[-0.025em]">필요한 순간에도, 그런 기억이 있었는지 떠오르지 않습니다.</p><p class="mt-[9px] text-[14px] text-[#8D9DB7]">스쳐 간 부탁과 작은 약속은 검색할 생각조차 놓침</p></div></div></div>
+<div class="absolute left-[64px] right-[64px] top-[581px] flex gap-[50px]"><div class="w-[547px]"><p class="text-[12px] text-[#9CAAC3]">성빈 · 28세 신입사원</p><p class="mt-[8px] text-[18px] tracking-[-0.03em]">“찾느라 대화와 업무의 흐름을 끊고 싶지 않아요.”</p></div><div class="w-[540px] border-l border-[#2B3550] pl-[36px]"><p class="text-[12px] text-[#9CAAC3]">지현 · 26세 직장인</p><p class="mt-[8px] text-[18px] tracking-[-0.03em]">“가족·친구들이 흘린 말 한마디를 놓치지 않고<br/>제때 챙겨주고 싶어요.”</p></div></div>
+<footer class="absolute bottom-[25px] left-[64px] right-[64px] flex items-center justify-between text-[10px] tracking-[0.19em] text-[#71809C]"><span>WEAVE ASSIST / GALAXY AI CONCEPT</span><span>03 / 11</span></footer></section>
+
+<section id="slide-4" aria-label="Solution" class="relative w-[1280px] h-[720px] overflow-hidden bg-[#0B1224] text-[#F7F7FF]"><div class="absolute left-[64px] top-[38px] text-[11px] font-semibold tracking-[0.18em] text-[#B8A2FF]">04 / SOLUTION</div><h1 class="absolute left-[64px] top-[75px] text-[40px] leading-[1.25] tracking-[-0.05em] font-semibold">같은 기록, 세 가지 사용 방식.</h1><p class="absolute left-[64px] top-[139px] text-[17px] leading-[1.6] text-[#9CAAC3]">Weave Assist는 흩어진 기록을 엮어, 필요한 순간 건네는 온디바이스 AI입니다.</p>
+<div class="absolute left-[64px] right-[64px] top-[203px] flex border-y border-[#39405C] py-[19px]">
+<div class="w-[545px] flex gap-[26px]"><span class="text-[14px] font-semibold text-[#B8A2FF]">내 기록</span><span class="text-[18px]">대화 · 메모 · 메일 · 일정 · 사진 등</span></div>
+<div class="border-l border-[#39405C] pl-[35px] flex gap-[24px]"><span class="text-[14px] font-semibold text-[#B8A2FF]">현재 맥락</span><span class="text-[18px]">작성 중인 내용 · 대화 · 시간 · 위치 등</span></div>
+</div>
+<div class="absolute left-[64px] top-[300px] w-[1152px]">
+<div class="grid grid-cols-[266px_296px_264px_326px] pb-[15px] text-[12px] tracking-[0.04em] text-[#8D9AB3]"><span>사용 방식</span><span>언제</span><span>어떻게</span><span>사용 경험</span></div>
+<div class="grid grid-cols-[266px_296px_264px_326px] items-center h-[86px] border-t border-[#2B3550]"><div class="flex items-center gap-[15px]"><span class="text-[12px] text-[#8B74C8]">01</span><span class="text-[21px] font-semibold tracking-[-0.04em]">전역 검색</span></div><p class="text-[17px] leading-[1.65] text-[#B8C3D6]">필요한 내용을 알고<br/>직접 찾을 때</p><p class="text-[17px] leading-[1.65] text-[#B8C3D6]">검색 패널을 열고<br/>기억나는 내용을 입력</p><p class="text-[17px] leading-[1.65]">여러 앱의 기록을<br/>출처별 목록으로 단번에 확인</p></div><div class="grid grid-cols-[266px_296px_264px_326px] items-center h-[86px] border-t border-[#2B3550]"><div class="flex items-center gap-[15px]"><span class="text-[12px] text-[#8B74C8]">02</span><span class="text-[21px] font-semibold tracking-[-0.04em]">자동 완성</span></div><p class="text-[17px] leading-[1.65] text-[#B8C3D6]">입력할 내용이 정확히<br/>기억나지 않을 때</p><p class="text-[17px] leading-[1.65] text-[#B8C3D6]">키보드에서<br/>Weave 버튼 선택</p><p class="text-[17px] leading-[1.65]">답장·검색어·문구와<br/>출처를 확인하고 즉시 입력</p></div><div class="grid grid-cols-[266px_296px_264px_326px] items-center h-[86px] border-t border-[#2B3550]"><div class="flex items-center gap-[15px]"><span class="text-[12px] text-[#8B74C8]">03</span><span class="text-[21px] font-semibold tracking-[-0.04em]">먼저 건네는 기억</span></div><p class="text-[17px] leading-[1.65] text-[#B8C3D6]">지금 도움이 될 기억을<br/>미처 떠올리지 못했을 때</p><p class="text-[17px] leading-[1.65] text-[#B8C3D6]">관련 기억이 감지되면<br/>Weave 버튼에 알림 표시<br/><span class="text-[11px] text-[#8F9DB5]">Flickering · 짧게 강조</span></p><p class="text-[17px] leading-[1.65]">현재 상황에 맞는<br/>기억과 출처를 확인하고<br/>대화에 활용</p></div>
+</div>
+<p class="absolute left-[64px] top-[632px] text-[15px] text-[#B8A2FF]">기록은 출처와 함께 확인하고, 입력할 내용은 사용자가 선택합니다.</p>
+<footer class="absolute bottom-[25px] left-[64px] right-[64px] flex items-center justify-between text-[10px] tracking-[0.19em] text-[#71809C]"><span>WEAVE ASSIST / GALAXY AI CONCEPT</span><span>04 / 11</span></footer></section>
+
+<section id="slide-5" aria-label="UX 1" class="relative w-[1280px] h-[720px] overflow-hidden bg-[#0B1224] text-[#F7F7FF]">
+  <p class="absolute left-[64px] top-[40px] text-[12px] font-semibold tracking-[0.2em] text-[#B8A2FF]">05 / GLOBAL SEARCH</p>
+  <h2 class="absolute left-[64px] top-[72px] text-[40px] font-semibold leading-[1.25] tracking-[-0.04em]">어디에 적었든, 한 번에 찾습니다.</h2>
+  <p class="absolute left-[64px] top-[132px] text-[17px] leading-[1.6] text-[#9CAAC3]">통화는 그대로. 노트·메일·나와의 채팅에 남긴 시연 준비 내용을 한곳에서 확인합니다.</p>
+
+  <svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" class="absolute left-0 top-0 h-[720px] w-[1280px]" viewBox="0 0 1280 720" fill="none" aria-label="검색 결과와 원래 기록을 연결하는 실">
+    <path d="M 548 480 C 640 480 603 265 690 265" stroke="#B8A2FF" stroke-width="2" stroke-opacity="0.8"/>
+    <path d="M 548 537 C 629 537 611 406 690 406" stroke="#B8A2FF" stroke-width="2" stroke-opacity="0.8"/>
+    <path d="M 548 594 C 624 594 621 555 690 555" stroke="#B8A2FF" stroke-width="2" stroke-opacity="0.8"/>
+  </svg>
+
+  <div class="absolute left-[64px] top-[198px] h-[427px] w-[484px] overflow-hidden rounded-[24px] border border-[#344364] bg-[#10192B]">
+    <div class="flex h-[45px] items-center justify-between border-b border-[#2B3550] bg-[#1D2C37] px-[21px]">
+      <p class="text-[16px] font-medium text-[#C5E1D7]">선배와 통화 중</p>
+      <p class="text-[15px] text-[#C5E1D7]">02:18</p>
+    </div>
+    <div class="px-[23px] pt-[18px]">
+      <p class="text-[19px] font-medium leading-[1.6] tracking-[-0.03em]">“시연 순서랑 수정할 자료,<br />오늘 집합 시간도 확인 부탁드려요.”</p>
+      <p class="mt-[9px] text-[13px] text-[#9CAAC3]">통화 내용은 듣지 않고, 사용자가 검색어를 입력합니다.</p>
+    </div>
+    <div class="absolute inset-x-0 bottom-0 h-[238px] rounded-t-[22px] border-t border-[#485274] bg-[#1A253D] px-[19px] pt-[15px]">
+      <div class="flex h-[39px] items-center gap-[10px] rounded-[10px] bg-[#F1EDFF] px-[12px]">
+        <img src="assets/icons/magnifying-glass-light.svg" width="22" height="22" class="h-[22px] w-[22px] object-contain" alt="검색" />
+        <p class="text-[17px] font-medium text-[#232237]">어제 A사 시연 준비</p>
+      </div>
+      <div class="mt-[10px] divide-y divide-[#35405B]">
+        <div class="flex h-[57px] items-center gap-[12px]">
+          <div class="flex h-[32px] w-[32px] shrink-0 items-center justify-center rounded-[8px] bg-[#DBD1FF]"><img src="assets/icons/note-pencil-light.svg" width="22" height="22" class="h-[22px] w-[22px] object-contain" alt="삼성노트" /></div>
+          <div><p class="text-[16px] font-medium">시연 순서와 5분 진행안</p><p class="mt-[1px] text-[12px] text-[#9CAAC3]">삼성노트 · A사 시연 준비회의</p></div>
+        </div>
+        <div class="flex h-[57px] items-center gap-[12px]">
+          <div class="flex h-[32px] w-[32px] shrink-0 items-center justify-center rounded-[8px] bg-[#DBD1FF]"><img src="assets/icons/envelope-simple-light.svg" width="22" height="22" class="h-[22px] w-[22px] object-contain" alt="메일" /></div>
+          <div><p class="text-[16px] font-medium">발표자료 수정사항·문서 위치</p><p class="mt-[1px] text-[12px] text-[#9CAAC3]">메일 · 나에게 보낸 메일</p></div>
+        </div>
+        <div class="flex h-[57px] items-center gap-[12px]">
+          <div class="flex h-[32px] w-[32px] shrink-0 items-center justify-center rounded-[8px] bg-[#DBD1FF]"><img src="assets/icons/chat-light.svg" width="22" height="22" class="h-[22px] w-[22px] object-contain" alt="카카오톡" /></div>
+          <div><p class="text-[16px] font-medium">8:40 1층 로비·충전 어댑터</p><p class="mt-[1px] text-[12px] text-[#9CAAC3]">카카오톡 · 나와의 채팅</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <p class="absolute left-[692px] top-[184px] text-[12px] font-semibold tracking-[0.12em] text-[#9CAAC3]">연결된 원래 기록</p>
+  <article class="absolute left-[690px] top-[210px] h-[118px] w-[526px] rounded-[15px] border border-[#2B3550] bg-[#151F34] px-[22px] py-[16px]">
+    <div class="flex items-center justify-between"><p class="text-[14px] font-medium text-[#B8A2FF]">삼성노트</p><p class="text-[12px] text-[#9CAAC3]">원문 보기</p></div>
+    <p class="mt-[8px] text-[20px] font-semibold tracking-[-0.03em]">A사 시연 준비회의</p>
+    <p class="mt-[5px] text-[17px] text-[#D3D9E8]">설치 · 연결 · 사용 예시 / 전체 시연 5분</p>
+  </article>
+  <article class="absolute left-[690px] top-[344px] h-[142px] w-[526px] rounded-[15px] border border-[#2B3550] bg-[#151F34] px-[22px] py-[16px]">
+    <div class="flex items-center justify-between"><p class="text-[14px] font-medium text-[#B8A2FF]">메일 · 나에게 보냄</p><p class="text-[12px] text-[#9CAAC3]">메일 보기</p></div>
+    <p class="mt-[8px] text-[20px] font-semibold tracking-[-0.03em]">A사 시연 자료 — 내일 수정할 것</p>
+    <p class="mt-[5px] text-[16px] leading-[1.55] text-[#D3D9E8]">7쪽: 연결 화면 캡처 교체 · 9쪽: 설명 세 문장으로 축약<br />자료 위치: 사내 문서함 링크</p>
+  </article>
+  <article class="absolute left-[690px] top-[502px] h-[123px] w-[526px] rounded-[15px] border border-[#2B3550] bg-[#151F34] px-[22px] py-[16px]">
+    <div class="flex items-center justify-between"><p class="text-[14px] font-medium text-[#B8A2FF]">카카오톡 · 나와의 채팅</p><p class="text-[12px] text-[#9CAAC3]">가져온 기록</p></div>
+    <p class="mt-[8px] text-[20px] font-semibold tracking-[-0.03em]">A사 시연 집합 안내</p>
+    <p class="mt-[5px] text-[17px] text-[#D3D9E8]">“내일 8:40 1층 로비. 충전 어댑터 챙기기.”</p>
+  </article>
+  <p class="absolute left-[64px] top-[645px] text-[16px] tracking-[-0.02em] text-[#9CAAC3]">앱을 다시 열어 찾아다니지 않고, 필요한 기록과 출처를 함께 확인합니다.</p>
+  <p class="absolute bottom-[24px] left-[64px] text-[10px] font-medium tracking-[0.2em] text-[#9CAAC3]">WEAVE ASSIST / GALAXY AI CONCEPT</p>
+  <p class="absolute bottom-[24px] right-[64px] text-[10px] font-medium tracking-[0.12em] text-[#9CAAC3]">05 / 11</p>
+</section>
+
+<section id="slide-6" aria-label="UX 2" class="relative w-[1280px] h-[720px] overflow-hidden bg-[#0B1224] text-[#F7F7FF]">
+  <p class="absolute left-[64px] top-[40px] text-[12px] font-semibold tracking-[0.2em] text-[#B8A2FF]">06 / CONTEXTUAL COMPLETION</p>
+  <h2 class="absolute left-[64px] top-[72px] text-[40px] font-semibold leading-[1.25] tracking-[-0.04em]">기억나는 말이, 정확한 검색어가 됩니다.</h2>
+  <p class="absolute left-[64px] top-[132px] text-[17px] leading-[1.6] text-[#9CAAC3]">일정에서 찾은 날짜로 사진을 확인하고, 라벨에서 찾은 이름을 작성 중인 검색창에 연결합니다.</p>
+
+  <svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" class="absolute left-0 top-0 h-[720px] w-[1280px]" viewBox="0 0 1280 720" fill="none" aria-label="일정의 날짜가 사진의 라벨을 거쳐 검색어로 연결되는 실">
+    <path d="M 323 295 C 450 295 458 366 458 418" stroke="#B8A2FF" stroke-width="2" stroke-opacity="0.9"/>
+    <path d="M 610 491 C 685 491 655 454 726 454" stroke="#B8A2FF" stroke-width="2" stroke-opacity="0.9"/>
+    <path d="M 323 295 C 354 295 359 285 390 285" stroke="#B8A2FF" stroke-width="6" stroke-opacity="0.14"/>
+  </svg>
+
+  <article class="absolute left-[64px] top-[214px] h-[162px] w-[259px] rounded-[17px] border border-[#2B3550] bg-[#151F34] p-[21px]">
+    <div class="flex items-center gap-[11px]"><div class="flex h-[34px] w-[34px] items-center justify-center rounded-[9px] bg-[#DBD1FF]"><img src="assets/icons/calendar-light.svg" width="24" height="24" class="h-[24px] w-[24px] object-contain" alt="캘린더" /></div><p class="text-[15px] text-[#B8A2FF]">삼성 캘린더</p></div>
+    <p class="mt-[18px] text-[17px] text-[#9CAAC3]">지난주 일요일</p>
+    <p class="mt-[3px] text-[25px] font-semibold tracking-[-0.035em]">지은 집들이</p>
+  </article>
+  <div class="absolute left-[360px] top-[187px] w-[247px]">
+    <p class="text-[13px] font-semibold tracking-[0.12em] text-[#B8A2FF]">첫 번째 단서</p>
+    <p class="mt-[9px] text-[22px] font-medium leading-[1.5] tracking-[-0.03em]">언제 찍은 사진인지<br />알게 됩니다.</p>
+  </div>
+  <p class="absolute left-[65px] top-[444px] text-[13px] font-semibold tracking-[0.12em] text-[#B8A2FF]">두 번째 단서</p>
+  <p class="absolute left-[65px] top-[475px] text-[22px] font-medium leading-[1.5] tracking-[-0.03em]">사진에 남아 있던<br />이름을 읽습니다.</p>
+  <article class="absolute left-[305px] top-[416px] h-[199px] w-[305px] overflow-hidden rounded-[17px] border border-[#2B3550] bg-[#151F34]">
+    <div class="flex h-[48px] items-center gap-[10px] px-[19px]"><div class="flex h-[27px] w-[27px] items-center justify-center rounded-[7px] bg-[#DBD1FF]"><img src="assets/icons/images-light.svg" width="20" height="20" class="h-[20px] w-[20px] object-contain" alt="갤러리" /></div><p class="text-[14px] text-[#B8A2FF]">갤러리 · 같은 날의 와인 사진</p></div>
+    <div class="mx-[19px] h-[117px] rounded-[8px] bg-[#EBE8DC] px-[17px] pt-[17px] text-center text-[#34322B]">
+      <p class="text-[11px] font-medium tracking-[0.19em]">사진 속 라벨에서 읽은 이름</p>
+      <p class="mt-[7px] text-[31px] font-semibold leading-[1.1] tracking-[0.08em]">BABICH</p>
+      <p class="mt-[7px] text-[13px] tracking-[0.1em]">SAUVIGNON BLANC</p>
+    </div>
+    <p class="mt-[8px] text-center text-[11px] text-[#9CAAC3]">라벨 인식 영역을 재구성한 화면</p>
+  </article>
+
+  <div class="absolute left-[726px] top-[198px] h-[429px] w-[490px] overflow-hidden rounded-[25px] border border-[#344364] bg-[#10192B]">
+    <div class="flex h-[50px] items-center justify-between px-[24px]"><p class="text-[20px] font-semibold tracking-[-0.04em]">Google</p><p class="text-[12px] text-[#9CAAC3]">검색 화면 유지</p></div>
+    <div class="mx-[21px] flex h-[54px] items-center gap-[10px] rounded-[11px] border border-[#344364] bg-[#151F34] px-[13px]"><div class="flex h-[29px] w-[29px] shrink-0 items-center justify-center rounded-[7px] bg-[#DBD1FF]"><img src="assets/icons/magnifying-glass-light.svg" width="20" height="20" class="h-[20px] w-[20px] object-contain" alt="검색" /></div><p class="text-[17px] tracking-[-0.03em]">지은이네 집들이 때 마신 와인</p></div>
+    <div class="mx-[21px] mt-[17px] flex h-[38px] items-center gap-[9px]"><div class="flex h-[34px] w-[34px] items-center justify-center rounded-[9px] bg-[#B8A2FF]"><img src="assets/icons/weave-spool-outline.png" width="24" height="24" class="h-[24px] w-[24px] object-contain" alt="Weave 버튼" /></div><p class="text-[16px] font-medium">Weave</p><p class="ml-auto text-[13px] text-[#9CAAC3]">버튼을 눌러 확인</p></div>
+    <div class="mx-[21px] mt-[11px] h-[163px] rounded-[14px] border border-[#8171B3] bg-[#292541] px-[19px] py-[14px]">
+      <p class="text-[12px] font-semibold tracking-[0.05em] text-[#C9BAF7]">자동 완성 후보</p>
+      <p class="mt-[6px] text-[28px] font-semibold tracking-[-0.045em]">배비치 소비뇽 블랑</p>
+      <p class="mt-[7px] text-[14px] text-[#C1BDD3]">출처: ‘지은 집들이’ 일정 · 와인 라벨 사진</p>
+      <div class="mt-[11px] flex items-center justify-between"><p class="text-[12px] text-[#C1BDD3]">연결한 기록 보기</p><div class="rounded-[7px] bg-[#C3AEFF] px-[14px] py-[7px] text-[14px] font-semibold text-[#241C3F]">검색창에 넣기</div></div>
+    </div>
+    <div class="absolute inset-x-[21px] bottom-[16px] flex h-[38px] items-center gap-[6px] text-center text-[14px] text-[#ADB8CA]"><div class="flex h-[32px] w-[36px] items-center justify-center rounded-[5px] bg-[#202C42]">한/영</div><div class="flex h-[32px] w-[36px] items-center justify-center rounded-[5px] bg-[#202C42]">,</div><div class="flex h-[32px] flex-1 items-center justify-center rounded-[5px] bg-[#202C42] text-[12px]">한국어</div><div class="flex h-[32px] w-[36px] items-center justify-center rounded-[5px] bg-[#202C42]">.</div><div class="flex h-[32px] w-[60px] items-center justify-center rounded-[5px] bg-[#34304C] text-[#DCD2FF]">검색</div></div>
+  </div>
+  <p class="absolute left-[64px] top-[645px] text-[16px] tracking-[-0.02em] text-[#9CAAC3]">후보와 출처를 확인한 뒤 선택하면 입력됩니다. 작성 중인 내용은 임의로 바뀌지 않습니다.</p>
+  <p class="absolute bottom-[24px] left-[64px] text-[10px] font-medium tracking-[0.2em] text-[#9CAAC3]">WEAVE ASSIST / GALAXY AI CONCEPT</p>
+  <p class="absolute bottom-[24px] right-[64px] text-[10px] font-medium tracking-[0.12em] text-[#9CAAC3]">06 / 11</p>
+</section>
+
+<section id="slide-7" aria-label="UX 3" class="relative w-[1280px] h-[720px] overflow-hidden bg-[#0B1224] text-[#F7F7FF]">
+  <p class="absolute left-[64px] top-[40px] text-[12px] font-semibold tracking-[0.2em] text-[#B8A2FF]">07 / A MEMORY, RIGHT ON TIME</p>
+  <h2 class="absolute left-[64px] top-[72px] text-[40px] font-semibold leading-[1.25] tracking-[-0.04em]">잊고 있던 약속을, 필요한 순간 건넵니다.</h2>
+  <p class="absolute left-[64px] top-[132px] text-[17px] leading-[1.6] text-[#9CAAC3]">엄마에게 답장하는 지금, 2주 전의 약속이 현재 위치와 연결됩니다.</p>
+
+  <svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" class="absolute left-0 top-0 h-[720px] w-[1280px]" viewBox="0 0 1280 720" fill="none" aria-label="과거의 약속과 현재 위치가 답장에 연결되는 실">
+    <path d="M 515 350 C 614 350 594 420 688 420" stroke="#B8A2FF" stroke-width="2" stroke-opacity="0.9"/>
+    <path d="M 515 545 C 640 545 579 420 688 420" stroke="#B8A2FF" stroke-width="2" stroke-opacity="0.9"/>
+  </svg>
+
+  <article class="absolute left-[64px] top-[211px] h-[239px] w-[451px] rounded-[18px] border border-[#2B3550] bg-[#151F34] p-[23px]">
+    <div class="flex items-center gap-[11px]"><div class="flex h-[33px] w-[33px] items-center justify-center rounded-[8px] bg-[#DBD1FF]"><img src="assets/icons/chat-light.svg" width="23" height="23" class="h-[23px] w-[23px] object-contain" alt="과거 대화" /></div><p class="text-[16px] font-medium text-[#B8A2FF]">2주 전 · 가족 단체방</p></div>
+    <div class="mt-[19px] border-l-2 border-[#44506A] pl-[16px]"><p class="text-[13px] text-[#9CAAC3]">엄마</p><p class="mt-[3px] text-[18px] leading-[1.5]">“이거 TV에서 봤어! 맛있겠다.”</p></div>
+    <div class="mt-[15px] border-l-2 border-[#B8A2FF] pl-[16px]"><p class="text-[13px] text-[#9CAAC3]">나</p><p class="mt-[3px] text-[18px] leading-[1.5]">“성심당 무화과시루네.<br /><span class="text-[#D7C8FF]">다음에 대전 가면 사다줄게.</span>”</p></div>
+  </article>
+  <article class="absolute left-[64px] top-[495px] flex h-[106px] w-[451px] items-center gap-[17px] rounded-[18px] border border-[#2B3550] bg-[#151F34] px-[23px]">
+    <div class="flex h-[49px] w-[49px] items-center justify-center rounded-[12px] bg-[#DBD1FF]"><img src="assets/icons/map-pin-line-light.svg" width="31" height="31" class="h-[31px] w-[31px] object-contain" alt="현재 위치" /></div>
+    <div><p class="text-[14px] text-[#9CAAC3]">현재 위치</p><p class="mt-[5px] text-[23px] font-semibold tracking-[-0.03em]">대전역 근처</p></div>
+  </article>
+  <p class="absolute left-[546px] top-[301px] text-[15px] font-medium leading-[1.55] text-[#B8A2FF]">기억을 꺼낼<br />순간</p>
+
+  <div class="absolute left-[688px] top-[190px] h-[438px] w-[528px] overflow-hidden rounded-[25px] border border-[#344364] bg-[#10192B]">
+    <div class="flex h-[50px] items-center justify-between border-b border-[#2B3550] px-[22px]"><p class="text-[20px] font-semibold">엄마</p><p class="text-[12px] text-[#9CAAC3]">카카오톡 · 답장 작성 중</p></div>
+    <div class="px-[21px] pt-[13px]"><div class="w-[304px] rounded-[12px] rounded-tl-[3px] bg-[#29374C] px-[14px] py-[10px]"><p class="text-[16px] leading-[1.5]">출장 다녀오느라 고생했어!<br />집 오는 중이야?</p></div><div class="mt-[11px] ml-auto w-[387px] rounded-[10px] border border-[#3B4560] bg-[#1B2339] px-[13px] py-[9px]"><p class="text-[16px] tracking-[-0.03em] text-[#CAD0E0]">응, 역 근처에서 기차 기다리고 있어.</p></div></div>
+    <div class="mx-[21px] mt-[12px] flex h-[34px] items-center gap-[9px]"><div class="flex h-[32px] w-[32px] items-center justify-center rounded-[8px] bg-[#B8A2FF]"><img src="assets/icons/weave-spool-outline.png" width="23" height="23" class="h-[23px] w-[23px] object-contain" alt="Weave 버튼" /></div><p class="text-[16px] font-medium">Weave</p><p class="rounded-[5px] bg-[#332D50] px-[7px] py-[3px] text-[12px] text-[#D5C6FF]">연결된 기억 1</p><p class="ml-auto text-[12px] text-[#9CAAC3]">버튼을 눌러 확인</p></div>
+    <div class="mx-[21px] mt-[10px] h-[155px] rounded-[14px] border border-[#8171B3] bg-[#292541] px-[18px] py-[13px]">
+      <p class="text-[13px] font-medium text-[#C9BAF7]">엄마가 말했던 무화과시루 · 가족 단체방</p>
+      <p class="mt-[7px] text-[22px] font-semibold leading-[1.4] tracking-[-0.035em]">엄마, 전에 먹고 싶다던<br />무화과시루 사갈까?</p>
+      <div class="mt-[10px] flex items-center justify-between"><p class="text-[12px] text-[#C1BDD3]">연결한 기록 보기</p><div class="rounded-[7px] bg-[#C3AEFF] px-[14px] py-[7px] text-[14px] font-semibold text-[#241C3F]">문장에 넣기</div></div>
+    </div>
+  </div>
+  <p class="absolute left-[64px] top-[645px] text-[16px] tracking-[-0.02em] text-[#9CAAC3]">문장은 직접 선택해 입력합니다. 전송 여부도 사용자가 결정합니다.</p>
+  <p class="absolute bottom-[24px] left-[64px] text-[10px] font-medium tracking-[0.2em] text-[#9CAAC3]">WEAVE ASSIST / GALAXY AI CONCEPT</p>
+  <p class="absolute bottom-[24px] right-[64px] text-[10px] font-medium tracking-[0.12em] text-[#9CAAC3]">07 / 11</p>
+</section>
+
+<section id="slide-8" aria-label="Architecture" class="relative w-[1280px] h-[720px] overflow-hidden bg-[#0B1224] text-[#F7F7FF]"><div class="absolute left-[64px] top-[38px] text-[11px] font-semibold tracking-[0.18em] text-[#B8A2FF]">08 / HOW IT WORKS</div><h1 class="absolute left-[64px] top-[75px] text-[40px] leading-[1.25] tracking-[-0.05em] font-semibold">기록은 미리 정리하고, 필요할 때 연결합니다.</h1><p class="absolute left-[64px] top-[139px] text-[17px] leading-[1.6] text-[#9CAAC3]">검색 색인(Search index)으로 기록을 미리 정리하고, 필요한 근거만 경량 언어모델에 전달합니다.</p>
+<div class="absolute left-[64px] top-[202px] w-[1152px] h-[67px] border-y border-[#39415C] flex items-center gap-[43px]"><span class="text-[13px] font-semibold text-[#B8A2FF]">미리 준비</span><p class="text-[18px] tracking-[-0.025em]">허용한 기록 가져오기</p><span class="h-px w-[34px] bg-[#55617C]"></span><p class="text-[18px] tracking-[-0.025em]">내용·출처 정리</p><span class="h-px w-[34px] bg-[#55617C]"></span><p class="text-[18px] tracking-[-0.025em]">색인 작업(Indexing)</p><span class="ml-auto text-[13px] text-[#899AB5]">충전·유휴 시간 활용</span></div>
+<svg aria-hidden="true" class="absolute inset-0 w-[1280px] h-[720px] pointer-events-none" xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720" fill="none"><path d="M85 336 C380 336 420 336 1194 336" stroke="#6D5B99" stroke-width="1.5"/></svg>
+<div class="absolute left-[64px] top-[312px] grid grid-cols-4 gap-[27px] w-[1152px]"><div><span class="inline-flex items-center justify-center w-[46px] h-[46px] border border-[#9D87D2] rounded-full bg-[#171E34] text-[14px] text-[#CDBBFF]">01</span><p class="mt-[24px] text-[26px] font-semibold tracking-[-0.045em]">Trigger</p><p class="mt-[9px] text-[18px] text-[#CBB7FF] font-medium tracking-[-0.03em]">필요한 순간을 감지</p><p class="mt-[16px] text-[16px] leading-[1.75] text-[#ACB8CD]">직접 검색 · Weave 버튼<br/>대화와 상황의 변화</p><p class="mt-[22px] text-[11px] text-[#6F819C]">입력 이벤트 · 경량 분류</p></div><div><span class="inline-flex items-center justify-center w-[46px] h-[46px] border border-[#9D87D2] rounded-full bg-[#171E34] text-[14px] text-[#CDBBFF]">02</span><p class="mt-[24px] text-[26px] font-semibold tracking-[-0.045em]">Routing</p><p class="mt-[9px] text-[18px] text-[#CBB7FF] font-medium tracking-[-0.03em]">찾을 단서와 순서를 결정</p><p class="mt-[16px] text-[16px] leading-[1.75] text-[#ACB8CD]">누구의 어떤 기억인지 파악<br/>다음 기록으로 이어질 단서 선택</p><p class="mt-[22px] text-[11px] text-[#6F819C]">인물 · 시간 · 위치 / sLLM</p></div><div><span class="inline-flex items-center justify-center w-[46px] h-[46px] border border-[#9D87D2] rounded-full bg-[#171E34] text-[14px] text-[#CDBBFF]">03</span><p class="mt-[24px] text-[26px] font-semibold tracking-[-0.045em]">Search</p><p class="mt-[9px] text-[18px] text-[#CBB7FF] font-medium tracking-[-0.03em]">관련 기록을 찾아 연결</p><p class="mt-[16px] text-[16px] leading-[1.75] text-[#ACB8CD]">키워드·의미 검색으로 모으고<br/>현재 맥락에 맞는 후보를 추림</p><p class="mt-[22px] text-[11px] text-[#6F819C]">키워드·벡터 검색 · Reranking</p></div><div><span class="inline-flex items-center justify-center w-[46px] h-[46px] border border-[#9D87D2] rounded-full bg-[#171E34] text-[14px] text-[#CDBBFF]">04</span><p class="mt-[24px] text-[26px] font-semibold tracking-[-0.045em]">Delivery</p><p class="mt-[9px] text-[18px] text-[#CBB7FF] font-medium tracking-[-0.03em]">지금 쓰기 좋은 형태로 전달</p><p class="mt-[16px] text-[16px] leading-[1.75] text-[#ACB8CD]">검색 결과 · 답장 · 검색어<br/>출처와 함께 확인하고 입력</p><p class="mt-[22px] text-[11px] text-[#6F819C]">문장 구성 · 키보드 UI</p></div></div>
+<div class="absolute left-[64px] top-[594px] w-[1152px] h-[61px] bg-[#1B2240] flex items-center px-[23px] gap-[18px]"><span class="inline-flex shrink-0 items-center justify-center w-[34px] h-[34px] rounded-[12px] bg-[#DCD2FF]"><img src="assets/icons/lock-key-light.svg" alt="lock" width="22" height="22" class="w-[22px] h-[22px] object-contain" /></span><p class="text-[20px] tracking-[-0.035em]">개인 기록의 검색과 연결은 <span class="text-[#CBB7FF]">서버가 아닌 기기 안에서.</span></p><span class="ml-auto text-[12px] text-[#9AA6BE]">사용자 동의 기반 · 온디바이스 설계</span></div>
+<footer class="absolute bottom-[25px] left-[64px] right-[64px] flex items-center justify-between text-[10px] tracking-[0.19em] text-[#71809C]"><span>WEAVE ASSIST / GALAXY AI CONCEPT</span><span>08 / 11</span></footer></section>
+
+<section id="slide-9" aria-label="Q&A" class="relative w-[1280px] h-[720px] overflow-hidden bg-[#0B1224] text-[#F7F7FF]">
+<div class="absolute left-[64px] top-[38px] text-[11px] font-semibold tracking-[0.18em] text-[#B8A2FF]">09 / Q & A</div>
+<h1 class="absolute left-[64px] top-[75px] text-[40px] leading-[1.25] tracking-[-0.05em] font-semibold">활용은 넓게, 처리는 기기 안에서.</h1>
+<p class="absolute left-[64px] top-[139px] text-[17px] text-[#9CAAC3]">기록을 가져오는 방법부터 사용자가 직접 통제하는 방법까지.</p>
+<div class="absolute left-[64px] right-[64px] top-[192px]">
+<div class="flex gap-[24px] h-[152px] pt-[15px] border-t border-[#2B3550]"><span class="w-[39px] shrink-0 text-[26px] text-[#B8A2FF]">Q.</span><div>
+<h2 class="text-[21px] font-semibold tracking-[-0.035em]">카카오톡 대화도 활용할 수 있나요?</h2>
+<p class="mt-[10px] text-[16px] leading-[1.7] text-[#C3CDDF]">A. 허용한 수신 알림을 기기 안에 쌓아 활용합니다. 본인 발신·‘나와의 채팅’도 대화 내보내기를<br/>한 번 실행해, 그 시점까지의 기록을 함께 가져올 수 있습니다.</p>
+<p class="mt-[9px] text-[11px] leading-[1.6] text-[#8E9DB6]"><a href="https://support.google.com/android/answer/15235441?hl=ko">Google Gemini도 허용된 알림을 읽고 요약합니다.</a> 알림에 없는 이후 발신 기록은 추가 내보내기로 갱신합니다.</p>
+</div></div>
+<div class="flex gap-[24px] h-[152px] pt-[15px] border-t border-[#2B3550]"><span class="w-[39px] shrink-0 text-[26px] text-[#B8A2FF]">Q.</span><div>
+<h2 class="text-[21px] font-semibold tracking-[-0.035em]">기록이 많으면 느려지거나, 배터리를 많이 쓰지 않을까요?</h2>
+<p class="mt-[10px] text-[16px] leading-[1.7] text-[#C3CDDF]">A. 무거운 색인 작업은 충전·유휴 시간에 미리 수행합니다. 사용 중에는 필요한 기록만 찾고,<br/>경량 언어모델에도 추려낸 근거만 전달해 처리 부담을 줄이도록 설계합니다.</p>
+<p class="mt-[9px] text-[11px] leading-[1.6] text-[#8E9DB6]"><a href="https://developer.android.com/develop/background-work/background-tasks/persistent/getting-started/define-work#work-constraints">Android WorkManager는 충전·유휴 등의 실행 조건을 지원합니다.</a> 지연·발열·전력은 대상 기기에서 측정해 조정합니다.</p>
+</div></div>
+<div class="flex gap-[24px] h-[152px] pt-[15px] border-t border-[#2B3550]"><span class="w-[39px] shrink-0 text-[26px] text-[#B8A2FF]">Q.</span><div>
+<h2 class="text-[21px] font-semibold tracking-[-0.035em]">사적인 기록과 잘못된 답변은 어떻게 다루나요?</h2>
+<p class="mt-[10px] text-[16px] leading-[1.7] text-[#C3CDDF]">A. 허용한 기록은 외부 서버로 보내지 않고 기기 안에서 처리하며, 언제든 활용을 끄거나 삭제할 수 있습니다.<br/>출처와 원문을 확인한 뒤 선택한 내용만 입력되고, 메시지는 자동으로 전송되지 않습니다.</p>
+<p class="mt-[9px] text-[11px] leading-[1.6] text-[#8E9DB6]"><a href="https://developer.android.com/privacy-and-security/keystore">Keystore로 저장소의 암호화 키를 보호합니다.</a> 근거가 부족하거나 충돌하면 답을 단정하지 않고 후보·원문을 먼저 보여줍니다.</p>
+</div></div>
+</div>
+<p class="absolute left-[64px] top-[653px] text-[10px] text-[#71809C]">Weave는 제안 설계 기준 · 상세 데이터 흐름과 모델 후보는 기획서의 Technical details 부록 참조</p>
+<footer class="absolute bottom-[25px] left-[64px] right-[64px] flex items-center justify-between text-[10px] tracking-[0.19em] text-[#71809C]"><span>WEAVE ASSIST / GALAXY AI CONCEPT</span><span>09 / 11</span></footer></section>
+
+<section id="slide-10" aria-label="Comparison" class="relative w-[1280px] h-[720px] overflow-hidden bg-[#0B1224] text-[#F7F7FF]"><div class="absolute left-[64px] top-[38px] text-[11px] font-semibold tracking-[0.18em] text-[#B8A2FF]">10 / DIFFERENTIATION</div><h1 class="absolute left-[64px] top-[75px] text-[40px] leading-[1.25] tracking-[-0.05em] font-semibold">흩어진 기록을, 찾고 이어 쓰는 경험.</h1><p class="absolute left-[64px] top-[139px] text-[17px] leading-[1.6] text-[#9CAAC3]">같은 정보를 보여주는 것을 넘어, 기록 속 단서를 이어 필요한 내용을 완성합니다.</p>
+<div class="absolute left-[64px] top-[197px] w-[1152px]">
+<div class="grid grid-cols-[240px_228px_228px_228px_228px] h-[67px] border-b border-[#685C8C]"><div class="flex items-center text-[13px] text-[#8E9CB5]">비교 요소</div><div class="text-center flex flex-col justify-center "><p class="text-[17px] font-semibold leading-[1.2] ">Samsung<br/>Writing Assist</p><p class="mt-[4px] text-[10px] text-[#9EA9C0]">2024.01.31¹</p></div><div class="text-center flex flex-col justify-center "><p class="text-[17px] font-semibold leading-[1.2] ">Now Nudge</p><p class="mt-[4px] text-[10px] text-[#9EA9C0]">2026.03.11</p></div><div class="text-center flex flex-col justify-center "><p class="text-[17px] font-semibold leading-[1.2] ">Kanana<br/>in KakaoTalk</p><p class="mt-[4px] text-[10px] text-[#9EA9C0]">2026.03.17</p></div><div class="text-center flex flex-col justify-center bg-[#554473]"><p class="text-[17px] font-semibold leading-[1.2] text-[#F0E8FF]">Weave</p><p class="mt-[4px] text-[10px] text-[#9EA9C0]">제안</p></div></div>
+<div class="grid grid-cols-[240px_228px_228px_228px_228px] h-[47px] border-b border-[#27324A]"><div class="flex items-center pr-[12px] text-[15px] tracking-[-0.025em] text-[#C5CEDF]">핵심 역할</div><div class="h-full flex items-center justify-center text-center px-[10px] text-[#B9C4D8] text-[14px] leading-[1.55]">문장 생성·교정·번역</div><div class="h-full flex items-center justify-center text-center px-[10px] text-[#B9C4D8] text-[14px] leading-[1.55]">필요한 정보·행동 안내</div><div class="h-full flex items-center justify-center text-center px-[10px] text-[#B9C4D8] text-[14px] leading-[1.55]">대화 속 일정·정보 챙기기</div><div class="h-full flex items-center justify-center text-center px-[10px] bg-[#292541] text-[#E2D5FF] text-[14px] leading-[1.55]">흩어진 기록 연결<br/>입력 완성</div></div><div class="grid grid-cols-[240px_228px_228px_228px_228px] h-[67px] border-b border-[#27324A]"><div class="flex items-center pr-[12px] text-[15px] tracking-[-0.025em] text-[#C5CEDF]">활용 데이터</div><div class="h-full flex items-center justify-center text-center px-[10px] text-[#B9C4D8] text-[14px] leading-[1.55]">입력·선택한 문장<br/>답장할 대화 내용</div><div class="h-full flex items-center justify-center text-center px-[10px] text-[#B9C4D8] text-[14px] leading-[1.55]">일정·사진·대화·스크린샷<br/>이름·이메일 등 저장 정보</div><div class="h-full flex items-center justify-center text-center px-[10px] text-[#B9C4D8] text-[14px] leading-[1.55]">카카오톡 대화·일정<br/>동의해 연동한 서비스 정보</div><div class="h-full flex items-center justify-center text-center px-[10px] bg-[#292541] text-[#E2D5FF] text-[14px] leading-[1.55]">메모·메일·일정·사진<br/>허용된 메신저 대화</div></div><div class="grid grid-cols-[240px_228px_228px_228px_228px] h-[57px] border-b border-[#27324A]"><div class="flex items-center pr-[12px] text-[15px] tracking-[-0.025em] text-[#C5CEDF]">데이터 처리</div><div class="h-full flex items-center justify-center text-center px-[10px] text-[#B9C4D8] text-[14px] leading-[1.55]">기능별 기기·클라우드</div><div class="h-full flex items-center justify-center text-center px-[10px] text-[#B9C4D8] text-[14px] leading-[1.55]">기기 내 처리 중심</div><div class="h-full flex items-center justify-center text-center px-[10px] text-[#B9C4D8] text-[14px] leading-[1.55]">대화 원문은 기기 내<br/>요약 맥락은 외부 AI 활용 가능</div><div class="h-full flex items-center justify-center text-center px-[10px] bg-[#292541] text-[#E2D5FF] text-[14px] leading-[1.55]">기기 내 검색·문장 생성</div></div><div class="grid grid-cols-[240px_228px_228px_228px_228px] h-[48px] border-b border-[#27324A]"><div class="flex items-center pr-[12px] text-[15px] tracking-[-0.025em] text-[#C5CEDF]">여러 앱의 기록 활용</div><div class="h-full flex items-center justify-center text-center px-[10px] text-[#B9C4D8] text-[25px] leading-[1.55]">×</div><div class="h-full flex items-center justify-center text-center px-[10px] text-[#B9C4D8] text-[25px] leading-[1.55]">○</div><div class="h-full flex items-center justify-center text-center px-[10px] text-[#B9C4D8] text-[25px] leading-[1.55]">△<span class="text-[11px] ml-[8px] text-[#8998B2]">카톡·연동 서비스</span></div><div class="h-full flex items-center justify-center text-center px-[10px] bg-[#292541] text-[#E2D5FF] text-[25px] leading-[1.55]">○</div></div><div class="grid grid-cols-[240px_228px_228px_228px_228px] h-[48px] border-b border-[#27324A]"><div class="flex items-center pr-[12px] text-[15px] tracking-[-0.025em] text-[#CDB9FF] font-semibold">기록 통합검색 패널</div><div class="h-full flex items-center justify-center text-center px-[10px] text-[#B9C4D8] text-[25px] leading-[1.55]">×</div><div class="h-full flex items-center justify-center text-center px-[10px] text-[#B9C4D8] text-[25px] leading-[1.55]">×</div><div class="h-full flex items-center justify-center text-center px-[10px] text-[#B9C4D8] text-[25px] leading-[1.55]">×</div><div class="h-full flex items-center justify-center text-center px-[10px] bg-[#292541] text-[#E2D5FF] text-[25px] leading-[1.55]">○</div></div><div class="grid grid-cols-[240px_228px_228px_228px_228px] h-[54px] border-b border-[#27324A]"><div class="flex items-center pr-[12px] text-[15px] tracking-[-0.025em] text-[#CDB9FF] font-semibold">앱 간 단서를 이어 입력 완성</div><div class="h-full flex items-center justify-center text-center px-[10px] text-[#B9C4D8] text-[25px] leading-[1.55]">×</div><div class="h-full flex items-center justify-center text-center px-[10px] text-[#B9C4D8] text-[25px] leading-[1.55]">△<span class="text-[11px] ml-[8px] text-[#8998B2]">정보 조회·자동입력</span></div><div class="h-full flex items-center justify-center text-center px-[10px] text-[#B9C4D8] text-[25px] leading-[1.55]">△<span class="text-[11px] ml-[8px] text-[#8998B2]">카톡 대화 중심</span></div><div class="h-full flex items-center justify-center text-center px-[10px] bg-[#292541] text-[#E2D5FF] text-[25px] leading-[1.55]">○</div></div><div class="grid grid-cols-[240px_228px_228px_228px_228px] h-[48px] border-b border-[#27324A]"><div class="flex items-center pr-[12px] text-[15px] tracking-[-0.025em] text-[#C5CEDF]">상황에 맞춰 먼저 알림</div><div class="h-full flex items-center justify-center text-center px-[10px] text-[#B9C4D8] text-[25px] leading-[1.55]">×</div><div class="h-full flex items-center justify-center text-center px-[10px] text-[#B9C4D8] text-[25px] leading-[1.55]">○</div><div class="h-full flex items-center justify-center text-center px-[10px] text-[#B9C4D8] text-[25px] leading-[1.55]">○</div><div class="h-full flex items-center justify-center text-center px-[10px] bg-[#292541] text-[#E2D5FF] text-[25px] leading-[1.55]">○</div></div>
+</div>
+<div class="absolute left-[64px] top-[638px] text-[10px] leading-[1.75] text-[#75859F]"><p>○ 해당 경험 지원 · △ 범위·흐름에 차이 · × 해당 UX 미안내(공개 자료 기준) · Weave는 제안 설계 기준</p><p>¹ 전신 Chat Assist 최초 탑재 기기 출시일. <a href="https://www.samsung.com/us/support/answer/ANS10010355/">삼성</a>·<a href="https://kanana.kakao.com/chat/policy">카카오</a> 공식 안내 기준 / △는 해당 기술이 불가능하다는 의미가 아닙니다.</p></div>
+<footer class="absolute bottom-[25px] left-[64px] right-[64px] flex items-center justify-between text-[10px] tracking-[0.19em] text-[#71809C]"><span>WEAVE ASSIST / GALAXY AI CONCEPT</span><span>10 / 11</span></footer></section>
+
+<section id="slide-11" aria-label="Expected Impact" class="relative w-[1280px] h-[720px] overflow-hidden bg-[#0B1224] text-[#F7F7FF]">
+<div class="absolute left-[64px] top-[38px] text-[11px] font-semibold tracking-[0.18em] text-[#B8A2FF]">11 / THE IMPACT</div>
+<h1 class="absolute left-[64px] top-[91px] text-[43px] font-semibold leading-[1.43] tracking-[-0.055em]">흩어진 기억과<br/>우리의 대화,<br/><span class="text-[#C9B4FF]">Weave가 잇습니다.</span></h1>
+<p class="absolute left-[64px] top-[337px] text-[18px] leading-[1.9] text-[#A3B1C8]">덜 찾고, 더 잘 챙기고.<br/>쌓인 기록이 오늘의 도움이 되는<br/>갤럭시의 새로운 사용 경험.</p>
+<svg aria-hidden="true" class="absolute inset-0 w-[1280px] h-[720px] pointer-events-none" xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720" fill="none"><path d="M64 587 C183 587 180 504 292 504 S358 625 461 598 C534 580 507 522 553 522" stroke="#8F74C4" stroke-width="2"/><path d="M64 608 C199 608 178 527 292 527 S382 644 481 618" stroke="#3B3654" stroke-width="1.5"/></svg>
+<div class="absolute left-[598px] top-[104px] w-[618px]">
+<div class="h-[175px] pt-[19px] border-t border-[#37415A]"><p class="text-[12px] font-medium text-[#B8A2FF]">01 · 하던 일을 이어가는 경험</p><h2 class="mt-[11px] text-[24px] font-semibold tracking-[-0.04em]">“잠깐만, 찾아볼게” 대신, 하던 일을 이어갑니다.</h2><p class="mt-[12px] text-[16px] leading-[1.75] text-[#A3B1C8]">앱을 오가며 찾고 다시 입력하는 수고를 줄여,<br/>기억을 찾느라 멈췄던 대화와 업무가 자연스럽게 이어집니다.</p></div>
+<div class="h-[175px] pt-[19px] border-t border-[#37415A]"><p class="text-[12px] font-medium text-[#B8A2FF]">02 · 관계를 챙기는 경험</p><h2 class="mt-[11px] text-[25px] font-semibold tracking-[-0.04em]">“그걸 기억했어?”라는 순간을 만듭니다.</h2><p class="mt-[12px] text-[16px] leading-[1.75] text-[#A3B1C8]">스쳐 간 한마디와 잊었던 약속을 제때 떠올려,<br/>무심코 지나칠 수 있었던 말을 작은 배려로 이어줍니다.</p></div>
+<div class="h-[175px] pt-[19px] border-t border-[#37415A]"><p class="text-[12px] font-medium text-[#B8A2FF]">03 · 갤럭시를 계속 쓰는 이유</p><h2 class="mt-[11px] text-[25px] font-semibold tracking-[-0.04em]">쌓인 기록이, 갤럭시를 계속 쓰는 이유가 됩니다.</h2><p class="mt-[12px] text-[16px] leading-[1.75] text-[#A3B1C8]">저장만 했던 대화·사진·메모가 오늘의 검색과 답장에 쓰입니다.<br/>내 기록을 잘 활용해 주는 경험이 지속 사용의 이유가 됩니다.</p></div>
+</div>
+<footer class="absolute bottom-[25px] left-[64px] right-[64px] flex items-center justify-between text-[10px] tracking-[0.19em] text-[#71809C]"><span>WEAVE ASSIST / GALAXY AI CONCEPT</span><span>11 / 11</span></footer></section>
+</main>
+
+</div>
+<nav id="deck-toolbar" aria-label="슬라이드 이동" class="fixed z-50 bottom-[16px] left-1/2 -translate-x-1/2 flex items-center gap-[12px] rounded-[12px] border border-[#2B3550] bg-[#10182B] px-[16px] py-[10px] text-[12px] text-[#D4DBE9]">
+  <button id="previous-slide" type="button" class="rounded-[6px] px-[10px] py-[5px] hover:bg-[#292541] disabled:opacity-30" aria-label="이전 슬라이드">이전</button>
+  <span id="slide-position" class="w-[47px] text-center tabular-nums text-[#CBB7FF]">1 / 11</span>
+  <button id="next-slide" type="button" class="rounded-[6px] px-[10px] py-[5px] hover:bg-[#292541] disabled:opacity-30" aria-label="다음 슬라이드">다음</button>
+  <span class="h-[18px] w-px bg-[#2B3550]"></span>
+  <select id="slide-menu" aria-label="슬라이드 선택" class="w-[202px] rounded-[6px] border border-[#2B3550] bg-[#10182B] px-[8px] py-[5px]"><option value="0">01 · 그때 그거? Weave got it!</option><option value="1">02 · Motivation</option><option value="2">03 · Pain Points</option><option value="3">04 · Solution</option><option value="4">05 · UX 1 · 전역 검색</option><option value="5">06 · UX 2 · 자동 완성</option><option value="6">07 · UX 3 · 먼저 건네는 기억</option><option value="7">08 · 구현</option><option value="8">09 · Q&A</option><option value="9">10 · 차별화 포인트</option><option value="10">11 · 기대효과</option></select>
+  <button id="fullscreen-toggle" type="button" class="rounded-[6px] px-[10px] py-[5px] hover:bg-[#292541]">전체화면</button>
+</nav>
+<script>
+(() => {
+  const stage = document.getElementById('deck-stage');
+  const deck = document.getElementById('presentation-slides-wrapper');
+  const slides = [...deck.children];
+  const menu = document.getElementById('slide-menu');
+  const position = document.getElementById('slide-position');
+  const previous = document.getElementById('previous-slide');
+  const next = document.getElementById('next-slide');
+  let current = Math.max(0, Math.min(slides.length - 1, (Number(location.hash.slice(1)) || 1) - 1));
+  function draw() {
+    const availableHeight = Math.max(200, innerHeight - 90);
+    const scale = Math.min((innerWidth - 24) / 1280, availableHeight / 720);
+    const width = 1280 * scale;
+    const height = 720 * scale;
+    stage.style.width = width + 'px';
+    stage.style.height = height + 'px';
+    stage.style.left = ((innerWidth - width) / 2) + 'px';
+    stage.style.top = ((availableHeight - height) / 2 + 8) + 'px';
+    deck.style.transformOrigin = 'top left';
+    deck.style.transform = 'scale(' + scale + ') translateY(-' + (current * 720) + 'px)';
+    menu.value = String(current);
+    position.textContent = (current + 1) + ' / ' + slides.length;
+    previous.disabled = current === 0;
+    next.disabled = current === slides.length - 1;
+    slides.forEach((s, i) => s.setAttribute('aria-hidden', String(i !== current)));
+    document.title = 'Weave Assist · ' + String(current + 1).padStart(2, '0') + ' / 11';
+    try { history.replaceState(null, '', '#' + (current + 1)); } catch {}
+  }
+  function go(delta) { current = Math.max(0, Math.min(slides.length - 1, current + delta)); draw(); }
+  previous.addEventListener('click', () => go(-1));
+  next.addEventListener('click', () => go(1));
+  menu.addEventListener('change', () => { current = Number(menu.value); draw(); });
+  document.getElementById('fullscreen-toggle').addEventListener('click', async () => {
+    try { if (document.fullscreenElement) await document.exitFullscreen(); else await document.documentElement.requestFullscreen(); } catch {}
+  });
+  document.addEventListener('keydown', e => {
+    if (e.target.closest('select,input,textarea')) return;
+    if (['ArrowRight','ArrowDown','PageDown',' '].includes(e.key)) { e.preventDefault(); go(1); }
+    if (['ArrowLeft','ArrowUp','PageUp'].includes(e.key)) { e.preventDefault(); go(-1); }
+    if (e.key === 'Home') { e.preventDefault(); current=0; draw(); }
+    if (e.key === 'End') { e.preventDefault(); current=slides.length-1; draw(); }
+    if (e.key.toLowerCase() === 'f') document.getElementById('fullscreen-toggle').click();
+  });
+  window.addEventListener('resize', draw);
+  window.addEventListener('hashchange', () => { current = Math.max(0, Math.min(slides.length-1, (Number(location.hash.slice(1)) || 1)-1)); draw(); });
+  draw();
+  document.fonts.ready.then(draw);
+})();
+</script>
+</body>
+</html>
