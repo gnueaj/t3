@@ -80,7 +80,7 @@ INTRO_NOTES = {
 NOTES = {
     'hook': ('우리는 매일 셀 수 없이 많은 기록을 남깁니다. '
              '(클릭) 카톡 대화, (클릭) 사진, (클릭) 메모, (클릭) 일정, (클릭) 메일까지. '
-             '(클릭) 수많은 기억 속에서, 지금 필요한 기억을 찾아 헤매는 것. 저희는 바로 이 문제에서 출발했습니다.'),
+             '(클릭) 수많은 기록 속에서, 지금 필요한 기록을 찾아 헤매는 것. 저희는 바로 이 문제에서 출발했습니다.'),
     # hub2, scat, link, bridge: 4차까지 여기서 그리던 장의 노트(s_hub2, s_scat, s_link, s_bridge). 5차부터 덱에는 팀원이 손본 장이 들어가고 말할 글은 INTRO_NOTES
     'hub2': ('기록을 남길 때부터 한 사람이 평균 3.8곳에 나눠 저장하기 때문입니다. '
              '(클릭) 91.4%는 두 곳 이상에, 74.8%는 세 곳 이상에 나눠 남기고 있었습니다.'),
@@ -106,7 +106,7 @@ NOTES = {
     # 9차(11-14): 기술 구간('검색 기술은 뜻으로 찾는 임베딩에서, 찾아낸 정보를 바탕으로 답하는 RAG로 발전했고, 지난해에는 … 나왔습니다')이
     # 비문 같고 자연스럽지 않다는 검토 → Carbon이 다듬은 글로(두 문장으로 끊고, 화면의 마디 이름 '뜻으로 찾기', '찾아서 답하기'와 같은 말로)
     'tl': ('그렇다면 왜 지금일까요? '
-           '(클릭) 검색 기술은 뜻으로 찾는 임베딩과 찾아서 답하는 RAG를 거쳐 왔습니다. '
+           '(클릭) 검색 기술은 뜻으로 찾는 임베딩과 이를 찾아서 답하는 RAG를 거쳐 왔습니다. '
            '그리고 지난해 추론하며 찾는 Reasoning Embedding에 이어, 올해는 단서를 잇는 AgentIR과 Hi-Q까지 등장했습니다. '
            '(클릭) 갤럭시도 준비를 마쳤습니다. 온디바이스 AI 연산을 위한 NPU가 들어왔고, '
            '2024년에는 Galaxy AI가, 지난해에는 개인 데이터를 기기 안에서 다루는 Personal Data Engine, 즉 PDE가 더해졌습니다. '
@@ -246,8 +246,8 @@ def s_hook():
     s.add('hk/veil', [R('hk/veil', 0, 0, 1280, 720, fill='050508', alpha=58, line=None)])
     s.add('hk/hero', hero_prims('hk/hero', False))
     s.add('hk/hero2', hero_prims('hk/hero2', True))
-    s.add('hk/l1', [T('hk/l1', 0, 282, 1280, 66, '수많은 기억 속에서,', size=46, color=HK_WHITE, weight='b', align='c', anchor='ctr', spc=-0.6)])
-    s.add('hk/l2', [T('hk/l2', 0, 352, 1280, 66, [[('지금 필요한 기억', dict(color=HK_SOFT)), ('을 찾아 헤맵니다', dict(color=HK_WHITE))]],
+    s.add('hk/l1', [T('hk/l1', 0, 282, 1280, 66, '수많은 기록 속에서,', size=46, color=HK_WHITE, weight='b', align='c', anchor='ctr', spc=-0.6)])
+    s.add('hk/l2', [T('hk/l2', 0, 352, 1280, 66, [[('지금 필요한 기록', dict(color=HK_SOFT)), ('을 찾아 헤맵니다', dict(color=HK_WHITE))]],
                       size=46, weight='b', align='c', anchor='ctr', spc=-0.6)])
     # 장이 열리면: 검색 화면 → 결과 없음(천천히, 읽을 시간) → 화면이 물러나며 벽이 드러남
     s.on('hk/hero', 'zoom_in', rt(150), rt(450), **{'from': 0.94})

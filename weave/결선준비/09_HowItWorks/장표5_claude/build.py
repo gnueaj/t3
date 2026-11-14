@@ -1290,13 +1290,17 @@ def s_trig():
 QR = (52, 246, 576, 288)          # 11-10 4차: 질의 글 위아래 빈 곳을 절반으로(340 → 288). 글과 판 묶음은 오른쪽 검색창·자판과 세로 가운데를 맞춤
 
 
+QR_MODEL = 'sLLM'                    # 판 이름 옆의 작은 회색 뱃지: 질의를 다시 쓰는 모델(11-14 검토). 기존 검색 판의 BM25, One-hop 뱃지와 같은 모양
+
+
 def qr_full():
     """02 장의 Query Rewriting 판(크게)."""
     x, y, w, h = QR
     out = [('sp/card', [R('sp/card/bg', x, y, w, h, prst='roundRect', radius=22, fill='FFFFFF', line=RING, line_w=2.2, glow=(10, RING, 22),
                           shadow=SHADOW_LIFT),
                         P('sp/card/ic', ICON['spool'], x + 24, y + 20, 30, 30),
-                        T('sp/card/t', x + 62, y + 20, 300, 30, 'Query Rewriting', size=17, color=PURPLE, weight='b', anchor='ctr')])]
+                        T('sp/card/t', x + 62, y + 20, 300, 30, 'Query Rewriting', size=17, color=PURPLE, weight='b', anchor='ctr')] +
+                       chip('sp/card/m', x + 62 + tw('Query Rewriting', 17, 'b') + 10, y + 24, QR_MODEL, 'grayfill', pt=9.5, h=22, padx=9)[0])]
     return out
 
 
@@ -1355,7 +1359,8 @@ def qr_small(box=QC):
     x, y, w, h = box
     out = [R('sp/card/bg', x, y, w, h, prst='roundRect', radius=20, fill='FFFFFF', line=LINE2, line_w=1.4, shadow=SHADOW_CARD),
            P('sp/card/ic', ICON['spool'], x + 18, y + 14, 24, 24),
-           T('sp/card/t', x + 48, y + 14, 220, 24, 'Query Rewriting', size=13.5, color=PURPLE, weight='b', anchor='ctr')]
+           T('sp/card/t', x + 48, y + 14, 220, 24, 'Query Rewriting', size=13.5, color=PURPLE, weight='b', anchor='ctr')] + \
+        chip('sp/card/m', x + 48 + tw('Query Rewriting', 13.5, 'b') + 8, y + 16.5, QR_MODEL, 'grayfill', pt=8, h=19, padx=8)[0]
     q_ = [T('q/text', x + 20, y + 51, w - 30, 22, QUERY, size=12.5, color=INK)]
     r1y, r2y = y + 86, y + 134
     r1 = [R('sp/r1/bg', x + 14, r1y, w - 28, 40, prst='roundRect', radius=12, fill=LAV, line=None)] + \
@@ -1908,7 +1913,7 @@ def add_slides(prs, layout, note_tpl, specs, auto=False, hold=1700):
                     kind, dur, kw = 'move', 1, dict(dx=d[0], dy=d[1], accel=0, decel=0)
                 elif key in temps and kind in ('fly', 'move'):
                     kw['base'] = (-OFF, 0)
-                if kind == 'fly' and kw.get('show', True) and key not in temps:
+                if kind in ('fly', 'glide') and kw.get('show', True) and key not in temps:
                     # 날아 들어오는 것은 그 전까지 숨김(첫 효과가 나타내기 효과여야 PowerPoint가 처음에 숨김)
                     for spid in pa.spids[key]:
                         tl.add('appear', spid, delay=delay, dur=1)

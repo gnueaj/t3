@@ -21,7 +21,7 @@ PRESET = {
     'type': (1, 'entr', 0), 'blink': (35, 'emph', 0), 'dim': (9, 'emph', 0), 'undim': (9, 'emph', 0),
     'fly': (0, 'path', 0), 'move': (0, 'path', 0), 'pulse': (6, 'emph', 0), 'ring': (53, 'entr', 16),
     'zoom_out': (53, 'exit', 16), 'sink': (42, 'exit', 0), 'wheel_in': (21, 'entr', 1), 'wheel_out': (21, 'exit', 1),
-    'spin': (8, 'emph', 0), 'flip_in': (1, 'entr', 0), 'flip_out': (1, 'exit', 0),
+    'spin': (8, 'emph', 0), 'flip_in': (1, 'entr', 0), 'flip_out': (1, 'exit', 0), 'glide': (0, 'path', 0), 'grow': (1, 'entr', 0),
 }
 # 닦아 내기 방향. left·right는 시작하는 쪽(왼쪽에서, 오른쪽에서), down·up은 나아가는 쪽(아래로, 위로).
 # PowerPoint의 필터 이름은 반대라서(wipe(up) = 위에서부터 아래로, wipe(down) = 아래에서부터 위로) 여기서 바꿔 적는다(11-10 영상으로 확인).
@@ -297,6 +297,14 @@ class Timeline:
         elif kind == 'move':          # 지금 자리에서 (dx, dy)px 옮겨 가 머묾
             path = self._curve_path(e['dx'], e['dy'], e.get('bend', 0.0), to_zero=False, base=e.get('base', (0, 0)))
             self._motion(ck, ids, spid, path, dur, accel=e.get('accel', 40000), decel=e.get('decel', 60000))
+        elif kind == 'glide':         # (dx, dy)px 떨어진 곳에서 곧은 길로 와서 제자리에 섬. 빠르기는 고르게(accel, decel을 주면 grow와 같은 값으로).
+            #                           통합본 '미래의 Weave' 장에서 줄이 뻗는 끝에 화살촉이 함께 나아감(grow와 발맞춤)
+            path = 'M %.5f %.5f L 0 0 E' % (e['dx'] / 1280, e['dy'] / 720)
+            self._motion(ck, ids, spid, path, dur, accel=e.get('accel', 0), decel=e.get('decel', 0))
+        elif kind == 'grow':          # 왼쪽 끝을 붙잡고 오른쪽으로 늘어나며 나타남(곧은 줄이 뻗어 나감). 닦아 내기와 달리 끝이 번지지 않고 또렷함
+            self._set(ck, ids, spid, 'style.visibility', 'visible')
+            self._anim(ck, ids, spid, 'ppt_w', '#ppt_w*0.0002', '#ppt_w', dur, accel=e.get('accel'), decel=e.get('decel'))
+            self._anim(ck, ids, spid, 'ppt_x', '#ppt_x-#ppt_w*0.4999', '#ppt_x', dur, accel=e.get('accel'), decel=e.get('decel'))
         elif kind == 'spin':          # 제자리에서 돎(by 도, 시계 방향이 +). 통합본 기대효과 장의 입꼬리
             ar = el('p:animRot', ck, by=int(round(e.get('by', 180) * 60000)))
             cb = el('p:cBhvr', ar)

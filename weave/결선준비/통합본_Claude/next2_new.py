@@ -29,9 +29,18 @@
   카드마다 '앱 이름 · 날짜'까지 넣으니 정보가 너무 많다 → 그 줄을 모두 뺐다가, 앱 이름 정도는 있는 편이 낫다고 해서 앱 이름만 다시 넣음(날짜는 없음).
   노트의 제목은 짧게 '일기'가 들어가게('강릉 여행 일기'), 갤러리 카드는 본문 없이, 찾아낸 사진 아래에도 '갤러리'만.
   일기는 음슴체('보고 옴ㅎㅎ')가 아니라 '~다'로 끝나는 문장으로, 카카오톡의 말끝에는 우는 얼굴 이모지.
+  11-14 밤: 카드의 회색 줄에 날짜를 다시 넣음('앱 이름 · 날짜'). 삼성 뮤직 카드에는 회색 줄을 두지 않고(잘 쓰지 않는 앱이라),
+  갤러리는 '갤러리' 대신 사진을 묘사한 글(카드의 '벚꽃 사진', 찾아낸 사진 아래의 '노을 사진').
+  빽빽하다, 떠 있는 조각의 상하좌우 여백을 다른 장을 참고해 깔끔하게 → 30쪽의 기록 카드를 재서(글이 테두리에서 14~16px) 이 장의 조각을 맞춤:
+  카드 둘레 10 → 13px, 줄 높이 17 → 18.5px, 말풍선 안쪽 11과 6 → 13과 7px, 메모 조각은 네 변 28px, 사진 둘레 10px.
+  자리를 내려고 미래의 두 줄을 가운데 쪽으로 모음(YC ± 58 → ± 40). 위 세 조각은 위아래 끝을, 아래 두 장면은 위 끝을, 위아래 장면은 오른쪽 끝을 맞춤.
+  TV 장면은 말 조각을 TV 바로 위에 두고(오른쪽 끝을 맞춤) 실이 TV의 가운데로 내려오게. 다른 장은 바꾸지 않음(참고만).
+  SmartThings 아이콘의 왼쪽도 실이 갈라져 있다 → 냉장고에서 아이콘까지는 곧은 실 하나, 아이콘에서 카드로 두 가닥.
+  장이 열릴 때 동그란 빛이 달려가다 화살표가 되는 것보다 화살표가 그대로 뻗는 편이 자연스럽다 → 빛을 없애고 화살촉이 줄의 끝에서 함께 뻗어 나감.
+  대본: S펜 문장을 받은 글로, '삼성전자만의 강점인'(강점이라 하기 애매) → '삼성전자가 이미 갖춘'.
 
 장의 흐름
-  넘기면(Morph) 연표가 왼쪽으로 옮겨 가 두 줄이 Weave에서 만나는 곳만 남고, Weave에서 두 줄이 다시 갈라져 오른쪽 끝까지 뻗는다(빛이 달려 나감).
+  넘기면(Morph) 연표가 왼쪽으로 옮겨 가 두 줄이 Weave에서 만나는 곳만 남고, Weave에서 두 줄이 다시 갈라져 화살촉을 앞세워 오른쪽 끝까지 뻗는다.
   (클릭) 위(기술) 2027- 그려서 찾는 기억: S펜이 지나가며 메모가 그려짐 → 삼성노트 메모, 메시지 기록과 보라 실로 이어짐 → 찾아낸 갤러리 사진
   (클릭) 아래(인프라) 2027- 집에서 건네는 기억 ①: 캘린더(홈파티), 카카오톡(알레르기) 기록 → (SmartThings) → 냉장고 → Bixby의 말(결과)
   (클릭) 아래 ②: 사용자의 한마디 → (Bixby) → 스마트 TV가 그날 듣던 노래를 틂(결과). 단서는 갤러리와 삼성 뮤직의 기록
@@ -55,11 +64,14 @@ GRAD = NX.GRAD
 PAN = 1030                                  # 연표가 왼쪽으로 옮겨 가는 만큼(px): Weave 마디가 x 1140 → 110. 왼쪽 끝에는 두 줄이 Weave로 모이는 굽은 곳만 남음
 KEEP = {}                                   # 남는 마디 {키: 덜 옮기는 px}. 지금은 없음(모두 옮겨 가며 사라짐).
 #   위 줄 2026년 마디만 남긴 판({'tl/u982': 0}, PAN 880), 아래 줄 2025년 마디도 남긴 판({'tl/d846': 136})을 거쳐, 장면에 가로 자리를 더 주려고 다 내보냄(11-14)
-WX, YC, YU, YL = N.TL_WX - PAN, N.TL_YC, N.TL_YU, N.TL_YL
+WX, YC = N.TL_WX - PAN, N.TL_YC
+# 미래의 두 줄의 높이. 연표(34쪽)의 두 줄(YC ± 58)보다 안쪽으로 모음: 두 줄 사이의 빈 띠를 줄여 위아래 장면에 자리를 냄(11-14, 조각 안쪽 여백을 넓히려고)
+YU, YL = YC - 40, YC + 40
 FX0, FXS, FX1 = WX + 30, WX + 106, 1266     # 미래의 줄: Weave에서 갈라지기 시작, 곧게 뻗기 시작, 오른쪽 끝(화살촉)
 NDX = FXS + 48                              # 2027- 마디의 x(위 줄, 아래 줄 같은 자리)
-ZX, XR = NDX + 92, 1262                     # 장면 조각이 놓이는 가로 범위(마디 글의 오른쪽부터)
-UCY, LCY = (108 + YU - 18) / 2, (YL + 18 + 668) / 2      # 위 장면, 아래 장면의 가운데 높이
+ZX, XE = NDX + 92, 1223                     # 장면 조각이 놓이는 가로 범위(마디 글의 오른쪽부터. 오른쪽 끝은 위아래 장면이 같음)
+ZT, ZB, LG = 108, 684, 16                   # 위 장면의 위 끝, 아래 장면의 아래 끝, 줄과 조각 사이
+UCY, LCY = (ZT + YU - LG) / 2, (YL + LG + ZB) / 2      # 위 장면, 아래 장면의 가운데 높이
 # 제목: 사용자가 정한 글. 34쪽 제목처럼 이름만 보라로(S펜, Bixby, SmartThings, Weave). 그 전: '그림과 목소리로 가전까지 잇는 미래의 Weave'(Carbon),
 # '미래의 Weave, 더 넓게 읽고 더 멀리 잇습니다'
 TITLE = [('S펜', PURPLE), ('과 ', INK), ('Bixby', PURPLE), (', 그리고 ', INK), ('SmartThings', PURPLE), ('로 잇는 미래의 ', INK), ('Weave', PURPLE)]
@@ -68,11 +80,13 @@ YEAR = '2027-'
 # 말할 글. 처음에는 Carbon(Gemini)의 안 A를 받아 썼고(66.5초), '시간이 많이 넘는다, 20~30%는 줄일 수 있겠다, 하지만, 4억 7천만 명이 가입한,
 # 정작 같은 미사여구를 싹 날리고 간결하게'라는 검토를 받아 줄임. 뼈대(휴대폰 안에서만 머물지 않는다 → 기술 측면 → 인프라 측면 → 포부)와 장면마다 한 문장은 그대로.
 # 첫 두 문장은 사용자가 적어 준 글('저희가 그리는 미래의 Weave는 … 머물지 않습니다. 먼저 기술 측면에서는, 텍스트 중심의 입력을 멀티모달로 확장합니다')이고,
-# '텍스트 중심의 입력을'만 Carbon의 안 '글자로만 찾던 방식을'로 다듬음
+# '텍스트 중심의 입력을'만 Carbon의 안 '글자로만 찾던 방식을'로 다듬음.
+# 11-14 밤: S펜 문장은 사용자가 다시 적어 준 글('S펜으로 어렴풋이 기억나는 모습을 그리고 … 이렇게 해당되는 사진을 찾아냅니다')로,
+# '삼성전자만의 강점인'은 강점이라 하기 애매하다고 해서 '삼성전자가 이미 갖춘'으로(사용자의 '삼성전자가 갖춘'에 Carbon 1순위 안의 '이미')
 NOTE = ('저희가 그리는 미래의 Weave는 휴대폰 안에서만 머물지 않습니다. '
         '(클릭) 먼저 기술 측면에서는, 글자로만 찾던 방식을 멀티모달로 확장합니다. '
-        'S펜으로 바다를 대충 그리고 몇 글자만 적어도, 메모와 대화를 함께 추론해 노을 사진을 찾아냅니다. '
-        '(클릭) 인프라 측면에서는, 삼성전자만의 강점인 가전과 TV 생태계로 뻗어 나갑니다. '
+        'S펜으로 어렴풋이 기억나는 모습을 그리고 몇 글자를 적으면, 단서가 되는 메모와 대화를 통해, 이렇게 해당되는 사진을 찾아냅니다. '
+        '(클릭) 인프라 측면에서는, 삼성전자가 이미 갖춘 가전과 TV 생태계로 뻗어 나갑니다. '
         'SmartThings로 기억이 집 안 기기와 이어지면, 홈파티를 앞두고 깜빡한 친구의 알레르기를 냉장고가 먼저 챙겨 주고요. '
         '(클릭) 스마트 TV에 ‘작년에 벚꽃 보러 갔을 때 여자친구랑 듣던 노래 틀어 줘’ 하고 말하면, Bixby가 찾아 틀어 줍니다. '
         '휴대폰에서 가전과 TV까지, 삼성의 모든 기기가 기억을 나누는 생태계를 만들어 가겠습니다.')
@@ -80,8 +94,9 @@ SUPS = '¹²³⁴⁵⁶⁷⁸'
 SHADOW_FLOAT = (20, 6, '6B4EFF', 13)        # 떠 있는 조각의 그림자
 FLOAT = dict(fill='FFFFFF', line='E4DDF7', line_w=1.0)       # 떠 있는 조각의 흰 바탕
 
-# 기록 카드의 글: 앱 아이콘, 굵은 이름, 작은 회색 앱 이름, 그 아래 본문(카카오톡과 메시지는 회색 말풍선). 덱 앞쪽(How it Works)의 기록 카드를 따라
-# '앱 이름 · 날짜'를 넣었다가 정보가 너무 많다는 검토를 받아 모두 뺐고, 다시 앱 이름만 넣음(11-14: '앱 이름 정도는 넣는 게 나을 듯'). 날짜는 넣지 않음.
+# 기록 카드의 글: 앱 아이콘, 굵은 이름, 작은 회색 줄('앱 이름 · 날짜'), 그 아래 본문(카카오톡과 메시지는 회색 말풍선). 덱 앞쪽(How it Works)의 기록 카드와 같은 짜임.
+# 회색 줄은 11-14에 뺐다가(정보가 많음) 앱 이름만 넣었다가 다시 날짜까지 넣음. 다만 삼성 뮤직 카드에는 회색 줄을 두지 않고(잘 쓰지 않는 앱이라),
+# 갤러리는 '갤러리'라는 앱 이름 대신 사진을 묘사한 글을 적음(카드의 회색 줄 '벚꽃 사진 · 날짜', 찾아낸 사진 아래 '노을 사진 · 날짜').
 # 노트의 제목은 짧게 '일기'가 들어가게, 갤러리 카드는 본문 없이. 캘린더는 장 전체에서 한 번만(냉장고 장면).
 # 메모, 문자, 카카오톡의 글은 실제 말투가 아니라는 검토를 받아 Carbon(Gemini)과 다시 씀: 꾸민 감상('~ 산책~', '뿌듯!', '덕분에 행복했어~')이 아니라
 # 휴대폰에서 그대로 옮긴 듯한 말. 일기는 음슴체('보고 옴ㅎㅎ')도 퇴짜 → '~다'로 끝나는 문장에 그날 한 일과 다짐, 문자는 안부와 사진 이야기,
@@ -92,20 +107,21 @@ BUBBLE = ('talk', 'messages')               # 본문을 회색 말풍선에 담�
 EMOJI = dict(sad=str(AS / 'emoji-sad.png'))                 # 말끝에 붙는 그림 이모지: 본문 한 줄을 (글, 이름)으로 적으면 글 뒤에 놓임
 # 위 장면: 메모(서툰 그림과 손글씨 '빨간 등대 있던 바다 / 엄마랑 노을 본 날') → 삼성노트의 일기(누구와 어디에), 메시지(다녀온 날 밤 엄마가 보낸 문자: 등대, 노을)
 # → 갤러리 사진. 엄마의 말은 처음에 카카오톡이었고 메시지 앱으로 바꿈(11-14 검토)
-PEN = dict(note='note-light.png', photo='photo-light.jpg', at=(0.80, 0.90, 60),
-           links=[dict(kind='note', title='강릉 여행 일기', lines=['엄마랑 회 먹고 바닷가 실컷 걸었다!', '날 추워지기 전에 한 번 더 가야지~']),
-                  dict(kind='messages', title='엄마', lines=['잘 들어갔지? 등대에서 노을 볼 때', '찍은 거 또 보는 중^^ 푹 자~'])])
+# 2025년 10월 4일은 토요일
+PEN = dict(note='note-light.png', photo='photo-light.jpg', at=(0.845, 0.875, 60), found='노을 사진 · 2025년 10월 4일',
+           links=[dict(kind='note', title='강릉 여행 일기', when='10월 4일 (토)', lines=['엄마랑 회 먹고 바닷가 실컷 걸었다!', '날 추워지기 전에 한 번 더 가야지~']),
+                  dict(kind='messages', title='엄마', when='10월 4일 (토) 오후 8:40', lines=['잘 들어갔지? 등대에서 노을 볼 때', '찍은 거 또 보는 중^^ 푹 자~'])])
 # 냉장고 장면: 홈파티와 알레르기. 캘린더(홈파티)와 카카오톡(친구의 알레르기) → 냉장고 → Bixby가 먼저 건네는 두 줄.
-# '여행 전 냉장고 비우기'(캘린더 '부산 여행', '주말 동안 집을 비우시네요 / 남은 우유는 오늘 드실까요?')를 넣었다가 이 장면으로 되돌림
+# '여행 전 냉장고 비우기'(캘린더 '부산 여행', '주말 동안 집을 비우시네요 / 남은 우유는 오늘 드실까요?')를 넣었다가 이 장면으로 되돌림. 2027년 5월 12일은 수요일
 HOME = dict(l1='지은님은 새우를 못 드세요', l2='오늘 홈파티 메뉴에서 뺄까요?',
-            links=[dict(kind='cal', title='홈파티', lines=[]),
-                   dict(kind='talk', title='지은', lines=[('아 나 갑각류 알레르기 있어', 'sad')])])
+            links=[dict(kind='cal', title='홈파티', when='오늘 오후 7시', lines=[]),
+                   dict(kind='talk', title='지은', when='5월 12일 (수)', lines=[('아 나 갑각류 알레르기 있어', 'sad')])])
 # TV 장면: 사용자가 하는 말(두 줄, 사용자가 준 문장) → 갤러리(어디서 벚꽃을 봤는지)와 삼성 뮤직(그날의 재생 기록) → TV가 튼 곡.
 # 곡은 작년 봄에 나온 실제 곡: 10CM '너에게 닿기를'(2025년 3월 6일 공개, 5월 11일 멜론 일간 1위). 2025년 4월 5일은 토요일
 # ('벚꽃 엔딩'도 넣어 봤는데 작년 봄쯤 나온 유명하고 분위기 좋은 발라드 쪽이 낫다고 해서 바꿈)
 SONG = dict(l1='작년에 벚꽃 보러 갔을 때', l2='여자친구랑 듣던 노래 틀어 줘',
-            links=[dict(kind='gallery', title='석촌호수 벚꽃길', lines=[]),      # 본문 없이(본문 '서연 ♥ · 사진 42장'도, 날짜 '4월 5일 (토)'도 뺌)
-                   dict(kind='music', title='반복 재생한 곡', lines=['10CM - 너에게 닿기를'])],
+            links=[dict(kind='gallery', title='석촌호수 벚꽃길', meta='벚꽃 사진 · 4월 5일 (토)', lines=[]),      # 본문 없이. 회색 줄은 '갤러리' 대신 사진을 묘사한 글
+                   dict(kind='music', title='반복 재생한 곡', meta=None, lines=['10CM - 너에게 닿기를'])],      # 회색 줄 없이
             title='너에게 닿기를', artist='10CM', cap='2025년 4월 5일에 들은 곡')
 PEN_SUB, HOME_SUB = 'S펜 · 멀티모달 임베딩', 'SmartThings · Bixby'
 
@@ -114,14 +130,15 @@ PEN_SUB, HOME_SUB = 'S펜 · 멀티모달 임베딩', 'SmartThings · Bixby'
 def tl_past(s, dx):
     """연표를 dx만큼 옮겨 그린다. KEEP에 없는 마디와 줄 이름은 투명하게(옮겨 가며 사라짐), 남는 마디는 KEEP의 값만큼 덜 옮기고 근거 글은 각주 번호 없이."""
     xf = Xf(0, 0, dx, 0, 1.0)
-    s.add('tl/lu', [C('tl/lu', [(N.TL_X0, YU)] * 2 + [(N.TL_X1, YU)] * 2, stops=N.TL_STOPS, w=3)], xf=xf)
-    s.add('tl/ll', [C('tl/ll', [(N.TL_X0, YL)] * 2 + [(N.TL_X1, YL)] * 2, stops=N.TL_STOPS, w=3)], xf=xf)
+    yu, yl = N.TL_YU, N.TL_YL                   # 지난 연표의 두 줄은 34쪽의 높이 그대로(Morph로 이어짐)
+    s.add('tl/lu', [C('tl/lu', [(N.TL_X0, yu)] * 2 + [(N.TL_X1, yu)] * 2, stops=N.TL_STOPS, w=3)], xf=xf)
+    s.add('tl/ll', [C('tl/ll', [(N.TL_X0, yl)] * 2 + [(N.TL_X1, yl)] * 2, stops=N.TL_STOPS, w=3)], xf=xf)
     ex = N.TL_WX - 30
-    s.add('tl/ju', [C('tl/ju', [(N.TL_X1, YU), (N.TL_X1 + 44, YU), (ex - 44, YC), (ex, YC)], w=3, color=PURPLE)], xf=xf)
-    s.add('tl/jl', [C('tl/jl', [(N.TL_X1, YL), (N.TL_X1 + 44, YL), (ex - 44, YC), (ex, YC)], w=3, color=PURPLE)], xf=xf)
-    s.add('tl/now', N.tl_label('tl/now', YU, 'WHY NOW', '지금이라서'), xf=xf, alpha=0)
-    s.add('tl/sam', N.tl_label('tl/sam', YL, 'WHY SAMSUNG', '갤럭시라서'), xf=xf, alpha=0)
-    for up, rows, y in ((True, N.TL_UP, YU), (False, N.TL_DN, YL)):
+    s.add('tl/ju', [C('tl/ju', [(N.TL_X1, yu), (N.TL_X1 + 44, yu), (ex - 44, YC), (ex, YC)], w=3, color=PURPLE)], xf=xf)
+    s.add('tl/jl', [C('tl/jl', [(N.TL_X1, yl), (N.TL_X1 + 44, yl), (ex - 44, YC), (ex, YC)], w=3, color=PURPLE)], xf=xf)
+    s.add('tl/now', N.tl_label('tl/now', yu, 'WHY NOW', '지금이라서'), xf=xf, alpha=0)
+    s.add('tl/sam', N.tl_label('tl/sam', yl, 'WHY SAMSUNG', '갤럭시라서'), xf=xf, alpha=0)
+    for up, rows, y in ((True, N.TL_UP, yu), (False, N.TL_DN, yl)):
         for x, year, word, ref, icon in rows:
             k = 'tl/%s%d' % ('u' if up else 'd', x)
             s.add(k, N.tl_node(k, x, y, up, year, word, ref.rstrip(SUPS), icon), xf=Xf(0, 0, dx + KEEP.get(k, 0), 0, 1.0), alpha=100 if k in KEEP else 0)
@@ -135,23 +152,25 @@ def tl_past(s, dx):
 
 
 # ------------------------------------------------------------------ 조각
+HL_, HH_ = 12, 11                           # 줄 끝 화살촉의 길이와 높이
+
+
 def lane(key, y):
-    """Weave에서 갈라져 오른쪽 끝까지 뻗는 줄. 아래에 옅은 빛을 받침."""
-    pts = [(FX0, YC), (FX0 + 44, YC), (FXS - 44, y), (FXS, y), (FXS + 220, y), (FX1 - 220, y), (FX1, y)]
-    return [C(key + '/glow', pts, w=11, color='B9A6FF', alpha=30),
-            C(key + '/line', pts, w=3.4, stops=[(0, '6B4EFF', None), (100, 'A48BFF', None)], tail='triangle')]
+    """Weave에서 갈라져 오른쪽 끝까지 뻗는 줄을 둘로 나눠 그림. 돌려줌: (굽은 곳, 곧은 곳). 저마다 아래에 옅은 빛을 받침.
+    곧은 곳은 얇은 네모: 왼쪽 끝을 붙잡고 늘이면(grow) 끝이 또렷하게 뻗어 나가 화살촉(arrow)과 발이 맞음.
+    한 줄로 그려 닦아 내면 끝이 옅게 번져서 화살촉보다 60~120px 앞서 보였음(영상에서 잰 값). 화살촉은 따로 그림."""
+    xe = FX1 - HL_ + 2
+    pts = [(FX0, YC), (FX0 + 44, YC), (FXS - 44, y), (FXS, y)]
+    return ([C(key + '/bg', pts, w=11, color='B9A6FF', alpha=30), C(key + '/bl', pts, w=3.4, color='6C4FFF')],
+            [R(key + '/sg', FXS - 1, y - 5.5, xe - FXS + 1, 11, fill='B9A6FF', alpha=30, line=None),
+             R(key + '/sl', FXS - 1, y - 1.7, xe - FXS + 1, 3.4, fill=None, line=None,
+               grad=dict(stops=[(0, '6E51FF', None), (100, 'A48BFF', None)], ang=0))])
 
 
-def comet(key, y):
-    """줄을 따라 달려 나가는 작은 빛(잠깐만 보임). 놓인 자리는 곧은 구간의 시작."""
-    return [R(key, FXS - 5.5, y - 5.5, 11, 11, prst='ellipse', fill='FFFFFF', line=PURPLE, line_w=2.6, glow=(9, PURPLE2, 70))]
-
-
-def run(s, key, t, dur=900, first=False):
-    """빛이 줄의 끝까지 달려 나가고 사라진다. 빛은 화면 밖에 두었다가(temp) 처음 달릴 때 제자리로 옮긴다(정적 보기에는 안 보임)."""
-    s.on(key, 'jump' if first else 'fade_in', t, 110)
-    s.on(key, 'move', t, dur, dx=FX1 - FXS - 34, dy=0, accel=15000, decel=85000)
-    s.on(key, 'fade_out', t + dur - 160, 200)
+def arrow(key, y):
+    """줄 끝의 화살촉(오른쪽을 가리키는 세모). 놓인 자리는 줄의 오른쪽 끝.
+    처음에는 작은 동그란 빛이 줄을 따라 달려가 끝에서 화살표가 됐는데, 화살표가 그대로 뻗어 나가는 편이 자연스럽다는 검토를 받아 바꿈(11-14)."""
+    return [NX.poly(key, [(FX1 - HL_, y - HH_ / 2), (FX1, y), (FX1 - HL_, y + HH_ / 2)], fill='A48BFF', line=None)]
 
 
 def fnode(key, x, y, up, year, word, ref, icon):
@@ -185,42 +204,56 @@ def bend(key, a, b, w=2.4, vertical=False):
     return C(key, pts, color=PURPLE2, w=w)
 
 
-RP, RI, RL = 10, 26, 17                     # 기록 카드의 여백, 앱 아이콘 크기, 본문의 줄 높이
+RP, RI, RG, RL = 13, 26, 9, 18.5            # 기록 카드: 둘레 여백, 앱 아이콘, 머리(아이콘과 이름)와 본문 사이, 본문의 줄 높이
+RT, RB = RP + 1.5, RP - 3                   # 위 여백(이름 글자가 아이콘보다 1.5px 위로 올라와서 그만큼 더), 글로 끝나는 카드의 아래 여백(줄 높이 안의 빈 곳만큼 덜)
+BX, BY = 13, 7                              # 회색 말풍선 안쪽 여백(좌우, 위아래)
+EZ, CG = 17, 10                             # 말끝 이모지의 크기, 위아래로 쌓인 카드 사이
+# 여백은 덱 앞쪽 기록 카드(ui.card: 둘레 16, 아이콘 34, 줄 높이 20, 말풍선 14와 8)를 이 장의 카드 크기에 맞춰 줄인 값.
+# 처음에는 둘레 10, 줄 높이 17, 말풍선 11과 6이라 그림에서 재면 글이 테두리에서 7~10px밖에 안 떨어져 빽빽했음(11-14 검토)
+
+
+def rec_meta(c):
+    """이름 아래의 작은 회색 줄. 보통은 '앱 이름 · 날짜'. 'meta'를 적으면 그 글(갤러리: 사진을 묘사한 글과 날짜), None이면 줄을 두지 않음(삼성 뮤직)."""
+    return c['meta'] if 'meta' in c else '%s · %s' % (APPS[c['kind']], c['when'])
 
 
 def ln_w(ln):
     """본문 한 줄의 폭. 줄은 글이거나 (글, 이모지 이름)."""
-    return tw(ln, 11.5) if isinstance(ln, str) else tw(ln[0], 11.5) + 4 + RL
+    return tw(ln, 11.5) if isinstance(ln, str) else tw(ln[0], 11.5) + 4 + EZ
 
 
 def rec_size(c):
     """기록 카드의 (폭, 높이). 카카오톡과 메시지의 본문은 회색 말풍선 안."""
-    talk, lines = c['kind'] in BUBBLE, c['lines']
-    w = RP + RI + 8 + max(tw(c['title'], 12.5, 'b'), tw(APPS[c['kind']], 9)) + RP + 3
+    talk, lines, meta = c['kind'] in BUBBLE, c['lines'], rec_meta(c)
+    w = RI + 8 + max(tw(c['title'], 12.5, 'b'), tw(meta, 9) if meta else 0)
     if lines:
-        w = max(w, RP + max(ln_w(ln) for ln in lines) + (22 if talk else 0) + RP + 3)
-    h = RP + RI + RP if not lines else RP + RI + 7 + len(lines) * RL + (12 if talk else 0) + RP
-    return w, h
+        w = max(w, max(ln_w(ln) for ln in lines) + (2 * BX if talk else 0))
+    h = RI if not lines else RI + RG + len(lines) * RL + (2 * BY if talk else 0)
+    return w + 2 * RP + 2, RT + h + (RB if lines and not talk else RP)
 
 
 def rec(key, c, x, y, w):
-    """기록 카드: 덱 앞쪽 기록 카드(ui.card)를 작게 줄인 짜임. 앱 아이콘, 굵은 이름, 작은 회색 앱 이름, 그 아래 본문."""
-    talk, lines = c['kind'] in BUBBLE, c['lines']
+    """기록 카드: 덱 앞쪽 기록 카드(ui.card)를 작게 줄인 짜임. 앱 아이콘, 굵은 이름, 작은 회색 줄, 그 아래 본문.
+    그림에서 재면 글과 아이콘이 네 변에서 12~14px씩 떨어지게(RP, RT, RB)."""
+    talk, lines, meta = c['kind'] in BUBBLE, c['lines'], rec_meta(c)
     tx = x + RP + RI + 8
-    out = [R(key + '/bg', x, y, w, rec_size(c)[1], prst='roundRect', radius=15, shadow=(14, 4, '6B5CB0', 12), **FLOAT),
-           P(key + '/ic', APP_ICON[c['kind']], x + RP, y + RP, RI, RI),
-           T(key + '/t', tx, y + RP - 3, w - (tx - x) - 6, 18, c['title'], size=12.5, color=INK, weight='b', anchor='ctr'),
-           T(key + '/m', tx, y + RP + 14, w - (tx - x) - 6, 14, APPS[c['kind']], size=9, color=MUTE, anchor='ctr')]
-    by = y + RP + RI + 7
+    out = [R(key + '/bg', x, y, w, rec_size(c)[1], prst='roundRect', radius=16, shadow=(14, 4, '6B5CB0', 12), **FLOAT),
+           P(key + '/ic', APP_ICON[c['kind']], x + RP, y + RT, RI, RI)]
+    if meta:
+        out += [T(key + '/t', tx, y + RT - 3, w - (tx - x) - RP, 18, c['title'], size=12.5, color=INK, weight='b', anchor='ctr'),
+                T(key + '/m', tx, y + RT + 14, w - (tx - x) - RP, 14, meta, size=9, color=MUTE, anchor='ctr')]
+    else:                                           # 회색 줄이 없으면 이름을 아이콘의 가운데 높이에
+        out += [T(key + '/t', tx, y + RT, w - (tx - x) - RP, RI, c['title'], size=12.5, color=INK, weight='b', anchor='ctr')]
+    by = y + RT + RI + RG
     if lines and talk:
-        out.append(R(key + '/bb', x + RP, by, max(ln_w(ln) for ln in lines) + 22, len(lines) * RL + 12, prst='roundRect', radius=11, fill=GRAY_FILL,
+        out.append(R(key + '/bb', x + RP, by, max(ln_w(ln) for ln in lines) + 2 * BX, len(lines) * RL + 2 * BY, prst='roundRect', radius=12, fill=GRAY_FILL,
                      line=None))
     for i, ln in enumerate(lines):
         text, emo = (ln, None) if isinstance(ln, str) else ln
-        lx_, ly_ = x + RP + (11 if talk else 0), by + (6 if talk else 0) + RL * i
+        lx_, ly_ = x + RP + (BX if talk else 0), by + (BY if talk else 0) + RL * i
         out.append(T('%s/x%d' % (key, i), lx_, ly_, w - 2 * RP, RL, text, size=11.5, color=BODY, anchor='ctr'))
-        if emo:                                     # 말끝의 이모지: 글 바로 뒤에, 줄 높이만 한 크기로
-            out.append(P('%s/e%d' % (key, i), EMOJI[emo], lx_ + tw(text, 11.5) + 4, ly_, RL, RL))
+        if emo:                                     # 말끝의 이모지: 글 바로 뒤에
+            out.append(P('%s/e%d' % (key, i), EMOJI[emo], lx_ + tw(text, 11.5) + 4, ly_ + (RL - EZ) / 2, EZ, EZ))
     return out
 
 
@@ -242,7 +275,7 @@ def say_w(l1, l2, pt=13.5):
     return 17 + 27 + 10 + max(tw(l1, pt, 'b'), tw(l2, pt, 'b')) + 16
 
 
-def say_bubble(key, x, y, l1, l2, pt=13.5, h=56):
+def say_bubble(key, x, y, l1, l2, pt=13.5, h=64):
     """떠 있는 말 조각(사용자가 소리 내어 한 말): 목소리 막대와 두 줄."""
     w = say_w(l1, l2, pt)
     return ([R(key + '/bg', x, y, w, h, prst='roundRect', radius=22, shadow=SHADOW_FLOAT, **FLOAT)] +
@@ -343,31 +376,37 @@ def tv(key, cx, top, w, title, artist, cap):
 
 # ------------------------------------------------------------------ 장면
 def parts(s, pen=PEN, home=HOME, song=SONG):
-    """새 부품을 모두 넣는다. 돌려줌: 효과를 걸 값."""
+    """새 부품을 모두 넣는다. 돌려줌: 효과를 걸 값.
+    조각의 여백과 줄 맞춤(11-14 검토 '빽빽하다, 떠 있는 조각의 상하좌우 여백을 다른 장을 참고해 깔끔하게'):
+    위 장면의 세 조각(메모, 기록 카드 묶음, 사진)은 위아래 끝이 같고, 아래 두 장면은 위 끝이 같고, 위아래 장면의 오른쪽 끝(XE)이 같음.
+    조각 안쪽 여백은 조각마다 네 변이 같게(메모 28, 기록 카드 13, 사진 10)."""
     from PIL import Image
     K = {}
-    s.add('nx/lu', lane('nx/lu', YU))
-    s.add('nx/ll', lane('nx/ll', YL))
+    for k_, y_ in (('u', YU), ('l', YL)):                    # 미래의 두 줄: 굽은 곳, 곧은 곳, 화살촉
+        b_, s_ = lane('nx/l%s' % k_, y_)
+        s.add('nx/l%s/b' % k_, b_)
+        s.add('nx/l%s/s' % k_, s_)
+        s.add('nx/a%s' % k_, arrow('nx/a%s' % k_, y_))
     # ---- 위(기술): 2027- 그려서 찾는 기억. 줄 위쪽에 왼쪽에서 오른쪽으로: 메모 → 함께 읽는 기록 둘(삼성노트의 일기, 엄마의 문자) → 찾아낸 갤러리 사진
     s.add('nx/u/node', fnode('nx/u/node', NDX, YU, True, YEAR, '그려서 찾는 기억', PEN_SUB, AS / 'ic-pen-line.png'))
     cy = UCY
     sz = [rec_size(c) for c in pen['links']]
     lw = max(w for w, _ in sz)                              # 기록 카드의 폭
     lh = [h for _, h in sz]                                 # 기록 카드마다의 높이
-    ly0 = cy - (sum(lh) + 10 * (len(lh) - 1)) / 2           # 기록 카드 묶음의 위(카드 사이 10px)
-    nbh, pad_x, pad_y, g = 196, 22, 20, 48                  # 메모 조각의 높이, 그림 둘레의 여백(좌우, 위아래), 조각 사이(보라 실이 지나는 틈)
+    H = sum(lh) + CG * (len(lh) - 1)                        # 세 조각의 높이(기록 카드 묶음에 맞춤)
+    top = cy - H / 2
+    NP, PI, g = 28, 10, 40                                  # 메모 조각 안쪽 여백, 사진 둘레의 여백, 조각 사이(보라 실이 지나는 틈)
     nw, nh = Image.open(AS / pen['note']).size
-    k = (nbh - 2 * pad_y) / nh
+    k = (H - 2 * NP) / nh
     dw, dh = nw * k, nh * k
-    nbw = dw + 2 * pad_x                                    # 메모 조각의 폭: 그림에 맞춤
+    nbw = dw + 2 * NP                                       # 메모 조각의 폭: 그림에 맞춤
     lx = ZX + nbw + g                                       # 기록 카드의 왼쪽
     fx0 = lx + lw + g                                       # 사진 조각의 왼쪽
-    fw = min(XR - 39 - fx0, 286)                            # 사진 조각의 폭(오른쪽 끝은 아래 장면의 TV와 같은 자리)
-    pw = fw - 16
-    ph = round(pw * 9 / 16)
-    nb = (ZX, cy - nbh / 2, nbw, nbh)
+    fw = XE - fx0                                           # 사진 조각의 폭
+    assert fw >= 230, round(fw)
+    nb = (ZX, top, nbw, H)
     s.add('nx/u/nbg', [R('nx/u/nbg', *nb, prst='roundRect', radius=20, shadow=SHADOW_FLOAT, **FLOAT)])
-    nx, ny = nb[0] + pad_x, nb[1] + pad_y
+    nx, ny = nb[0] + NP, nb[1] + NP
     s.add('nx/u/note', [P('nx/u/note', str(AS / pen['note']), nx, ny, dw, dh)])
     fx, fy, ang = pen['at']
     px_, py_ = nx + dw * fx, ny + dh * fy
@@ -375,23 +414,24 @@ def parts(s, pen=PEN, home=HOME, song=SONG):
     s.add('nx/u/pen', NX.s_pen('nx/u/pen', px_, py_, k=1.0), rot=ang, start=K['pen_from'])
     K['links'] = []
     for i, c in enumerate(pen['links']):                               # 메모에서 기록으로, 기록에서 사진으로 보라 실
-        ky = ly0 + sum(lh[:i]) + 10 * i
+        ky = top + sum(lh[:i]) + CG * i
         my = ky + lh[i] / 2                                             # 이 카드의 가운데 높이(실이 닿는 곳)
         key = 'nx/u/l%d' % i
         s.add(key + '/in', [bend(key + '/in', (nb[0] + nb[2] + 1, cy), (lx, my))])
         s.add(key + '/out', [bend(key + '/out', (lx + lw, my), (fx0 - 1, cy))])
         s.add(key, rec(key, c, lx, ky, lw))
         K['links'].append(key)
-    fh_ = ph + 16 + 30
-    fy0 = cy - fh_ / 2
-    s.add('nx/u/photo', [R('nx/u/pbg', fx0, fy0, fw, fh_, prst='roundRect', radius=18, fill='FFFFFF', line=PURPLE2, line_w=2.0, shadow=SHADOW_FLOAT),
-                         P('nx/u/pic', str(AS / pen['photo']), fx0 + 8, fy0 + 8, pw, ph, radius=11, crop=crop_fit(str(AS / pen['photo']), pw, ph, (0.5, 0.5))),
-                         P('nx/u/pi', ICON['gallery'], fx0 + 11, fy0 + ph + 14, 20, 20),
-                         T('nx/u/pt', fx0 + 38, fy0 + ph + 12, pw - 34, 24, APP_NAME['gallery'], size=12, color=INK2, weight='m', anchor='ctr')])
+    photo = str(AS / pen['photo'])
+    pw, ph = fw - 2 * PI, H - PI - 8 - 24 - PI              # 사진 아래에 한 줄(아이콘과 글, 높이 24)
+    s.add('nx/u/photo', [R('nx/u/pbg', fx0, top, fw, H, prst='roundRect', radius=18, fill='FFFFFF', line=PURPLE2, line_w=2.0, shadow=SHADOW_FLOAT),
+                         P('nx/u/pic', photo, fx0 + PI, top + PI, pw, ph, radius=10, crop=crop_fit(photo, pw, ph, (0.56, 0.5))),
+                         P('nx/u/pi', ICON['gallery'], fx0 + PI + 2, top + PI + ph + 9, 22, 22),
+                         T('nx/u/pt', fx0 + PI + 32, top + PI + ph + 8, pw - 34, 24, pen['found'], size=12, color=INK2, weight='m', anchor='ctr')])
     # ---- 아래(인프라): 2027- 집에서 건네는 기억
     s.add('nx/l/node', fnode('nx/l/node', NDX, YL, False, YEAR, '집에서 건네는 기억', HOME_SUB, AS / 'ic-house.png'))
     cy = LCY
-    # ① 냉장고: 캘린더, 카카오톡 기록(오른쪽 위에 둘) → 굽은 실이 모여(SmartThings 아이콘) → 냉장고의 화면 → 굽은 실 → Bixby의 말(오른쪽 아래, 결과)
+    # ① 냉장고: 캘린더, 카카오톡 기록(오른쪽 위에 둘) → 굽은 실 둘이 SmartThings 아이콘에서 하나로 모여 → 곧은 실 하나로 냉장고의 화면에
+    #    → 냉장고에서 나온 실 → Bixby의 말(오른쪽 아래, 결과). 아이콘의 왼쪽은 한 줄(처음에는 냉장고에서부터 두 가닥으로 갈라져 있었음)
     fh = 204
     fcx = ZX + 2 + fh * 0.25
     fxr = fcx + fh * 0.25                                   # 냉장고의 오른쪽 끝
@@ -400,51 +440,51 @@ def parts(s, pen=PEN, home=HOME, song=SONG):
     s.add('nx/l/voice', NX.voice('nx/l/voice', vo[0], vo[1], color=PURPLE, n=5, h=13))
     sz = [rec_size(c) for c in home['links']]
     cw_, hh = max(w for w, _ in sz), [h for _, h in sz]
-    bh, cg, bg_ = 74, 6, 14                                 # Bixby의 말 조각 높이, 기록 카드 사이, 카드와 말 조각 사이
-    bx = fxr + 36                                           # Bixby의 말 조각의 왼쪽
-    # 기록 카드의 왼쪽: 냉장고와의 사이에 SmartThings 아이콘이 놓일 자리를 남기고, 카드가 넓으면 말 조각과 오른쪽 끝을 맞춤
-    kx = max(fxr + 70, min(fxr + 84, bx + bubble_w(home['l1'], home['l2']) - cw_))
-    ky0 = cy + 4 - (sum(hh) + cg * (len(hh) - 1) + bg_ + bh) / 2      # 기록 카드와 말 조각 묶음을 냉장고 옆에(위 줄에 닿지 않게 4px 내림)
-    jy = cy - 46                                            # 실이 냉장고에 닿는 높이(화면의 가운데쯤)
+    bh, bg_ = 72, 12                                        # Bixby의 말 조각 높이, 카드와 말 조각 사이
+    bw = bubble_w(home['l1'], home['l2'])
+    right = max(fxr + 76 + cw_, fxr + 36 + bw)              # 냉장고 장면의 오른쪽 끝: 기록 카드와 말 조각의 오른쪽 끝을 맞춤
+    kx, bx = right - cw_, right - bw                        # 기록 카드의 왼쪽(냉장고와의 사이에 SmartThings 아이콘), 말 조각의 왼쪽
+    ky0 = cy - (sum(hh) + CG * (len(hh) - 1) + bg_ + bh) / 2          # 기록 카드와 말 조각 묶음의 위
+    ix = fxr + 2 + 28                                       # SmartThings 아이콘의 가운데
+    kys = [ky0 + sum(hh[:i]) + CG * i for i in range(len(hh))]
+    ends = [ky + RT + RI / 2 for ky in kys]                 # 실이 카드에 닿는 높이: 카드의 머리(아이콘의 가운데)
+    jy = sum(ends) / len(ends)                              # 실이 모이는 높이: 두 카드의 가운데(냉장고 화면의 위쪽)
+    s.add('nx/l/th0', [line('nx/l/th0', (fxr + 2, jy), (ix, jy), color=PURPLE2, w=2.4)])
     K['home'] = []
     for i, c in enumerate(home['links']):
-        ky = ky0 + sum(hh[:i]) + cg * i
         key = 'nx/l/c%d' % i
-        s.add(key + '/th', [bend(key + '/th', (fxr + 2, jy), (kx, ky + hh[i] / 2))])
-        s.add(key, rec(key, c, kx, ky, cw_))
+        s.add(key + '/th', [bend(key + '/th', (ix, jy), (kx, ends[i]))])
+        s.add(key, rec(key, c, kx, kys[i], cw_))
         K['home'].append(key)
-    s.add('nx/l/tile', app_icon('nx/l/tile', fxr + 36, jy, NX.STHINGS, z=34))        # 실이 모이는 곳에(냉장고 바로 앞)
-    by = ky0 + sum(hh) + cg * (len(hh) - 1) + bg_
+    s.add('nx/l/tile', app_icon('nx/l/tile', ix, jy, NX.STHINGS, z=30))               # 실이 모이는 곳에(냉장고 바로 앞)
+    by = kys[-1] + hh[-1] + bg_
     s.add('nx/l/th2', [bend('nx/l/th2', (fxr + 2, by + bh / 2 - 12), (bx, by + bh / 2))])
     s.add('nx/l/say', bubble('nx/l/say', bx, by, NX.BIXBY, home['l1'], home['l2'], h=bh))
-    ax1 = max(bx + bubble_w(home['l1'], home['l2']), kx + cw_)         # 냉장고 장면의 오른쪽 끝
-    # ② 스마트 TV: 사용자의 한마디(위) → 곧은 실 가운데의 Bixby → TV가 그날 듣던 노래를 틂(오른쪽 아래, 결과).
-    #    단서인 기록 둘(갤러리, 삼성 뮤직)은 왼쪽 아래에 놓이고 굽은 실로 TV의 왼쪽에 닿는다(말에서 내려오는 실과 한곳에 모이지 않게)
-    sw_ = say_w(song['l1'], song['l2'])
+    # ② 스마트 TV: 사용자의 한마디(오른쪽 위) → 곧은 실 가운데의 Bixby → 바로 아래의 TV가 그날 듣던 노래를 틂(결과).
+    #    말 조각과 TV는 오른쪽 끝을 맞추고 실은 TV의 가운데로 내려옴. 단서인 기록 둘(갤러리, 삼성 뮤직)은 TV의 왼쪽에 놓여 굽은 실로 TV의 왼쪽에 닿음
     sz = [rec_size(c) for c in song['links']]
     rw, rh = max(w for w, _ in sz), [h for _, h in sz]
-    gap, tvw, rm = 48, 200, 34                              # 기록 카드와 TV 사이, TV의 폭, 장면 오른쪽에 남기는 자리
-    bw_ = max(sw_, rw + gap + tvw + 5)                      # TV 장면의 폭
-    tx_ = XR - rm - bw_                                     # TV 장면의 왼쪽
-    assert tx_ >= ax1 + 24, (round(tx_), round(ax1))
-    sy_, sh_ = cy - 107, 56                                 # 말 조각의 위, 높이
-    s.add('nx/t/say', say_bubble('nx/t/say', tx_, sy_, song['l1'], song['l2'], h=sh_))
-    tvx = tx_ + bw_ - 5 - tvw                               # TV의 왼쪽 끝
-    tvy = sy_ + sh_ + 50                                    # TV의 위(말 조각과의 사이에 Bixby 아이콘)
-    tcy = tvy + tvw * 9 / 32                                # TV의 가운데 높이
-    xv = min(tvx + 52, tx_ + sw_ - 30)                      # 말 조각에서 TV로 내려오는 실의 x
-    s.add('nx/t/th', [line('nx/t/th', (xv, sy_ + sh_), (xv, tvy - 4), color=PURPLE2, w=2.4)])
-    s.add('nx/t/tile', app_icon('nx/t/tile', xv, (sy_ + sh_ + tvy - 4) / 2, NX.BIXBY, z=30))
-    ry0 = min(tcy - (sum(rh) + 8 * (len(rh) - 1)) / 2, 684 - sum(rh) - 8 * (len(rh) - 1))      # 기록 카드 묶음의 위(TV와 가운데를 맞추되 아래로 넘치지 않게)
-    ry0 = max(ry0, sy_ + sh_ + 10)
+    gap, tvw = 44, 192                                      # 기록 카드와 TV 사이, TV의 폭
+    tvx = XE - tvw - 4 * tvw / 220                          # TV의 왼쪽 끝(결과를 두른 보라 테의 오른쪽 끝이 XE)
+    tx_ = tvx - gap - rw                                    # 기록 카드의 왼쪽
+    assert tx_ >= right + 40, (round(tx_), round(right))
+    sh_, sw_ = 64, say_w(song['l1'], song['l2'])            # 말 조각의 높이와 폭
+    sx_, sy_ = XE - sw_, ky0                                # 말 조각: TV의 보라 테와 오른쪽 끝을, 냉장고 장면과 위 끝을 맞춤
+    s.add('nx/t/say', say_bubble('nx/t/say', sx_, sy_, song['l1'], song['l2'], h=sh_))
+    tvy = sy_ + sh_ + 48                                    # TV의 위(말 조각과의 사이에 Bixby 아이콘)
+    tcx, tcy = tvx + tvw / 2, tvy + tvw * 9 / 32            # TV의 가운데
+    s.add('nx/t/th', [line('nx/t/th', (tcx, sy_ + sh_), (tcx, tvy - 4), color=PURPLE2, w=2.4)])
+    s.add('nx/t/tile', app_icon('nx/t/tile', tcx, (sy_ + sh_ + tvy - 4) / 2, NX.BIXBY, z=30))
+    tot = sum(rh) + CG * (len(rh) - 1)
+    ry0 = min(max(tcy - tot / 2, sy_ + sh_ + 14), ZB - tot)           # 기록 카드 묶음의 위(TV와 가운데를 맞추되 말 조각과 아래 끝을 넘지 않게)
     K['song'] = []
     for i, c in enumerate(song['links']):
-        ky = ry0 + sum(rh[:i]) + 8 * i
+        ky = ry0 + sum(rh[:i]) + CG * i
         key = 'nx/t/c%d' % i
         s.add(key + '/th', [bend(key + '/th', (tx_ + rw, ky + rh[i] / 2), (tvx - 5, tcy + (i - (len(rh) - 1) / 2) * 16))])
         s.add(key, rec(key, c, tx_, ky, rw))
         K['song'].append(key)
-    frame, now, prg = tv('nx/t/tv', tvx + tvw / 2, tvy, tvw, song['title'], song['artist'], song['cap'])
+    frame, now, prg = tv('nx/t/tv', tcx, tvy, tvw, song['title'], song['artist'], song['cap'])
     s.add('nx/t/tv', frame)
     s.add('nx/t/now', now)
     s.add('nx/t/prg', prg)
@@ -452,22 +492,22 @@ def parts(s, pen=PEN, home=HOME, song=SONG):
 
 
 def s_next(key='nx'):
-    """연표 다음 장. 연표가 두 줄이 Weave에서 만나는 곳만 남기고 옮겨 가고, 두 줄이 다시 뻗는다
+    """연표 다음 장. 연표가 두 줄이 Weave에서 만나는 곳만 남기고 옮겨 가고, 두 줄이 화살촉을 앞세워 다시 뻗는다
     → (클릭) 그려서 찾는 기억 → (클릭) 집에서 건네는 기억 ① 냉장고 → (클릭) ② 스마트 TV."""
     s = Slide(key, trans=('morph', 1100), bar=False, notes=NOTE)
     tl_past(s, -PAN)
     s.add('nx/title', [N.title('nx/title', TITLE)])
     K = parts(s)
-    s.add('nx/cu', comet('nx/cu', YU), temp=True)
-    s.add('nx/cl', comet('nx/cl', YL), temp=True)
-    # 장이 열리면(연표가 다 옮겨 간 뒤): 두 줄이 오른쪽 끝까지 뻗고 빛이 달려 나감
+    # 장이 열리면(연표가 다 옮겨 간 뒤): 두 줄이 화살촉을 앞세워 오른쪽 끝까지 뻗음. 굽은 곳이 먼저 닦여 나오고,
+    # 곧은 곳이 왼쪽 끝을 붙잡고 늘어나는 동안(grow) 화살촉이 그 끝에서 함께 나아가 오른쪽 끝에 섬(glide. 둘은 같은 때에 같은 빠르기)
+    t0, tb, td = 80, 110, 800
+    ease = dict(decel=60000)
     s.on('nx/title', 'fade_in', 0, 400)
-    s.on(['nx/lu', 'nx/ll'], 'wipe_in', 80, 900, dir='left')
-    run(s, 'nx/cu', 260, first=True)
-    run(s, 'nx/cl', 260, first=True)
-    s.click()      # 1: 위 줄(기술) — 마디 → 메모가 그려지고 → 캘린더, 카카오톡 기록과 이어지고 → 두 기록에서 뻗은 실이 그날의 사진으로
+    s.on(['nx/lu/b', 'nx/ll/b'], 'wipe_in', t0, tb, dir='left')
+    s.on(['nx/lu/s', 'nx/ll/s'], 'grow', t0 + tb - 30, td, **ease)
+    s.on(['nx/au', 'nx/al'], 'glide', t0 + tb - 30, td, dx=-(FX1 - HL_ - FXS), dy=0, **ease)
+    s.click()      # 1: 위 줄(기술) — 마디 → 메모가 그려지고 → 일기, 문자 기록과 이어지고 → 두 기록에서 뻗은 실이 그날의 사진으로
     s.on('nx/u/node', 'rise', 0, 420, dy=-12)
-    run(s, 'nx/cu', 60, 800)
     s.on('nx/u/nbg', 'rise', 160, 400, dy=10)
     s.on('nx/u/pen', 'fade_in', 420, 200)
     s.on('nx/u/pen', 'goto', 420)
@@ -478,19 +518,18 @@ def s_next(key='nx'):
         s.on(key_, 'rise', 1860 + i * 160, 380, dy=8)
     s.on([key_ + '/out' for key_ in K['links']], 'wipe_in', 2520, 260, dir='left')
     s.on('nx/u/photo', 'zoom_in', 2740, 440, **{'from': 0.92})
-    s.click()      # 2: 아래 줄(인프라) ① — 마디 → 냉장고 → 캘린더, 카카오톡 기록이 SmartThings를 따라 냉장고로 → Bixby가 먼저 말함
+    s.click()      # 2: 아래 줄(인프라) ① — 마디 → 냉장고 → 캘린더, 카카오톡 기록이 SmartThings에서 하나로 모여 냉장고로 → Bixby가 먼저 말함
     s.on('nx/l/node', 'rise', 0, 420, dy=12)
-    run(s, 'nx/cl', 60, 800)
     s.on('nx/l/fridge', 'fade_in', 220, 420)
     for i, key_ in enumerate(K['home']):
         s.on(key_, 'rise', 660 + i * 160, 380, dy=8)
-    s.on([key_ + '/th' for key_ in K['home']], 'wipe_in', 1100, 320, dir='right')
-    s.on('nx/l/tile', 'zoom_in', 1300, 300, **{'from': 0.5})
+    s.on([key_ + '/th' for key_ in K['home']], 'wipe_in', 1100, 260, dir='right')
+    s.on('nx/l/tile', 'zoom_in', 1280, 300, **{'from': 0.5})
+    s.on('nx/l/th0', 'wipe_in', 1360, 160, dir='right')
     s.on('nx/l/voice', 'fade_in', 1620, 240)
     s.on('nx/l/th2', 'wipe_in', 1680, 200, dir='left')
     s.on('nx/l/say', 'rise', 1820, 460, dy=10)
     s.click()      # 3: 아래 줄 ② — 사용자의 한마디 → Bixby → 갤러리, 삼성 뮤직의 기록 → 스마트 TV가 그날 듣던 노래를 틂
-    run(s, 'nx/cl', 60, 800)
     s.on('nx/t/say', 'rise', 120, 420, dy=10)
     s.on('nx/t/th', 'wipe_in', 560, 240, dir='down')
     s.on('nx/t/tile', 'zoom_in', 620, 300, **{'from': 0.5})
