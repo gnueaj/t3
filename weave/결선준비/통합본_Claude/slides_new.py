@@ -207,28 +207,49 @@ HK_WHITE, HK_SOFT = 'F4F4F6', '9B85FF'
 HK_FAIL = '검색 결과가 없습니다'
 
 
+HK_K = HK_HERO[2] / 360                                     # 큰 화면은 벽의 화면(assets/src/screens.html의 'find', 360×780)을 이 배율로 그린 것
+HK_QPX, HK_FPX = 16.5, 25                                   # 그 화면의 글자 크기(px): 검색창의 질문, '검색 결과가 없습니다'. screens.html의 값과 같아야 함
+
+
 def hero_prims(key, fail):
     """큰 휴대폰 화면: 검색창에 질문이 적혀 있고, fail이면 가운데에 '검색 결과가 없습니다'.
-    7쪽의 '일치하는 결과가 없습니다'와 같은 모양(연분홍 알약, 빨간 점, 빨간 굵은 글)으로, 화면 가운데의 돋보기는 두지 않는다."""
+    7쪽의 '일치하는 결과가 없습니다'와 같은 모양(연분홍 알약, 빨간 점, 빨간 굵은 글)으로, 화면 가운데의 돋보기는 두지 않는다.
+    이 화면은 줄어들며 사라지고 그 자리에 벽 한가운데 칸의 같은 화면(screens.html의 'find')이 남는다. 두 화면이 겹쳐 보일 때 어긋나지 않게
+    모든 자리와 크기를 그 화면의 값 × HK_K로 적는다(11-15: 큰 화면의 글자는 조금 줄이고 벽의 글자는 조금 키워 같은 비율로 맞춤.
+    그 전에는 큰 화면의 질문이 11.5pt, 알약의 글이 17.5pt라 벽의 화면보다 1.3배쯤 컸음)."""
     x, y, w, h = HK_HERO
-    qw = tw(HK_QUERY, 11.5, 'm')
-    out = [R(key + '/body', x, y, w, h, prst='roundRect', radius=34, fill='FFFFFF', line=None, shadow=(36, 0, 'FFFFFF', 14)),
-           T(key + '/time', x + 26, y + 12, 60, 18, '12:30', size=9, color=INK, weight='b', anchor='ctr'),
-           R(key + '/bat', x + w - 50, y + 16, 21, 10, prst='roundRect', radius=3, fill=None, line=INK, line_w=1.1),
-           R(key + '/batf', x + w - 48, y + 18, 14, 6, prst='roundRect', radius=1.5, fill=INK, line=None),
-           R(key + '/field', x + 14, y + 42, w - 28, 40, prst='roundRect', fill='F1F1F5', line=None)]
-    out += magnifier(key + '/mag', x + 34, y + 61, r=5.5, color='5A5A64', w=1.7)
-    out += [T(key + '/q', x + 50, y + 42, qw + 8, 40, HK_QUERY, size=11.5, color='3A3A42', weight='m', anchor='ctr'),
-            R(key + '/cur', x + 50 + qw + 3, y + 52, 1.8, 20, fill=PURPLE, line=None),
-            R(key + '/home', x + w / 2 - 45, y + h - 12, 90, 3.5, prst='roundRect', fill='C9C9CF', line=None)]
+    k = HK_K
+    ink = '17171A'
+    qpt, fpt = HK_QPX * k * 0.75, HK_FPX * k * 0.75           # px → pt
+    qw = tw(HK_QUERY, qpt, 'm')
+    fy, fh = y + 46 * k, 46 * k                                 # 검색창
+    sy = y + 23.5 * k                                           # 위 띠(시각, 신호, 배터리)의 가운데 높이
+    out = [R(key + '/body', x, y, w, h, prst='roundRect', radius=40 * k, fill='FFFFFF', line=None, shadow=(36, 0, 'FFFFFF', 14)),
+           T(key + '/time', x + 28 * k, sy - 9, 60, 18, '12:30', size=13 * k * 0.75, color=ink, weight='b', anchor='ctr')]
+    for i, bh in enumerate((3.4, 6, 8.4, 11)):                 # 신호 막대 넷(오른쪽으로 갈수록 김)
+        out.append(R('%s/sg%d' % (key, i), x + (267 + i * 4.6) * k, sy + (5.5 - bh) * k, 2.6 * k, bh * k, fill=ink, line=None))
+    wx, wy = x + 297 * k, sy + 5 * k                            # 와이파이: 점 하나와 그 위의 둥근 줄 셋
+    for i, (r_, lift) in enumerate(((7.0, 3.6), (4.7, 2.5), (2.4, 1.3))):
+        yy = wy - (6.8 - 2.5 * i) * k
+        out.append(C('%s/wf%d' % (key, i), [(wx - r_ * k, yy), (wx - r_ * 0.45 * k, yy - lift * k), (wx + r_ * 0.45 * k, yy - lift * k), (wx + r_ * k, yy)],
+                     color=ink, w=1.6 * k))
+    out.append(R(key + '/wfd', wx - 1 * k, wy - 1 * k, 2 * k, 2 * k, prst='ellipse', fill=ink, line=None))
+    bx = x + 310 * k                                            # 배터리
+    out += [R(key + '/bat', bx + 0.7 * k, sy - 5.3 * k, 21.6 * k, 10.6 * k, prst='roundRect', radius=3.2 * k, fill=None, line=ink, line_w=1.3 * k),
+            R(key + '/batf', bx + 2.5 * k, sy - 3.5 * k, 15 * k, 7 * k, prst='roundRect', radius=1.6 * k, fill=ink, line=None),
+            R(key + '/batc', bx + 23.5 * k, sy - 2.2 * k, 2 * k, 4.4 * k, prst='roundRect', radius=1 * k, fill=ink, line=None),
+            R(key + '/field', x + 16 * k, fy, w - 32 * k, fh, prst='roundRect', fill='F1F1F5', line=None)]
+    out += magnifier(key + '/mag', x + 41.6 * k, y + 67.6 * k, r=5.96 * k, color='4A4A52', w=1.74 * k)
+    out += [T(key + '/q', x + 63 * k, fy, qw + 8, fh, HK_QUERY, size=qpt, color='4A4A52', weight='m', anchor='ctr'),
+            R(key + '/cur', x + 63 * k + qw + 3 * k, fy + (fh - 19 * k) / 2, 2 * k, 19 * k, fill=PURPLE, line=None),
+            R(key + '/home', x + w / 2 - 54 * k, y + h - 12 * k, 108 * k, 4 * k, prst='roundRect', fill='B8B8B8', line=None)]
     if fail:
-        pt = 17.5
-        fw = tw(HK_FAIL, pt, 'b')
-        pw, ph = fw + 66, 46
-        px, py = x + (w - pw) / 2, y + 268
+        fw = tw(HK_FAIL, fpt, 'b')
+        pw, ph = (24 + 11 + 11 + 26) * k + fw, 55 * k           # 왼쪽 여백, 점, 사이, 글, 오른쪽 여백
+        px, py = x + (w - pw) / 2, y + 322 * k
         out += [R(key + '/nb', px, py, pw, ph, prst='roundRect', fill='FDECEF', line=None),
-                R(key + '/nd', px + 21, py + ph / 2 - 4.5, 9, 9, prst='ellipse', fill='E0566B', line=None),
-                T(key + '/nt', px + 40, py, fw + 16, ph, HK_FAIL, size=pt, color='D6455C', weight='b', anchor='ctr')]
+                R(key + '/nd', px + 24 * k, py + ph / 2 - 5.5 * k, 11 * k, 11 * k, prst='ellipse', fill='E0566B', line=None),
+                T(key + '/nt', px + 46 * k, py, fw + 16, ph, HK_FAIL, size=fpt, color='D6455C', weight='b', anchor='ctr')]
     return out
 
 
