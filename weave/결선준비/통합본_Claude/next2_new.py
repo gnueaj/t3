@@ -125,6 +125,9 @@ SONG = dict(l1='작년에 벚꽃 보러 갔을 때', l2='여자친구랑 듣던 
                    dict(kind='music', title='반복 재생한 곡', when='4월 5일 (토)', lines=['10CM - 너에게 닿기를'])],
             title='너에게 닿기를', artist='10CM', cap='2025년 4월 5일에 들은 곡')
 PEN_SUB, HOME_SUB = 'S펜 · 멀티모달 임베딩', 'SmartThings · Bixby'
+# 스마트 TV 장면의 배치. False: 말 조각이 TV 바로 위(오른쪽 끝을 맞추고 실이 TV의 가운데로). True: 그 전의 배치 — 말 조각이 왼쪽 위,
+# 그 아래에 기록 카드 둘, 오른쪽 아래에 TV(폭 200). 말 조각과 카드 둘이 왼쪽에서 TV로 모여듦
+TV_SIDE = False
 
 
 # ------------------------------------------------------------------ 지난 연표(34쪽의 부품. 키가 같아 Morph로 이어짐)
@@ -465,19 +468,24 @@ def parts(s, pen=PEN, home=HOME, song=SONG):
     #    말 조각과 TV는 오른쪽 끝을 맞추고 실은 TV의 가운데로 내려옴. 단서인 기록 둘(갤러리, 삼성 뮤직)은 TV의 왼쪽에 놓여 굽은 실로 TV의 왼쪽에 닿음
     sz = [rec_size(c) for c in song['links']]
     rw, rh = max(w for w, _ in sz), [h for _, h in sz]
-    gap, tvw = 42, 192                                      # 기록 카드와 TV 사이, TV의 폭
+    gap, tvw = (40, 200) if TV_SIDE else (42, 192)          # 기록 카드와 TV 사이, TV의 폭
     tvx = XE - tvw - 4 * tvw / 220                          # TV의 왼쪽 끝(결과를 두른 보라 테의 오른쪽 끝이 XE)
     tx_ = tvx - gap - rw                                    # 기록 카드의 왼쪽
-    assert tx_ >= right + 40, (round(tx_), round(right))
+    assert tx_ >= right + (34 if TV_SIDE else 40), (round(tx_), round(right))
     sh_, sw_ = 64, say_w(song['l1'], song['l2'])            # 말 조각의 높이와 폭
-    sx_, sy_ = XE - sw_, ky0                                # 말 조각: TV의 보라 테와 오른쪽 끝을, 냉장고 장면과 위 끝을 맞춤
+    tcx = tvx + tvw / 2                                     # TV의 가운데 x
+    if TV_SIDE:                                             # 말 조각은 기록 카드와 왼쪽 끝을 맞추고, 실은 말 조각의 오른쪽에서 TV의 왼쪽 위로 내려옴
+        sx_, xv = tx_, min(tvx + 52, tx_ + sw_ - 30)
+    else:                                                   # 말 조각은 TV의 보라 테와 오른쪽 끝을 맞추고, 실은 TV의 가운데로 내려옴
+        sx_, xv = XE - sw_, tcx
+    sy_ = ky0                                               # 말 조각의 위: 냉장고 장면과 같은 높이
     s.add('nx/t/say', say_bubble('nx/t/say', sx_, sy_, song['l1'], song['l2'], h=sh_))
-    tvy = sy_ + sh_ + 48                                    # TV의 위(말 조각과의 사이에 Bixby 아이콘)
-    tcx, tcy = tvx + tvw / 2, tvy + tvw * 9 / 32            # TV의 가운데
-    s.add('nx/t/th', [line('nx/t/th', (tcx, sy_ + sh_), (tcx, tvy - 4), color=PURPLE2, w=2.4)])
-    s.add('nx/t/tile', app_icon('nx/t/tile', tcx, (sy_ + sh_ + tvy - 4) / 2, NX.BIXBY, z=30))
+    tvy = sy_ + sh_ + (50 if TV_SIDE else 48)               # TV의 위(말 조각과의 사이에 Bixby 아이콘)
+    tcy = tvy + tvw * 9 / 32                                # TV의 가운데 y
+    s.add('nx/t/th', [line('nx/t/th', (xv, sy_ + sh_), (xv, tvy - 4), color=PURPLE2, w=2.4)])
+    s.add('nx/t/tile', app_icon('nx/t/tile', xv, (sy_ + sh_ + tvy - 4) / 2, NX.BIXBY, z=30))
     tot = sum(rh) + CG * (len(rh) - 1)
-    ry0 = min(max(tcy - tot / 2, sy_ + sh_ + 14), ZB - tot)           # 기록 카드 묶음의 위(TV와 가운데를 맞추되 말 조각과 아래 끝을 넘지 않게)
+    ry0 = min(max(tcy - tot / 2, sy_ + sh_ + (10 if TV_SIDE else 14)), ZB - tot)      # 기록 카드 묶음의 위(TV와 가운데를 맞추되 말 조각과 아래 끝을 넘지 않게)
     K['song'] = []
     for i, c in enumerate(song['links']):
         ky = ry0 + sum(rh[:i]) + CG * i
