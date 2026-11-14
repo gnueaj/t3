@@ -50,7 +50,9 @@ MG_TAIL = 1.4                      # 영상이 끝난 뒤 그 장에 더 머무�
 MG_VOL = 0.8                       # 덱에 넣은 영상 소리 크기(80%)와 같게
 END_HOLD = 3.0                     # 말이 없는 끝 화면에 머무는 시간
 SPEAKER = '장이준'                 # 노트에 [발표자 이름]이 남아 있으면 읽을 이름
-LEADS = {'cover': 1.0, 'in02': 1.2}                     # 장이 열린 뒤 말을 떼기까지(초): 표지, 2쪽(문장이 다 뜬 뒤)
+# 장이 열린 뒤 말을 떼기까지(초): 표지, 2쪽(통화 음성이 끝나고 한 박자 뒤. 통화 음성을 넣기 전에는 문장이 다 뜬 뒤인 1.2초)
+LEADS = {'cover': 1.0, 'in02': MK.CALL_AT + MK.CALL_LEN + 1.2}
+CALL_VOL = 1.0                     # 영상에 섞는 통화 음성의 크기(음성 -17.2 LUFS, 낭독은 -16 LUFS에 맞춤)
 MARK_RGB = ['FF00FF', '00FFFF', '00FF00']               # 구간 표 색(차례로 번갈아). 영상에서 덮어 지움
 MARK_BOX = HW.MARK_BOX
 FONT = Path.home() / '.cache' / 'weave-tools' / 'fonts' / 'SamsungOneKorean-500.ttf'
@@ -262,6 +264,27 @@ def find_video_start(silent, t_guess):
 
 
 # ------------------------------------------------------------------ 자막
+def find_call(silent, t_guess):
+    """녹화에 담긴 소리에서 2쪽의 통화 음성이 시작한 때를 찾는다: PowerPoint가 덱에 넣은 음성을 재생한 소리와 원본을 맞대어 봄.
+    화면의 문장은 PowerPoint 안에서 음성에 맞춰 뜨므로, 영상에 섞는 깨끗한 원본도 그때에 놓아야 글자와 소리가 맞는다.
+    돌려줌: (시작한 때(초), 닮은 정도 0~1). 닮은 정도가 낮으면 덱의 음성이 재생되지 않은 것."""
+    from scipy.signal import correlate
+    sr = 8000
+
+    def pcm(src, ss=None, t=None):
+        cmd = [FFMPEG, '-v', 'error'] + (['-ss', '%.3f' % ss] if ss is not None else []) + ['-i', str(src)] + (['-t', '%.3f' % t] if t else [])
+        raw = subprocess.run(cmd + ['-vn', '-ac', '1', '-ar', str(sr), '-f', 's16le', '-'], capture_output=True, check=True).stdout
+        return np.frombuffer(raw, dtype=np.int16).astype(np.float32)
+    a0 = max(t_guess - 2.0, 0.0)
+    rec, ref = pcm(silent, a0, MK.CALL_LEN + 8), pcm(MK.CALL_MP3)
+    if len(rec) <= len(ref) or not rec.any():
+        return None, 0.0
+    corr = correlate(rec, ref, mode='valid', method='fft')
+    k = int(np.argmax(corr))
+    seg = rec[k:k + len(ref)]
+    return a0 + k / sr, float(corr[k] / (np.linalg.norm(seg) * np.linalg.norm(ref) + 1e-9))
+
+
 def sub_png(text, dst, pt=30, maxw=1620):
     """자막 한 장(1920×SUB_H, 투명 바탕): 어두운 둥근 판 위 흰 글. 긴 말은 폭에 맞춰 줄을 나눈다. How it Works 낭독 영상의 자막과 같은 모양."""
     font = ImageFont.truetype(str(FONT), pt)
@@ -382,6 +405,19 @@ def finish(silent, mp4, plan, clips, tail=1.0):
         p['video_at'] = t0
     else:
         audio += ';[va]anull[au]'
+    call = next(((p, s) for p, s in zip(plan, starts) if p['key'] == 'in02'), None)
+    if call and MK.CALL_MP3.exists():           # 2쪽의 통화 음성: 녹화에서 재생이 시작한 때를 찾아 그 자리에 원본을 섞음
+        t_call, score = find_call(silent, call[1] + shift)
+        if t_call is None or score < 0.5:
+            print('   ! 통화 음성: 녹화에서 못 찾음(닮은 정도 %.2f) → 장이 열린 때로 어림' % score)
+            t_call = call[1] + shift + call[0]['trans'] / 2 + MK.CALL_AT
+        t_call -= shift
+        print('통화 음성: 2쪽이 열린 때 %.2f초, 음성이 시작한 때 %.2f초(닮은 정도 %.2f)' % (call[1], t_call, score))
+        ms = round(t_call * 1000)
+        audio = (audio[:-len('[au]')] + '[au0];[%d:a]volume=%.2f,adelay=%d|%d,aformat=channel_layouts=stereo:sample_rates=44100[ca]'
+                 ';[au0][ca]amix=inputs=2:normalize=0:duration=longest[au]') % (ins.count('-i'), CALL_VOL, ms, ms)
+        ins += ['-i', str(MK.CALL_MP3)]
+        call[0]['call_at'] = round(t_call, 2)
     fc += ['[%s]split[a][b];[b]crop=%d:%d:0:%d[p];[a][p]overlay=0:%d[v2]' % (last, W, H, Y - H - 2, Y),
            '[2:v]fps=30,format=rgba[sub]', '[v2][sub]overlay=0:%d:eof_action=pass[v]' % (1065 - SUB_H), audio]
     subprocess.run([FFMPEG, '-y', '-loglevel', 'error', *ins, '-filter_complex', ';'.join(fc), '-map', '[v]', '-map', '[au]', '-r', '30',

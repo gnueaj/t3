@@ -14,12 +14,13 @@
 
 마무리 장의 사진 후보 195장과 출처는 `../마무리사진_후보/README.md`에 있어요(Unsplash 라이선스, Pexels 라이선스).
 
-## 3~5쪽의 기록 조각, 13쪽의 흐린 배경 (`intro/`)
+## 2쪽의 통화 음성, 3~5쪽의 기록 조각, 13쪽의 흐린 배경 (`intro/`)
 
 - `intro/floats.png`: `src/floats.html`에 그린 기록 조각이에요. 표지 영상의 조각과 같은 모양이고, 아이콘은 `../10_표지영상/소스/assets/icons`의 것을 써요. `tools/intro_assets.py`가 찍어요.
 - `intro/floats-a.png`, `intro/floats-b.png`, `intro/floats-c.png`: 같은 조각을 세 층으로 나눈 그림이에요(6차). 3~5쪽에서 층마다 다른 쪽으로 천천히 떠다녀요. `floats.png`는 5차까지 쓰던 한 장짜리예요.
 - `intro/aura-1.png`, `intro/aura-2.png`, `intro/aura-3.png`: 3~5쪽 인물 뒤에 까는 옅은 보라 그라데이션이에요(7차). 팀원 덱 5쪽의 인물 그림 셋에서 윤곽(투명도)만 읽어 크게 흐린 그림이고, `tools/intro_assets.py --aura`가 만들어요.
 - `intro/blur_link.jpg`: 4차까지 13쪽 배경으로 쓰던 그림이에요(우리가 그린 12쪽을 흐리게 함, `tools/intro_assets.py --blur`). 5차부터 13쪽은 팀원이 손본 덱의 장을 그대로 옮겨서, 배경도 그 덱의 것이에요.
+- `intro/call-hook.mp3`: 2쪽의 통화 음성(임시, 10.2초). Carbon(Gemini)이 이 컴퓨터에서 Supertonic 3로 읽은 말에 통화 연결음(440Hz + 480Hz), 수화기를 드는 소리, 전화 음질을 입힌 셋째 후보(`../통합본_Carbon/오프닝통화_후보/후보3_압축템포_전화코덱_2쪽문구일치.mp3`)를 그대로 가져왔어요. 나중에 다른 음성으로 바꿀 자리예요.
 
 ## 연표의 NPU 아이콘 (`outro/ic-npu.png`)
 

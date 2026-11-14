@@ -180,8 +180,9 @@ PREV3_KEEP = [16] + list(range(21, 27)) + [30, 37]      # 3차 통합본에서: 
 # Hop 1(29), 결과 제공(31), 기대효과(32), 비교(33), 비즈니스 임팩트(34), 연표(35), 마무리 ①②(36, 37), 맺는 장(39)
 PREV7_KEEP = [2, 3, 4, 5, 7, 8, 9, 10, 11, 12, 14, 18, 21, 22, 23, 24, 25, 29, 31, 32, 33, 34, 35, 36, 37, 39]
 # 8차 통합본에서: 9차에 화면이나 대본이 바뀐 장. 수많은 기록(6), 02 질의 재작성(29), Hop 1(30), Hop 2(31), 본 발표에서 뺀 비즈니스 임팩트(34), 연표(35),
-# 마무리 ①(36), 맺는 장(39). 6쪽과 31쪽은 11월 14일 밤에 더함(6쪽 '기억' → '기록', 29~31쪽 Query Rewriting 판의 sLLM 뱃지)
-PREV8_KEEP = [6, 29, 30, 31, 34, 35, 36, 39]
+# 마무리 ①(36), 맺는 장(39). 6쪽과 31쪽은 11월 14일 밤에 더함(6쪽 '기억' → '기록', 29~31쪽 Query Rewriting 판의 sLLM 뱃지),
+# 2쪽은 11월 15일에 더함(통화 음성을 넣고 대본의 첫 문장을 뺌)
+PREV8_KEEP = [2, 6, 29, 30, 31, 34, 35, 36, 39]
 
 
 def own_specs():
@@ -597,9 +598,84 @@ def patch_logo_center(sl):
         shift(by_name(sl, name), dx=LOGO_DX)
 
 
+# ------------------------------------------------------------------ 9차(11-15): 2쪽의 통화 음성
+# 장이 열리면 통화 음성이 저절로 나오고, 화면의 문장은 음성의 마지막 말("잠깐만요, 찾아보고 다시 알려 드릴게요.")에 맞춰 뜬다.
+# 음성은 임시(나중에 바꿈): Carbon이 이 컴퓨터에서 합성한 후보 3 — 통화 연결음 한 번 → "네, 삼성리서치 양서윤 프로입니다." → "아... 네? 그거요?"
+# → "잠깐만요, 찾아보고 다시 알려 드릴게요." → 끊는 소리. 다른 음성으로 바꾸려면 파일을 바꾸고 아래 값을 그 음성에 맞춘다
+# (CALL_QUOTE는 소리 크기로 잰 값: 마지막 말이 시작하는 때)
+CALL_MP3 = INTRO_AS / 'call-hook.mp3'
+CALL_LEN = 10.21                                      # 음성의 길이(초)
+CALL_AT = 0.3                                         # 장이 열린 뒤 음성이 시작하는 때(초)
+CALL_QUOTE = 7.28                                     # 음성 안에서 마지막 말이 시작하는 때(초)
+CALL_TYPE = 90                                        # 화면의 문장이 한 글자씩 뜨는 간격(ms). 말하는 빠르기에 맞춤(원래 70)
+MEDIA_URI = '{DAA4B4D4-6D71-4841-9C94-3DE7FCFB9230}'
+P14 = 'http://schemas.microsoft.com/office/powerpoint/2010/main'
+
+
+def patch_call(sl):
+    """2쪽: 통화 음성을 넣는다. 소리는 화면 밖 왼쪽 위의 전화 아이콘에 달려 있고 장이 열리면 저절로 재생된다(PowerPoint가 쓰는 모양 그대로:
+    그림에 a:audioFile과 p14:media, 효과 나무에 재생 명령과 p:audio). 문장이 뜨는 효과는 음성의 마지막 말에 맞춰 늦춘다."""
+    from pptx.media import Video
+    from pptx.opc.constants import RELATIONSHIP_TYPE as RT
+    pa = painter(sl)
+    el = pa.el(P('callsound', HW.ICON['phone'], -64, 24, 40, 40))
+    live_tree(sl).append(el)
+    part = sl.part.package.get_or_add_media_part(Video.from_path_or_file_like(str(CALL_MP3), 'audio/mpeg'))
+    media_rid, audio_rid = sl.part.relate_to(part, RT.MEDIA), sl.part.relate_to(part, RT.AUDIO)
+    nv = el.find(q('p:nvPicPr'))
+    c = nv.find(q('p:cNvPr'))
+    spid = c.get('id')
+    link = etree.Element('{%s}hlinkClick' % A)
+    link.set(q('r:id'), '')
+    link.set('action', 'ppaction://media')
+    c.insert(0, link)
+    nvpr = nv.find(q('p:nvPr'))
+    etree.SubElement(nvpr, '{%s}audioFile' % A).set(q('r:link'), audio_rid)
+    ext = etree.SubElement(etree.SubElement(nvpr, q('p:extLst')), q('p:ext'))
+    ext.set('uri', MEDIA_URI)
+    etree.SubElement(ext, '{%s}media' % P14, nsmap={'p14': P14}).set(q('r:embed'), media_rid)
+    tm = sl._element.find(q('p:timing'))
+    cts = list(tm.iter(q('p:cTn')))
+    ids = itertools.count(max(int(e.get('id')) for e in cts) + 1)
+    root = next(e for e in cts if e.get('nodeType') == 'tmRoot')
+    first = next(g for g, auto in F.groups(sl) if auto)
+    inner = first.find(q('p:cTn')).find(q('p:childTnLst'))[0].find(q('p:cTn'))       # 첫 묶음의 첫 안쪽 묶음(통화 중 표시가 뜨는 곳)
+    par = etree.SubElement(inner.find(q('p:childTnLst')), q('p:par'))
+    ct = etree.SubElement(par, q('p:cTn'), id=str(next(ids)), presetID='1', presetClass='mediacall', presetSubtype='0', fill='hold', nodeType='withEffect')
+    etree.SubElement(etree.SubElement(ct, q('p:stCondLst')), q('p:cond'), delay=str(round(CALL_AT * 1000)))
+    cmd = etree.SubElement(etree.SubElement(ct, q('p:childTnLst')), q('p:cmd'), type='call', cmd='playFrom(0.0)')
+    cb = etree.SubElement(cmd, q('p:cBhvr'))
+    etree.SubElement(cb, q('p:cTn'), id=str(next(ids)), dur=str(round(CALL_LEN * 1000)), fill='hold')
+    etree.SubElement(etree.SubElement(cb, q('p:tgtEl')), q('p:spTgt'), spid=spid)
+    node = etree.SubElement(etree.SubElement(root.find(q('p:childTnLst')), q('p:audio')), q('p:cMediaNode'), vol='80000', showWhenStopped='0')
+    at = etree.SubElement(node, q('p:cTn'), id=str(next(ids)), fill='hold', display='0')
+    etree.SubElement(etree.SubElement(at, q('p:stCondLst')), q('p:cond'), delay='indefinite')
+    stop = etree.SubElement(etree.SubElement(at, q('p:endCondLst')), q('p:cond'), evt='onStopAudio', delay='0')
+    etree.SubElement(etree.SubElement(stop, q('p:tgtEl')), q('p:sldTgt'))
+    etree.SubElement(etree.SubElement(node, q('p:tgtEl')), q('p:spTgt'), spid=spid)
+    qid = by_name(sl, '!!quote').find(q('p:nvSpPr')).find(q('p:cNvPr')).get('id')
+    for eff in tm.iter(q('p:cTn')):                     # 문장이 한 글자씩 뜨는 효과: 음성의 마지막 말이 시작할 때로 늦추고 글자 간격을 말에 맞춤
+        if eff.get('presetClass') == 'entr' and {t.get('spid') for t in eff.iter(q('p:spTgt'))} == {qid}:
+            # 이 효과는 '앞 효과 다음에' 묶음에 따로 들어 있어서, 그대로 두면 PowerPoint가 음성이 끝난 뒤에야 시작한다(시험: 지연 값을 바꿔도 10.5초 뒤).
+            # 음성과 같은 묶음으로 옮겨 '앞 효과와 함께 + 지연'으로 건다
+            par_eff = eff.getparent()
+            holder = par_eff.getparent().getparent().getparent()        # 이 효과만 담고 있던 안쪽 묶음(p:par)
+            eff.find(q('p:stCondLst')).find(q('p:cond')).set('delay', str(round((CALL_AT + CALL_QUOTE) * 1000 - 80)))
+            eff.set('nodeType', 'withEffect')
+            inner.find(q('p:childTnLst')).append(par_eff)
+            if not len(holder.find(q('p:cTn')).find(q('p:childTnLst'))):
+                holder.getparent().remove(holder)
+            for it in eff.iter(q('p:tmAbs')):
+                it.set('val', str(CALL_TYPE))
+            break
+    else:
+        raise AssertionError('2쪽: 문장이 뜨는 효과를 못 찾음')
+
+
 # 옮겨 온 덱의 노트와 견주지 않는 장: 6차에 우리가 노트를 바꾼 장과, 8차에 발표자가 대본을 다시 쓴 장
 NOTE_OURS = {'in02', 'in03', 'in04', 'in05', 'in07', 'in08', 'hub2', 'in09', 'scat', 'gath', 'link', 'bridge'}
 INTRO_PATCH = {                                       # 옮겨 온 장마다 6차부터 더 손보는 일
+    'in02': [patch_call],
     'in03': [patch_person_click, patch_floats, patch_aura], 'in04': [patch_floats, patch_aura], 'in05': [patch_floats, patch_aura],
     'in07': [patch_heading7], 'hub2': [patch_hub], 'in09': [patch_answer], 'gath': [patch_gather], 'bridge': [patch_logo_center],
 }
@@ -654,7 +730,7 @@ def build(dst):
                              '여기부터는 제안 장표입니다. 본 발표에서는 넘기지 않습니다.')] + specs['prop']) if specs['prop'] else []      # 6차: 없음
     prev8, prev7, prev6, prev5, prev4, prev3, prev2, prev1 = (list(Presentation(str(f)).slides)
                                                               for f in (PREV8, PREV7, PREV6, PREV5, PREV4, PREV3, PREV2, PREV))
-    old8 = draw([N.s_divider('o8', '이전 판 (8차)', ['11월 13일 8차 통합본에서 9차에 화면이나 대본이 바뀐 장: 수많은 기록(6쪽), 02 질의 재작성(29쪽)',
+    old8 = draw([N.s_divider('o8', '이전 판 (8차)', ['11월 13일 8차 통합본에서 9차에 화면이나 대본이 바뀐 장: 통화(2쪽), 수많은 기록(6쪽), 02 질의 재작성(29쪽)',
                                                     'Hop 1(30쪽), Hop 2(31쪽), 본 발표에서 뺀 비즈니스 임팩트(34쪽), 연표(35쪽), 마무리 ①(36쪽), 맺는 장(39쪽)',
                                                     '노트에 그때의 대본이 그대로 있습니다'],
                              '여기부터는 바꾸기 전의 장입니다. 본 발표에서는 넘기지 않습니다.')])
