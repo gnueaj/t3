@@ -106,12 +106,14 @@
 그 전에 쓰던 아웃트로 덱의 앱 아이콘 19개는 뺐어요(덱 뒤쪽 이전 판 (5차)의 36쪽에 그 모습이 있어요).
 끝 화면 바탕(`end-bg.png`)은 2차부터 쓰지 않아 뺐어요. `moment-hand-white.png`는 손글씨 '순간'을 사진 위에 얹으려고 흰색으로 바꾼 거예요.
 
-## '앞으로의 Weave' 장 후보의 그림 (`next/`, 11월 14일)
+## '미래의 Weave' 장의 그림 (`next/`, 11월 14일)
 
-덱에는 아직 넣지 않은 후보 장(`../next_new.py`, `../미래장표_후보`)의 그림이에요. `tools/next_assets.py`가 만들어요.
+덱 35쪽 '미래의 Weave'(`../next2_new.py`)와 그 1판(`../next_new.py`)의 그림이에요. `tools/next_assets.py`가 만들어요. 35쪽에 쓰는 것은 `note-light.png`, `photo-light.jpg`, 앱 아이콘 셋, `ic-pen-line.png`, `ic-house.png`예요.
 
-- `next/note-light.png`, `next/note-wind.png`, `next/note-tree.png`: 검정 펜으로 서툴게 그린 풍경과 손글씨 두 줄. codex의 이미지 생성으로 만든 그림에서 흰 바탕을 투명으로 바꾸고 선을 조금 굵혔어요.
+- `next/note-light.png`, `next/note-wind.png`, `next/note-tree.png`: 검정 펜으로 서툴게 그린 풍경과 손글씨 두 줄. codex의 이미지 생성으로 만든 그림에서 흰 바탕을 투명으로 바꾸고 선을 조금 굵혔어요. `note-light.png`의 손글씨는 '빨간 등대 있던 바다 / 엄마랑 노을 본 날'이에요.
 - `next/photo-light.jpg`, `next/photo-wind.jpg`, `next/photo-tree.jpg`, `next/photo-family.jpg`: 그 손그림으로 찾는 사진 셋과 TV 화면 속 가족 여행 사진. codex의 이미지 생성으로 만들었어요.
 - `next/app-bixby.png`: Galaxy Store의 Bixby 앱 아이콘(galaxystore.samsung.com/detail/com.samsung.android.bixby.agent)을 128px로 줄였어요.
 - `next/app-smartthings.png`: Google Play의 SmartThings 앱 아이콘(play.google.com/store/apps/details?id=com.samsung.android.oneconnect)을 128px로 줄이고 모서리를 둥글렸어요.
+- `next/app-music.png`: Galaxy Store의 Samsung Music 앱 아이콘(galaxystore.samsung.com/detail/com.sec.android.app.music)을 128px로 줄였어요.
+- `next/emoji-sad.png`: Noto Emoji(github.com/googlefonts/noto-emoji, 그림은 Apache License 2.0)의 우는 얼굴(`2D/png/512/emoji_u1f622.png`)을 128px로 줄였어요. 35쪽 카카오톡 말끝에 붙어요.
 - `next/ic-*.png`(펜, 집, 휴대폰, 워치, 노트북, TV, 냉장고, 세탁기, 차): Lucide(lucide.dev, ISC 라이선스, lucide-static 0.460.0)의 선 그림이에요. `src/icons_next.html`에 옮겨 적고 연표 아이콘과 같은 규격(24칸 격자, 굵기 2)에 보라(6B4EFF)로 찍었어요.

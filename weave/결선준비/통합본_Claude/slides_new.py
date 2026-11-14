@@ -11,6 +11,8 @@
   기존 기능과의 비교는 Appendix로 옮김(cmp_new.s_cmp_apx). 여기의 s_cmp(두 축 지도)는 5차까지 쓰던 것이고 아이콘과 이름표(cmp_icon, map_point)는 계속 씀.
 - 7차(11-13): 비교 장이 다시 본 발표로(cmp_new.s_cmp, 키 cmp. 말할 글은 여기 NOTES['cmp']), 맺는 인사를 하는 마지막 장(s_bye: 아이콘과 Weave 글자만).
   bi는 앱 아이콘을 5차의 묶음(19개)으로 되돌리고 휴대폰 안 동그라미 아래에 'Weave Assist'.
+- 9차(11-14): 비즈니스 임팩트(bi)를 본 발표에서 빼고, 연표 다음에 '미래의 Weave'(next2_new.s_next, 키 nx)를 넣음. 연표의 두 줄 사이를 조금 좁힘(TL_YU, TL_YL).
+  맺는 장(s_bye)은 15쪽처럼 로고 아래에서 앱들이 실 한 가닥으로 이어짐(클릭 없이).
 
 좌표는 1280×720 px. 말할 글은 NOTES((클릭) = 그 자리에서 클릭)와 INTRO_NOTES(옮겨 온 인트로 장의 노트)에 있다.
 """
@@ -101,14 +103,17 @@ NOTES = {
             'Writing Assist는 지금 쓰는 글을 다듬고, 카나나는 카카오톡 내에서 대화 요약과 맞춤형 제안을 제공합니다. '
             'Now Nudge와 Finder 역시 지금 화면에 맞춰 제안하거나 한 번 탐색하는 데 그칩니다. '
             '(클릭) Weave는 여러 앱에 흩어진 단서를 찾을 뿐 아니라, 이들을 연결함으로써 사용자가 정말 원하는 답이 무엇인지 찾아줍니다.'),
+    # 9차(11-14): 기술 구간('검색 기술은 뜻으로 찾는 임베딩에서, 찾아낸 정보를 바탕으로 답하는 RAG로 발전했고, 지난해에는 … 나왔습니다')이
+    # 비문 같고 자연스럽지 않다는 검토 → Carbon이 다듬은 글로(두 문장으로 끊고, 화면의 마디 이름 '뜻으로 찾기', '찾아서 답하기'와 같은 말로)
     'tl': ('그렇다면 왜 지금일까요? '
-           '(클릭) 검색 기술은 뜻으로 찾는 임베딩에서, 찾아낸 정보를 바탕으로 답하는 RAG로 발전했고, '
-           '지난해에는 추론하며 찾는 Reasoning Embedding이, 올해는 단서를 이어 찾는 AgentIR과 Hi-Q가 나왔습니다. '
+           '(클릭) 검색 기술은 뜻으로 찾는 임베딩과 찾아서 답하는 RAG를 거쳐 왔습니다. '
+           '그리고 지난해 추론하며 찾는 Reasoning Embedding에 이어, 올해는 단서를 잇는 AgentIR과 Hi-Q까지 등장했습니다. '
            '(클릭) 갤럭시도 준비를 마쳤습니다. 온디바이스 AI 연산을 위한 NPU가 들어왔고, '
            '2024년에는 Galaxy AI가, 지난해에는 개인 데이터를 기기 안에서 다루는 Personal Data Engine, 즉 PDE가 더해졌습니다. '
            '(클릭) 기술과 인프라가 모두 준비된 지금이, Weave가 필요한 때입니다.'),
-    'end1': ('당신이 사랑하는 모든 것에 더 가까이 다가가고, 오래도록 이야기하게 될 순간을 담아보세요. '
-             '최근 갤럭시 광고 카피 중 일부입니다. 저희는 갤럭시와 함께 더 많은 소중한 순간을 담을 수 있게 되었고,'),      # 문장이 다음 장(end2)으로 이어짐
+    # 9차(11-14): 시간이 많이 넘어 뒤의 두 문장을 뺌('최근 갤럭시 광고 카피 중 일부입니다. 저희는 갤럭시와 함께 더 많은 소중한 순간을 담을 수 있게 되었고,').
+    # 출처는 화면의 글(END_BY)로만 남음
+    'end1': '당신이 사랑하는 모든 것에 더 가까이 다가가고, 오래도록 이야기하게 될 순간을 담아보세요.',
     'end2': '기기 안에는 그렇게 담아 둔 순간들이 쌓여 있습니다.',
     'end3': '갤럭시의 모든 순간이 다시 이야기가 되도록, Weave가 이어 가겠습니다.',
     'bye': '지금까지 Weave였습니다. 감사합니다.',      # 11-13 7차: 맺는 인사는 마지막 장(아이콘과 Weave 글자만)에서. 8차: 'Weave Assist였습니다' → 'Weave였습니다'
@@ -795,7 +800,7 @@ def s_cmp():
 # ------------------------------------------------------------------ 뒷부분 4: Why Now · Why Samsung 연표
 # 위는 기술, 아래는 갤럭시. 두 줄이 회색에서 보라로 짙어지며 오른쪽 끝의 Weave에서 만난다(11-12: 2차의 제안 장표 모양을 본 발표로).
 # 이름표(WHY NOW, WHY SAMSUNG)는 줄 왼쪽 바깥에, 마디마다 아이콘. 기술 줄의 마지막 마디는 2026년 AgentIR · Hi-Q.
-TL_YU, TL_YL, TL_YC = 318, 454, 386            # 위 줄, 아래 줄, 두 줄이 만나는 높이
+TL_YU, TL_YL, TL_YC = 328, 444, 386            # 위 줄, 아래 줄, 두 줄이 만나는 높이(9차: 두 줄 사이를 136 → 116px로 조금 좁힘. 다음 장 '미래의 Weave'도 같은 값)
 TL_X0, TL_X1, TL_WX = 206, 1034, 1140          # 줄이 시작하는 곳, 곧게 가는 끝, Weave 마디
 TL_NOW = 700                                   # 이보다 오른쪽 마디는 보라(최근), 왼쪽은 회색
 TL_UP = [    # (x, 해, 한마디, 근거, 아이콘)
@@ -939,16 +944,45 @@ def s_end3(photo='closing-3-family-sea.jpg', stops=((0, 54), (30, 58), (62, 58),
     return s
 
 
-BYE_MARK, BYE_PT = 86, 68          # 맺는 장의 아이콘 한 변과 글자 크기(14쪽 가운데의 로고와 같은 크기)
+BYE_MARK, BYE_PT = 86, 68          # 맺는 장의 아이콘 한 변과 글자 크기(15쪽 가운데의 로고와 같은 크기)
+BYE_T0, BYE_TH, BYE_STEP = 600, 1900, 380      # 맺는 장: 앱들이 뜨기 시작하는 때, 실이 들어오기 시작하는 때, 실이 앱 하나를 지나는 시간(ms, s.on()에 넣는 값)
 
 
 def s_bye():
-    """맺는 인사("지금까지 Weave Assist였습니다. 감사합니다.")를 하는 마지막 장(11-13 7차): 덱의 기본 바탕 한가운데에 아이콘과 'Weave' 글자만."""
+    """맺는 인사("지금까지 Weave였습니다. 감사합니다.")를 하는 마지막 장. 7차(11-13): 덱의 기본 바탕 한가운데에 아이콘과 'Weave' 글자만.
+    9차(11-14): 15쪽(모션그래픽 앞 장)처럼 로고는 가운데 조금 위에, 그 아래에 떠 있는 앱들이 실 한 가닥으로 이어진다.
+    클릭 없이 장이 열리면 끝까지 나온다: 로고 → 앱들이 떠오름 → 실이 왼쪽에서 들어와 카카오톡, 갤러리, 삼성노트, 캘린더를 차례로 잇고 별에서 끝남.
+    실에 꿰이지 않는 앱은 실이 다 이어질 때쯤 멈춘다(끝없이 흘러가게 두면 저절로 넘기는 영상에서 장이 길어짐)."""
     s = Slide('bye', trans=('fade', 900), bar=False, notes=NOTES['bye'])
     w = BYE_MARK * 1.22 + logo_word_w(BYE_PT, 'Weave')
-    mark, word, _ = logo('bye', 640 - w / 2 - 5, 360, mark=BYE_MARK, pt=BYE_PT, text='Weave')      # 글상자의 왼쪽 여백만큼 당겨 보이는 묶음이 한가운데에 오게
+    mark, word, _ = logo('bye', 640 - w / 2 - 5, BR_CY, mark=BYE_MARK, pt=BYE_PT, text='Weave')      # 글상자의 왼쪽 여백만큼 당겨 보이는 묶음이 한가운데에 오게
+    th, end = br_thread()
+    for i, (_, pts, stops) in enumerate(th):
+        key = 'bye/th%d' % i
+        under = [(0, 'FFFFFF', 0 if i == 0 else 90), (100, 'FFFFFF', 90)]
+        s.add(key, [C(key + '/u', pts, w=BR_W + 4.4, stops=under), C(key, pts, w=BR_W, stops=stops)])
+    s.add('bye/star', star4_icon('bye/star', end[0] + 17, end[1], r=12, color='5E40F5'))
+    for k, icon, x, y, sz, al, _ in BR_FLOAT:
+        s.add('bye/' + k, [P('bye/' + k, icon, x - sz / 2, y - sz / 2, sz, sz, alpha=al, shadow=(14, 4, '6B4EFF', 16))])
     s.add('bye/logo', mark + word)
     s.on('bye/logo', 'rise', 350, 800, dy=12)
+    t_end = BYE_TH + 300 + len(BR_LINK) * BYE_STEP              # 실이 마지막 앱을 지나 별에 닿는 때
+    for i, (k, _, _, _, _, _, d) in enumerate(BR_FLOAT):          # 앱들이 서서히 떠오르고 제자리에서 조금씩 흘러감
+        t = BYE_T0 + i * 90
+        s.on('bye/' + k, 'fade_in', t, 500)
+        if k in BR_LINK:                                        # 실에 꿰이는 앱: 실이 닿기 바로 전까지 흘러가다가 제자리로 돌아옴
+            back = BYE_TH + 300 + BR_LINK.index(k) * BYE_STEP - 260
+            s.on('bye/' + k, 'move', t + 50, back - (t + 50) - 20, dx=d[0], dy=d[1], accel=0, decel=0)
+        else:
+            s.on('bye/' + k, 'move', t + 50, t_end + 260 - (t + 50), dx=d[0], dy=d[1], accel=0, decel=50000)
+    drift = {k: d for k, _, _, _, _, _, d in BR_FLOAT}
+    s.on('bye/th0', 'wipe_in', BYE_TH, 300, dir='left')
+    for i, k in enumerate(BR_LINK):
+        ti = BYE_TH + 300 + i * BYE_STEP
+        s.on('bye/' + k, 'fly', ti - 260, 420, dx=drift[k][0], dy=drift[k][1], bend=0, show=False, fade=False)   # 흘러가 있던 자리에서 제자리로
+        s.on('bye/' + k, 'pulse', ti - 40, 150, scale=1.12)
+        s.on('bye/th%d' % (i + 1), 'wipe_in', ti, BYE_STEP, dir='left')
+    s.on('bye/star', 'zoom_in', t_end - 60, 320, **{'from': 0.4})
     return s
 
 
@@ -995,9 +1029,16 @@ def s_cmp_main():
     return cmp_new.s_cmp()
 
 
+def s_next():
+    """미래의 Weave(9차): 연표 다음 장. next2_new가 이 파일을 불러 쓰므로 그릴 때 불러온다."""
+    import next2_new
+    return next2_new.s_next()
+
+
 # 11-12 4차: 비교 장을 Lock-in 앞으로(기대효과 → 비교 → Lock-in → 연표). Lock-in에서 '지금, 갤럭시에서 가능한 이유'로 바로 이어지게
 # 11-13 6차: 기대효과 세 장 → 한 장, 비교 장은 Appendix로(make.appendix_specs). 차례: 기대효과 → Lock-in → 연표 → 마무리
 # 11-13 7차: 비교 장을 다시 본 발표로(4차와 같은 자리), 맺는 인사를 하는 마지막 장(s_bye)을 더함. 차례: 기대효과 → 비교 → Lock-in → 연표 → 마무리 셋 → 맺는 장
 # 11-13 8차: 비교 장은 다시 Appendix로(make.appendix_specs → cmp_new.s_cmp_apx2). 차례: 기대효과 → Lock-in → 연표 → 마무리 셋 → 맺는 장
-SLIDES_BACK = [s_fx_one, s_bi, s_tl, s_end1, s_end2, s_end3, s_bye]
+# 11-14 9차: 비즈니스 임팩트(Lock-in, s_bi)를 빼고 연표 다음에 '미래의 Weave'(s_next). 차례: 기대효과 → 연표 → 미래의 Weave → 마무리 셋 → 맺는 장
+SLIDES_BACK = [s_fx_one, s_tl, s_next, s_end1, s_end2, s_end3, s_bye]
 SLIDES_PROPOSAL = []               # 6차: 제안 장표 묶음은 없음(기대효과를 고리의 움직임으로 보여 주던 세 장은 이전 판 (5차)에)

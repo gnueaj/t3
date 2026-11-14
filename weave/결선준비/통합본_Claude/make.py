@@ -12,7 +12,7 @@
   7차(11-13): 3~5쪽 인물 뒤에 아주 옅은 보라 그라데이션(patch_aura).
   4차까지는 원본/Weave_결선_중간본_도입부수정.pptx의 장을 옮겨 손보고(patch_intro) 9, 11~12, 14쪽은 새로 그렸다(slides_new.py의 s_hub2, s_scat, s_link, s_bridge).
 - 6쪽(수많은 기록): 새로 그린다(slides_new.py).
-- 바꾸기 전의 장: 원본/통합본_7차.pptx (git show e0a4e14:…), 원본/통합본_6차.pptx (git show 9c91050:…), 원본/통합본_5차.pptx (git show fcf8346:…), 원본/통합본_4차.pptx (git show 406c351:…), 원본/통합본_3차.pptx (git show ab0c460:…), 원본/통합본_2차.pptx (git show 9a8bddb:…), 원본/통합본_1차.pptx (git show ab7ab74:…)에서 옮겨 덱 맨 뒤에 둔다.
+- 바꾸기 전의 장: 원본/통합본_8차.pptx (git show c3a5b5d:…), 원본/통합본_7차.pptx (git show e0a4e14:…), 원본/통합본_6차.pptx (git show 9c91050:…), 원본/통합본_5차.pptx (git show fcf8346:…), 원본/통합본_4차.pptx (git show 406c351:…), 원본/통합본_3차.pptx (git show ab0c460:…), 원본/통합본_2차.pptx (git show 9a8bddb:…), 원본/통합본_1차.pptx (git show ab7ab74:…)에서 옮겨 덱 맨 뒤에 둔다.
 - 표지와 모션그래픽 영상 장: 02_PPT/Weave_결선_중간본.pptx의 1쪽과 4쪽. 표지는 영상을 v9(10_표지영상/표지_루프.mp4, 18초)로 바꾸고 제목을 조금 줄인다(patch_cover).
   모션그래픽은 영상을 v24(08_인트로영상/Weave_모션그래픽.mp4: 제목의 색과 자간을 표지와 같게)로 바꿔 끼운다(patch_mg).
 - 솔루션 3장 + How it Works 13장 + Appendix 15장: 09_HowItWorks/장표5_claude/build.py의 장을 그대로 그린다.
@@ -22,6 +22,8 @@
   8차(11-13 낮): 발표자가 다시 쓴 대본. 12쪽을 둘로 나눔(patch_gather: 기록 그림만 가운데로 옮겨 오는 장을 11쪽과 12쪽 사이에),
   10쪽 AI 답변 글자를 한 단계 작게 하고 말풍선의 네 변 여백을 맞춤(patch_answer), 15쪽 로고를 조금 오른쪽으로(patch_logo_center),
   비교 장은 다시 Appendix 맨 앞으로(cmp_new.s_cmp_apx2), 모션그래픽은 v25(03 장면의 대화, 탑승권, 링크, 병 사진).
+  9차(11-14): 비즈니스 임팩트(8차 34쪽)를 본 발표에서 빼고 연표 다음에 '미래의 Weave'(next2_new.s_next)를 넣음. 연표의 두 줄 사이를 조금 좁히고,
+  맺는 장은 15쪽처럼 앱들이 실로 이어짐(slides_new.s_bye). How it Works 29, 30쪽의 대본은 '핵심 요소'를 짚는 말로(장표5_claude/build.py).
 """
 import argparse
 import copy
@@ -57,6 +59,7 @@ HW.OUT = OUT                                                      # 낭독(out/t
 # ------------------------------------------------------------------ 읽는 소리: 숫자·영문을 소리 나는 대로(How it Works의 tts_text 앞에 한 번 더 거름)
 READ_FIRST = [('Personal Data Engine', '퍼스널 데이터 엔진'), ('Weave Assist', '위브 어시스트'), ('Writing Assist', '라이팅 어시스트'), ('Galaxy AI', '갤럭시 에이아이'), ('Now Nudge', '나우 넛지'), ('Finder', '파인더'), ('RAG', '래그'),
               ('AgentIR', '에이전트 아이알'), ('Hi-Q', '하이큐'), ('NPU', '엔피유'), ('Lock-in', '락인'),
+              ('SmartThings', '스마트싱스'), ('Bixby', '빅스비'), ('S펜', '에스펜'), ('TV', '티브이'),      # 9차: 미래의 Weave
               ('Multi-hop', '멀티홉'), ('PDE', '피디이'), ('KEEP', '킵'), ('AI', '에이아이'), ('Samsung', '삼성'), ('Galaxy', '갤럭시'), ("'", '')]
 DIGIT = '영일이삼사오육칠팔구'
 
@@ -85,6 +88,7 @@ PREV4 = HERE / '원본' / '통합본_4차.pptx'                # 11월 12일 4�
 PREV5 = HERE / '원본' / '통합본_5차.pptx'                # 11월 12일 5차 통합본(밤의 낱말 수정까지, fcf8346)
 PREV6 = HERE / '원본' / '통합본_6차.pptx'                # 11월 13일 6차 통합본(9c91050)
 PREV7 = HERE / '원본' / '통합본_7차.pptx'                # 11월 13일 7차 통합본(7차 뒤의 손질까지, e0a4e14)
+PREV8 = HERE / '원본' / '통합본_8차.pptx'                # 11월 13일 8차 통합본(c3a5b5d)
 INTRO2 = HERE / '원본' / '통합본_인트로수정_87bf80b.pptx'   # 팀원이 7~14쪽을 손본 덱(jjun-0824/t3 87bf80b). 2~5쪽과 7~14쪽을 여기서 옮김
 MG_MP4 = ROOT / '08_인트로영상' / 'Weave_모션그래픽.mp4'      # 모션그래픽 v25(111.1초). 중간본에 든 v23과 길이와 소리가 같음
 COVER_MP4 = ROOT / '10_표지영상' / '표지_루프.mp4'      # 표지 영상 v9(18초)
@@ -175,6 +179,8 @@ PREV3_KEEP = [16] + list(range(21, 27)) + [30, 37]      # 3차 통합본에서: 
 # 7차 통합본에서: 8차에 화면이나 대본이 바뀐 장. 인트로 2~5, 7~12, 14쪽, 솔루션 ③(18), 기존 검색 물음(21), 키워드(22), 임베딩(23), step(24), 중간 단서(25),
 # Hop 1(29), 결과 제공(31), 기대효과(32), 비교(33), 비즈니스 임팩트(34), 연표(35), 마무리 ①②(36, 37), 맺는 장(39)
 PREV7_KEEP = [2, 3, 4, 5, 7, 8, 9, 10, 11, 12, 14, 18, 21, 22, 23, 24, 25, 29, 31, 32, 33, 34, 35, 36, 37, 39]
+# 8차 통합본에서: 9차에 화면이나 대본이 바뀐 장. 02 질의 재작성(29), Hop 1(30), 본 발표에서 뺀 비즈니스 임팩트(34), 연표(35), 마무리 ①(36), 맺는 장(39)
+PREV8_KEEP = [29, 30, 34, 35, 36, 39]
 
 
 def own_specs():
@@ -645,7 +651,13 @@ def build(dst):
     appx = draw(appendix_specs())
     prop = draw([N.s_divider('p0', '제안 장표', ['본 발표에 넣을지 정하지 않은 장'],
                              '여기부터는 제안 장표입니다. 본 발표에서는 넘기지 않습니다.')] + specs['prop']) if specs['prop'] else []      # 6차: 없음
-    prev7, prev6, prev5, prev4, prev3, prev2, prev1 = (list(Presentation(str(f)).slides) for f in (PREV7, PREV6, PREV5, PREV4, PREV3, PREV2, PREV))
+    prev8, prev7, prev6, prev5, prev4, prev3, prev2, prev1 = (list(Presentation(str(f)).slides)
+                                                              for f in (PREV8, PREV7, PREV6, PREV5, PREV4, PREV3, PREV2, PREV))
+    old8 = draw([N.s_divider('o8', '이전 판 (8차)', ['11월 13일 8차 통합본에서 9차에 화면이나 대본이 바뀐 장: 02 질의 재작성(29쪽), Hop 1(30쪽)',
+                                                    '본 발표에서 뺀 비즈니스 임팩트(34쪽), 연표(35쪽), 마무리 ①(36쪽), 맺는 장(39쪽)',
+                                                    '노트에 그때의 대본이 그대로 있습니다'],
+                             '여기부터는 바꾸기 전의 장입니다. 본 발표에서는 넘기지 않습니다.')])
+    old8 += [F.copy_slide(prs, prev8[i - 1], note_tpl) for i in PREV8_KEEP]
     old7 = draw([N.s_divider('o7', '이전 판 (7차)', ['11월 13일 7차 통합본에서 8차에 화면이나 대본이 바뀐 장: 인트로 2~5, 7~12, 14쪽, 솔루션 ③(18쪽)',
                                                     'How it Works 21~25, 29, 31쪽, 기대효과(32쪽), 비교(33쪽), 비즈니스 임팩트(34쪽), 연표(35쪽)',
                                                     '마무리 ①②(36, 37쪽), 맺는 장(39쪽). 노트에 그때의 대본이 그대로 있습니다'],
@@ -677,12 +689,12 @@ def build(dst):
                                                     '노트에 그때의 대본이 그대로 있습니다'],
                              '여기부터는 바꾸기 전의 장입니다. 본 발표에서는 넘기지 않습니다.')])
     old1 += [F.copy_slide(prs, prev1[i - 1], note_tpl) for i in PREV_KEEP] + [F.copy_slide(prs, src[12], note_tpl)]
-    order = [*main, *appx, *prop, *old7, *old6, *old5, *old4, *old3, *old2, *old1]
+    order = [*main, *appx, *prop, *old8, *old7, *old6, *old5, *old4, *old3, *old2, *old1]
     drop_slides(prs, [s for s in old if s not in (cover, mg)])
     reorder(prs, order)
     samsung_fonts.remap_prs(prs)
     logo_style(own['back'])                             # 맺는 장의 'Weave' 글자를 표지 제목처럼(Samsung Sharp Sans, 보라 그라데이션)
-    build.n_old7, build.n_old6, build.n_old5, build.n_old4 = len(old7), len(old6), len(old5), len(old4)
+    build.n_old8, build.n_old7, build.n_old6, build.n_old5, build.n_old4 = len(old8), len(old7), len(old6), len(old5), len(old4)
     build.n_main, build.n_appx, build.n_prop, build.n_old3, build.n_old2, build.n_old1 = n_main, len(appx), len(prop), len(old3), len(old2), len(old1)
     prs.save(str(dst))
     for key, nclick, nnote, _ in report:

@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
-"""9차 후보(next_new.py: 연표 다음의 '앞으로의 Weave' 장, biz_new.py: 비즈니스 임팩트 장)를 말하며 넘기는 영상으로 찍는다. 덱은 바꾸지 않는다.
+"""9차에 만든 장(next2_new.py: 연표 다음의 '미래의 Weave', next_new.py: 그 1판, biz_new.py: 비즈니스 임팩트 후보)을 그 장만 말하며 넘기는 영상으로 찍는다.
+통합 덱은 바꾸지 않는다(덱에 넣는 것은 make.py).
 
-  python tools/next_try.py               → 후보 모두: <폴더>/<이름>.mp4 와 후보를 모은 덱(클릭으로 넘김), 한눈에 그림
-  python tools/next_try.py --only 미래A,임팩트가
-  python tools/next_try.py --quick 미래A  → 낭독 없이 빨리 찍어 봄(out/next_try/quick_미래A.mp4와 한눈에 보는 그림)
-  python tools/next_try.py --deck        → 후보를 모은 덱과 정적 그림(out/next_try/png)만
-  python tools/next_try.py --check       → 영상에 넣은 낭독을 받아쓰기로 글과 견줌
-  python tools/next_try.py --sheet       → 찍어 둔 영상에서 한눈에 그림만 다시
+  python tools/next_try.py --only 미래의Weave   → 미래장표_후보/미래의Weave.mp4, 그 장만 담은 덱(클릭으로 넘김), 한눈에 그림
+  python tools/next_try.py --only 미래A,임팩트가  → 1판과 비즈니스 임팩트 후보를 다시 찍을 때(--only 없이 부르면 1판을 뺀 모두)
+  python tools/next_try.py --quick 미래의Weave  → 낭독 없이 빨리 찍어 봄(out/next_try/quick_미래의Weave.mp4와 한눈에 보는 그림)
+  python tools/next_try.py --deck [--only …]   → 덱과 정적 그림(out/next_try/png_<묶음>)만
+  python tools/next_try.py --check [--only …]  → 영상에 넣은 낭독을 받아쓰기로 글과 견줌
+  python tools/next_try.py --sheet [--only …]  → 찍어 둔 영상에서 한눈에 그림만 다시
 
 낭독은 이 컴퓨터 안에서만 만든다(talk.py와 같은 목소리). 낭독과 녹화는 out/next_try/<후보>/에 따로 둔다.
 """
@@ -26,10 +27,9 @@ import next_new as NX  # noqa: E402
 
 HW = MK.HW
 WORK = MK.OUT / 'next_try'
-MK.READ_FIRST[:0] = [('SmartThings', '스마트싱스'), ('Bixby', '빅스비'), ('S펜', '에스펜'), ('TV', '티브이'), ('Galaxy AI', '갤럭시 에이아이')]      # 읽는 소리
 
 
-OLD = {c[0] for c in NX.CANDIDATES}       # 1판(카드 셋이 한 줄의 실에 꿰임): 덱 뒤쪽에만 남기고 영상은 다시 찍지 않음(--only로 부르면 찍음)
+OLD = {c[0] for c in NX.CANDIDATES}       # 1판(카드 셋이 한 줄의 실에 꿰임): 덱과 영상을 다시 만들지 않음(--only로 부르면 영상은 찍음)
 
 
 def cands():
@@ -170,7 +170,7 @@ def overview(group, dst, heads):
 
 
 def nine(dst):
-    """자리 셋 × 후보 셋의 카드 아홉 장을 한 장에(정적 그림 out/next_try/png_미래에서 잘라 냄: 미래A, B, C가 2, 4, 6쪽)."""
+    """1판: 자리 셋 × 후보 셋의 카드 아홉 장을 한 장에(1판의 장을 모은 덱의 정적 그림에서 잘라 냄. 지금은 부르지 않음: 그림은 미래장표_후보/이전판에 있음)."""
     from PIL import Image, ImageDraw, ImageFont
     k = 1600 / 1280
     font, small = ImageFont.truetype(str(TK.FONT), 30), ImageFont.truetype(str(TK.FONT), 22)
@@ -213,16 +213,14 @@ def main():
     if not (a.deck or a.sheet):
         for code in codes:
             record(code)
+    todo = [d for d in NX.DECKS if any(c.startswith(d[0]) and c not in OLD for c in codes)]      # 손댄 묶음만 덱과 그림을 다시 만든다
     if not a.sheet:
-        for group, folder, name in NX.DECKS:
-            cs = [c[0] for c in cands() if c[0].startswith(group)]
-            if cs:
-                dst = deck(cs, HERE / folder / name)
-                print(MK.render_c.png(dst, WORK / ('png_' + group), 1600, 900)[-1])
-    for group, folder, name in NX.DECKS:
+        for group, folder, name in todo:
+            cs = [c[0] for c in cands() if c[0].startswith(group) and c[0] not in OLD]
+            dst = deck(cs, HERE / folder / name)
+            print(MK.render_c.png(dst, WORK / ('png_' + group), 1600, 900)[-1])
+    for group, folder, name in todo:
         overview(group, HERE / folder / '한눈에.jpg', heads=4)
-    (NX.FUT / '이전판').mkdir(exist_ok=True)
-    nine(NX.FUT / '이전판' / '카드_아홉장_1판.jpg')
 
 
 if __name__ == '__main__':

@@ -6,8 +6,9 @@
 원본(저장소에는 넣지 않음)
 - note_<이름>.png   서툰 손그림과 손글씨(흰 바탕, 검정 펜). codex 이미지 생성으로 만든 것 → 흰 바탕을 투명으로, 잉크는 한 가지 검정으로, 그림과 글씨의 테두리에 맞춰 잘라 냄
 - photo_<이름>.png  그 손그림으로 찾는 사진(codex 이미지 생성) → 카드의 사진 칸 비율로 잘라 jpg로
-- bixby_512.png (Galaxy Store의 Bixby 앱 아이콘), smartthings_512.png (Google Play의 SmartThings 앱 아이콘) → 128px. SmartThings는 네모 그림이라 모서리를 둥글림
+- bixby_512.png, music_512.png (Galaxy Store의 Bixby, Samsung Music 앱 아이콘), smartthings_512.png (Google Play의 SmartThings 앱 아이콘) → 128px. SmartThings는 네모 그림이라 모서리를 둥글림
 - lucide/<이름>.svg   Lucide(ISC)의 기기 선 그림 → assets/src/icons_next.html에 옮겨 적고 assets/next/ic-<이름>.png로 찍음
+- emoji_u1f622.png  Noto Emoji(github.com/googlefonts/noto-emoji의 2D/png/512, Apache-2.0)의 우는 얼굴 → 128px. 카카오톡 말끝에 붙는 이모지
 """
 import argparse
 from pathlib import Path
@@ -75,6 +76,10 @@ def main():
         icon(src / 'bixby_512.png', DST / 'app-bixby.png')
     if (src / 'smartthings_512.png').exists():
         icon(src / 'smartthings_512.png', DST / 'app-smartthings.png', round_k=0.26)
+    if (src / 'music_512.png').exists():
+        icon(src / 'music_512.png', DST / 'app-music.png')
+    if (src / 'emoji_u1f622.png').exists():
+        icon(src / 'emoji_u1f622.png', DST / 'emoji-sad.png')
     if (src / 'lucide').is_dir():
         icons(src)
 
