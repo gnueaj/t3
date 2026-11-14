@@ -605,6 +605,8 @@ def patch_logo_center(sl):
 #   통화 연결음 한 번 → 수화기 드는 소리 → "네, 삼성리서치 양서윤 프로입니다." → (정적) → "어... 네.. 그거요...?" → "아... 잠깐만요, 찾아보고 다시 알려 드릴게요."
 #   → 끊는 소리. 그 전에는 임시로 Carbon이 이 컴퓨터에서 합성한 후보 3(10.2초)을 넣어 두었음
 # 다른 음성으로 바꾸려면 파일을 바꾸고 아래 값을 그 음성에 맞춘다(때는 기기 안의 받아쓰기로 낱말마다 잰 값)
+# 11-15 '통화 부분 볼륨만 살짝 높여서, 지금은 잘 안 들리네': 받은 파일은 연결음이 크고(-13.9 LUFS) 목소리가 작아서(-21.9 LUFS. 낭독은 -16 LUFS)
+#   연결음은 그대로 두고 그 뒤의 목소리만 6dB 키운 파일로 바꿈(tools/call_gain.py → -17.6 LUFS). 길이와 말하는 때는 그대로. 덱에서 트는 크기도 80% → 100%
 CALL_MP3 = INTRO_AS / 'call-hook.mp3'
 CALL_LEN = 14.02                                      # 음성의 길이(초)
 CALL_AT = 0.3                                         # 장이 열린 뒤 음성이 시작하는 때(초)
@@ -650,7 +652,7 @@ def patch_call(sl):
     cb = etree.SubElement(cmd, q('p:cBhvr'))
     etree.SubElement(cb, q('p:cTn'), id=str(next(ids)), dur=str(round(CALL_LEN * 1000)), fill='hold')
     etree.SubElement(etree.SubElement(cb, q('p:tgtEl')), q('p:spTgt'), spid=spid)
-    node = etree.SubElement(etree.SubElement(root.find(q('p:childTnLst')), q('p:audio')), q('p:cMediaNode'), vol='80000', showWhenStopped='0')
+    node = etree.SubElement(etree.SubElement(root.find(q('p:childTnLst')), q('p:audio')), q('p:cMediaNode'), vol='100000', showWhenStopped='0')
     at = etree.SubElement(node, q('p:cTn'), id=str(next(ids)), fill='hold', display='0')
     etree.SubElement(etree.SubElement(at, q('p:stCondLst')), q('p:cond'), delay='indefinite')
     stop = etree.SubElement(etree.SubElement(at, q('p:endCondLst')), q('p:cond'), evt='onStopAudio', delay='0')
