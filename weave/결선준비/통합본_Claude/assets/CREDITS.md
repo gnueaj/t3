@@ -105,3 +105,12 @@
 갤러리, 메시지, 카카오톡, 카메라, 리마인더, 연락처, 계산기, 삼성노트, 스토어, 설정, 헬스, 내 파일, 클라우드, 월렛, 전화, 인터넷, 날씨, 음성 녹음, 시계예요. 34쪽(비즈니스 임팩트)에 써요.
 그 전에 쓰던 아웃트로 덱의 앱 아이콘 19개는 뺐어요(덱 뒤쪽 이전 판 (5차)의 36쪽에 그 모습이 있어요).
 끝 화면 바탕(`end-bg.png`)은 2차부터 쓰지 않아 뺐어요. `moment-hand-white.png`는 손글씨 '순간'을 사진 위에 얹으려고 흰색으로 바꾼 거예요.
+
+## '앞으로의 Weave' 장 후보의 그림 (`next/`, 11월 14일)
+
+덱에는 아직 넣지 않은 후보 장(`../next_new.py`, `../미래장표_후보`)의 그림이에요. `tools/next_assets.py`가 만들어요.
+
+- `next/note-light.png`, `next/note-wind.png`, `next/note-tree.png`: 검정 펜으로 서툴게 그린 풍경과 손글씨 두 줄. codex의 이미지 생성으로 만든 그림에서 흰 바탕을 투명으로 바꾸고 선을 조금 굵혔어요.
+- `next/photo-light.jpg`, `next/photo-wind.jpg`, `next/photo-tree.jpg`, `next/photo-family.jpg`: 그 손그림으로 찾는 사진 셋과 TV 화면 속 가족 여행 사진. codex의 이미지 생성으로 만들었어요.
+- `next/app-bixby.png`: Galaxy Store의 Bixby 앱 아이콘(galaxystore.samsung.com/detail/com.samsung.android.bixby.agent)을 128px로 줄였어요.
+- `next/app-smartthings.png`: Google Play의 SmartThings 앱 아이콘(play.google.com/store/apps/details?id=com.samsung.android.oneconnect)을 128px로 줄이고 모서리를 둥글렸어요.
