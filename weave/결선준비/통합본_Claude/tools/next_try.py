@@ -29,14 +29,13 @@ WORK = MK.OUT / 'next_try'
 MK.READ_FIRST[:0] = [('SmartThings', '스마트싱스'), ('Bixby', '빅스비'), ('S펜', '에스펜'), ('TV', '티브이'), ('Galaxy AI', '갤럭시 에이아이')]      # 읽는 소리
 
 
+OLD = {c[0] for c in NX.CANDIDATES}       # 1판(카드 셋이 한 줄의 실에 꿰임): 덱 뒤쪽에만 남기고 영상은 다시 찍지 않음(--only로 부르면 찍음)
+
+
 def cands():
-    out = list(NX.CANDIDATES)
-    try:
-        import biz_new as BZ
-        out += BZ.CANDIDATES
-    except ImportError:
-        pass
-    return out
+    import biz_new as BZ
+    import next2_new as N2
+    return list(N2.CANDIDATES) + list(NX.CANDIDATES) + list(BZ.CANDIDATES)
 
 
 def use(code):
@@ -139,7 +138,7 @@ def stills(code, times, w=800):
 def overview(group, dst, heads):
     """후보마다 클릭이 끝난 순간들을 녹화에서 뽑아 한 장에. group = 후보 코드의 앞머리('미래', '임팩트')."""
     from PIL import Image, ImageDraw, ImageFont
-    cs = [c for c in cands() if c[0].startswith(group) and (WORK / c[0] / 'timing.json').exists()]
+    cs = [c for c in cands() if c[0].startswith(group) and c[0] not in OLD and (WORK / c[0] / 'timing.json').exists()]
     if not cs:
         return
     font, small = ImageFont.truetype(str(TK.FONT), 26), ImageFont.truetype(str(TK.FONT), 18)
@@ -148,10 +147,12 @@ def overview(group, dst, heads):
         wd = WORK / code
         plan = json.loads((wd / '_talk.json').read_text(encoding='utf-8'))['plan']
         tm = json.loads((wd / 'timing.json').read_text(encoding='utf-8'))
-        p_ = plan[-1]                                       # 마지막 장(후보 장)
-        a = next(r for r in tm['rows'] if r[0] == p_['key'])[1]
-        ss, t0 = p_['seg_secs'], a + p_['trans']
-        ts = [t0 + sum(ss[:j + 1]) - 0.3 for j in range(len(ss) - 1)] + [tm['total'] - 0.5]
+        ts = []                                             # 후보 장(들)의 구간이 끝나는 때. 첫 장이 35쪽이면 그 장은 뺌
+        for p_ in (plan[1:] if len(plan) > 1 else plan):
+            a = next(r for r in tm['rows'] if r[0] == p_['key'])[1]
+            ss, t0 = p_['seg_secs'], a + p_['trans']
+            ts += [t0 + sum(ss[:j + 1]) - 0.3 for j in range(len(ss))]
+        ts[-1] = tm['total'] - 0.5
         rows.append((code, label, stills(code, ts[-heads:], 640)))
     w, h, pad, head, left = 640, 354, 12, 16, 270
     n = max(len(r[2]) for r in rows)
@@ -179,7 +180,7 @@ def nine(dst):
     d = ImageDraw.Draw(im)
     for j, t in enumerate(['자리 1', '자리 2', '자리 3']):
         d.text((left + pad + j * (cw + pad) + cw / 2, head / 2 + 2), t, font=font, fill='#1C1A24', anchor='mm')
-    for i, (name, page) in enumerate((('가', 2), ('나', 4), ('다', 6))):
+    for i, (name, page) in enumerate((('가', 5), ('나', 7), ('다', 9))):
         src = Image.open(WORK / 'png_미래' / ('s%02d.png' % page)).convert('RGB')
         y = head + i * (ch + pad)
         d.text((left / 2 + 4, y + ch / 2), name, font=font, fill='#6B4EFF', anchor='mm')
@@ -200,7 +201,7 @@ def main():
     ap.add_argument('--sheet', action='store_true')
     a = ap.parse_args()
     WORK.mkdir(parents=True, exist_ok=True)
-    codes = [c[0] for c in cands() if not a.only or c[0] in a.only.split(',')]
+    codes = [c[0] for c in cands() if (c[0] in a.only.split(',') if a.only else c[0] not in OLD)]
     if a.quick:
         for code in a.quick.split(','):
             quick(code)
@@ -220,7 +221,8 @@ def main():
                 print(MK.render_c.png(dst, WORK / ('png_' + group), 1600, 900)[-1])
     for group, folder, name in NX.DECKS:
         overview(group, HERE / folder / '한눈에.jpg', heads=4)
-    nine(NX.FUT / '카드_아홉장.jpg')
+    (NX.FUT / '이전판').mkdir(exist_ok=True)
+    nine(NX.FUT / '이전판' / '카드_아홉장_1판.jpg')
 
 
 if __name__ == '__main__':

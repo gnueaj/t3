@@ -114,3 +114,4 @@
 - `next/photo-light.jpg`, `next/photo-wind.jpg`, `next/photo-tree.jpg`, `next/photo-family.jpg`: 그 손그림으로 찾는 사진 셋과 TV 화면 속 가족 여행 사진. codex의 이미지 생성으로 만들었어요.
 - `next/app-bixby.png`: Galaxy Store의 Bixby 앱 아이콘(galaxystore.samsung.com/detail/com.samsung.android.bixby.agent)을 128px로 줄였어요.
 - `next/app-smartthings.png`: Google Play의 SmartThings 앱 아이콘(play.google.com/store/apps/details?id=com.samsung.android.oneconnect)을 128px로 줄이고 모서리를 둥글렸어요.
+- `next/ic-*.png`(펜, 집, 휴대폰, 워치, 노트북, TV, 냉장고, 세탁기, 차): Lucide(lucide.dev, ISC 라이선스, lucide-static 0.460.0)의 선 그림이에요. `src/icons_next.html`에 옮겨 적고 연표 아이콘과 같은 규격(24칸 격자, 굵기 2)에 보라(6B4EFF)로 찍었어요.

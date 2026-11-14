@@ -7,6 +7,7 @@
 - note_<이름>.png   서툰 손그림과 손글씨(흰 바탕, 검정 펜). codex 이미지 생성으로 만든 것 → 흰 바탕을 투명으로, 잉크는 한 가지 검정으로, 그림과 글씨의 테두리에 맞춰 잘라 냄
 - photo_<이름>.png  그 손그림으로 찾는 사진(codex 이미지 생성) → 카드의 사진 칸 비율로 잘라 jpg로
 - bixby_512.png (Galaxy Store의 Bixby 앱 아이콘), smartthings_512.png (Google Play의 SmartThings 앱 아이콘) → 128px. SmartThings는 네모 그림이라 모서리를 둥글림
+- lucide/<이름>.svg   Lucide(ISC)의 기기 선 그림 → assets/src/icons_next.html에 옮겨 적고 assets/next/ic-<이름>.png로 찍음
 """
 import argparse
 from pathlib import Path
@@ -74,7 +75,45 @@ def main():
         icon(src / 'bixby_512.png', DST / 'app-bixby.png')
     if (src / 'smartthings_512.png').exists():
         icon(src / 'smartthings_512.png', DST / 'app-smartthings.png', round_k=0.26)
+    if (src / 'lucide').is_dir():
+        icons(src)
 
+
+
+# ------------------------------------------------------------------ 선 그림: 2027- 마디의 펜과 집, 끝 장 아래 줄의 기기
+LUCIDE = ['smartphone', 'tv', 'refrigerator', 'washing-machine', 'watch', 'laptop', 'car', 'pen-line', 'house']      # lucide-static 0.460.0 (ISC)
+ICON_HTML = '''<!doctype html>
+<html lang="ko">
+<meta charset="utf-8">
+<!-- '앞으로의 Weave' 끝 장의 기기 아이콘. Lucide(ISC, lucide.dev)의 선 그림을 연표 아이콘(ic-*.png)과 같은 규격(24칸 격자, 굵기 2)으로, 색은 보라(6B4EFF).
+     찍기: python -I tools/next_assets.py --src <원본 폴더> (원본 폴더의 lucide/*.svg를 읽어 이 파일을 다시 씀) → assets/next/ic-*.png (256×256) -->
+<style>
+  * { margin: 0; padding: 0; }
+  body { background: transparent; }
+  .shot { width: 256px; height: 256px; }
+  svg { width: 256px; height: 256px; fill: none; stroke: #6B4EFF; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+</style>
+<body>
+%s
+</body>
+</html>
+'''
+
+
+def icons(src):
+    """원본 폴더의 lucide/<이름>.svg에서 도형만 읽어 assets/src/icons_next.html을 쓰고 PNG로 찍는다."""
+    import re
+    import subprocess
+    rows = []
+    for name in LUCIDE:
+        svg = (src / 'lucide' / (name + '.svg')).read_text(encoding='utf-8')
+        body = re.search(r'<svg[^>]*>(.*)</svg>', svg, re.S).group(1)
+        shapes = ' '.join(m.group(0) for m in re.finditer(r'<(?:path|rect|circle|line|polyline|ellipse|polygon)\b[^>]*/>', body))
+        assert shapes and '<script' not in svg.lower(), name
+        rows.append('<div class="shot" data-name="ic-%s"><svg viewBox="0 0 24 24">%s</svg></div>' % (name, shapes))
+    html = HERE / 'assets' / 'src' / 'icons_next.html'
+    html.write_text(ICON_HTML % '\n'.join(rows), encoding='utf-8')
+    subprocess.run(['node', str(HERE / 'tools' / 'shot.cjs'), str(html), str(DST)], check=True)
 
 if __name__ == '__main__':
     main()
