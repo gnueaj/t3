@@ -1,13 +1,14 @@
 #!/usr/bin/env python3
 """2쪽 통화 음성의 목소리를 키운다 → assets/intro/call-hook.mp3
 
-  python tools/call_gain.py <원본 wav> [--gain 6] [--from 1.3]
+  python tools/call_gain.py <원본 wav> [--gain 6] [--ring 3] [--from 1.3]
 
 원본(Carbon이 다듬은 최종후보 B의 wav)은 통화 연결음이 크고(-13.9 LUFS) 그 뒤의 목소리가 작다(-21.9 LUFS. 낭독은 -16 LUFS).
 연결음까지 함께 키우면 연결음만 더 커지므로, 연결음이 끝난 뒤(--from 초)부터만 --gain dB를 올린다(연결음과 목소리 사이의 빈 곳 0.2초에 걸쳐 서서히).
 목소리의 높은 봉우리는 넘치지 않게 눌러 준다(ffmpeg alimiter, -1 dBFS). 길이와 말하는 때는 그대로라 make.py의 CALL_LEN, CALL_LINES는 바꾸지 않는다.
 
 11월 15일: '첫 통화 부분 볼륨만 살짝 높여서 … 지금은 잘 안 들리네'라는 검토를 받고 만듦.
+그 뒤 '벨소리 살짝만 더 크게, 뚜루루 소리 약간 작은 듯': 목소리를 키우고 나니 연결음이 견주어 작게 들려서 연결음도 따로 키울 수 있게 함(--ring dB).
 """
 import argparse
 import re
@@ -38,15 +39,16 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('src')
     ap.add_argument('--gain', type=float, default=6.0, help='목소리를 키우는 만큼(dB)')
-    ap.add_argument('--from', dest='start', type=float, default=1.3, help='이때(초)부터 키움: 통화 연결음이 끝난 뒤')
+    ap.add_argument('--ring', type=float, default=0.0, help='통화 연결음(--from 앞)을 키우는 만큼(dB)')
+    ap.add_argument('--from', dest='start', type=float, default=1.3, help='이때(초)부터 목소리: 통화 연결음이 끝난 뒤')
     a = ap.parse_args()
     with wave.open(a.src, 'rb') as w:
         assert w.getnchannels() == 1 and w.getsampwidth() == 2, '모노 16비트 wav'
         sr, n = w.getframerate(), w.getnframes()
         x = np.frombuffer(w.readframes(n), dtype=np.int16).astype(np.float64) / 32768
     t = np.arange(n) / sr
-    g = 10 ** (a.gain / 20)
-    env = 1 + (g - 1) * np.clip((t - a.start) / RAMP, 0, 1)
+    g, gr = 10 ** (a.gain / 20), 10 ** (a.ring / 20)
+    env = gr + (g - gr) * np.clip((t - a.start) / RAMP, 0, 1)      # 연결음은 gr배, 그 뒤 0.2초에 걸쳐 g배로
     y = x * env                                         # 봉우리는 1을 넘을 수 있음 → 32비트 실수 wav로 넘겨 ffmpeg가 누르게 함
     TMP.parent.mkdir(parents=True, exist_ok=True)
     raw = TMP.with_suffix('.f32')
