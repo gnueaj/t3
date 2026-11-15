@@ -9,6 +9,7 @@ D-7 Multi-hop Retrieval 연구와 Weave의 위치, D-8 한국어 일상 기록 �
 """
 from ui import BODY, INK, MUTE, PURPLE, R, T
 
+import qna_num as NUM
 from qna_lib import (Page, box, data_row, footnote, hbars, label, lh_of, notes3, page_slide, panel, pipeline, points, rich, rwrap, tbl, vis_nums)
 
 X, W = 70, 1140
@@ -16,24 +17,27 @@ HI = dict(color=PURPLE, weight='b')
 
 
 # ------------------------------------------------------------------ D-1 모델 구성과 스펙
-D1 = [[['검색', 'Reasoning Embedding'], ['EmbeddingGemma 2¹ (Google, 2026. 10)', '텍스트 2.7억 파라미터, 256-dim'], '필요. 한국어 일상 단서로 튜닝 (D-6)', ['질의 1건에 **8ms**', '(S26 Ultra NPU 실측)'], '약 0.19GB'],
-      [['질의 재작성', 'Query Rewriter'], ['Samsung Gauss + LoRA Adapter', '(대안: 2.7억 파라미터 전용 모델)'], '필요. 검색 계획 생성을 튜닝 (D-4)', ['0.5~1.6초²', '(출력 40~80토큰)'], 'Adapter 수십 MB³'],
-      ['답변 생성', ['Samsung Gauss 3B', '(탑재된 모델 그대로)'], '없음 (프롬프트로 시작)', ['0.2~1.7초²', '(출력 10~80토큰)'], '없음']]
+D1 = [[['검색', 'Reasoning Embedding'], ['EmbeddingGemma 2¹ (Google)', '텍스트 2.7억 파라미터, 256-dim'], '필요. 한국어 일상 단서로 튜닝 (D-6)',
+       ['질의 1건에 **8ms**', 'EmbeddingGemma 2를 Galaxy S26 Ultra의 NPU에서 잰 값'], '약 0.19GB'],
+      [['질의 재작성', 'Query Rewriter'], ['Samsung Gauss + LoRA Adapter', '(대안: 2.7억 파라미터 전용 모델)'], '필요. 검색 계획 생성을 튜닝 (D-4)',
+       ['**%s** (출력 40~80토큰)' % NUM.T_RW, 'Gemma 3 1B의 NPU 실측과 FunctionGemma 270M의 NPU 환산 기준²'], 'Adapter 수십 MB³'],
+      ['답변 생성', ['Samsung Gauss 3B', '(탑재된 모델 그대로)'], '없음 (프롬프트로 시작)',
+       ['**%s** (출력 10~80토큰)' % NUM.T_AN, 'Gemma 3 1B의 NPU 실측과 Gemma 4 E2B의 NPU 환산 기준²'], '없음']]
 
 
 def s_d1():
     s = page_slide('qd_model', 'D-1', [('모델 구성과 스펙', INK)])
     y = 100
-    y += tbl(s, 'qd/t', X, y, W, [17, 29, 22, 19, 13], ['역할', '모델', '추가 튜닝', '속도', '추가 메모리'], D1, hi=(0, 1), pady=11) + 22
+    y += tbl(s, 'qd/t', X, y, W, [17, 25, 17, 29, 12], ['역할', '모델', '추가 튜닝', '속도와 잰 모델', '추가 메모리'], D1, hi=(0, 1), pady=10, pt=11.5) + 20
     y += label(s, 'qd/l', X, y, '입출력 길이 제한: 온디바이스에서는 생성 길이가 곧 지연 시간')
     s.add('qd/len', [panel('qd/len/bg', X, y + 4, W, 96)] +
           vis_nums([('128토큰 이하', ['질의']), ('256토큰 이하', ['기록 Chunk⁴']), ('40~80토큰', ['검색 계획 (Query Rewriter의 출력)']),
                     ('10~80토큰', ['답변 (이름 추출 10, 메시지 25, 3줄 요약 80)'])], pt=17)(X, y + 4, W, 96))
     y += 4 + 96 + 20
     y += points(s, 'qd/p', X, y, W, ['**새로 싣는 모델은 임베딩 하나입니다.** sLLM은 기기에 탑재된 Gauss를 그대로 쓰고, Query Rewriter는 그 위에 얹는 Adapter입니다. 상황 인식과 Slot 채우기는 모델 없이 Rule과 메타데이터로 처리합니다.',
-                                    '**sLLM의 속도는 같은 크기의 공개 모델로 계산했습니다.** Gemma 3 1B와 Gemma 4 E2B를 Galaxy S25 Ultra와 S26 Ultra에서 잰 공개 측정값을 썼습니다.']) + 14
+                                    '**sLLM의 속도는 같은 크기의 공개 모델로 셈했습니다.** Gemma 3 1B는 Galaxy S25 Ultra의 NPU에서 잰 값을 그대로 쓰고, GPU와 CPU에서 잰 Gemma 4 E2B와 FunctionGemma 270M은 NPU 기준으로 환산했습니다. (B-5)']) + 14
     footnote(s, ['¹ Google, "EmbeddingGemma 2" (2026. 10. 06)와 모델 카드: Apache 2.0, 전체 7.4억 파라미터(텍스트 2.7억), 768-dim을 256-dim으로 줄여도 MTEB multilingual 61.4 → 60.4',
-                 '² LiteRT-LM 모델 카드의 공개 측정값으로 계산   ³ Apple, "Introducing Apple\'s On-Device and Server Foundation Models" (2024. 06)   ⁴ Android ML Kit GenAI Embeddings API의 입력 한도'], y)
+                 '² 공개 측정값과 NPU 환산은 B-5   ³ Apple, "Introducing Apple\'s On-Device and Server Foundation Models" (2024. 06)   ⁴ Android ML Kit GenAI Embeddings API의 입력 한도'], y)
     return s
 
 
@@ -41,7 +45,7 @@ def s_d1():
 D2 = [['Coreference Resolution', '대화나 화면을 가리키는 지시어를 풀어 독립된 질의로 만듦', ['ReALM (Apple, 2024)', 'ConvSearch-R1 (2025)'], '적합. 출력 10~30토큰'],
       ['Query Reformulation', '검색기에 맞는 표현으로 고쳐 씀', 'Rewrite-Retrieve-Read (2023)', '적합. 출력 10~30토큰'],
       [('Query Decomposition', HI), ('Multi-hop 질의를 순서가 있는 Sub-query로 분해', HI), ['RQ-RAG (2024)', 'Hi-Q (2026)'], ('Weave의 선택. 튜닝하면 가능, 출력 40~80토큰', HI)],
-      ['Reasoning Expansion', '추론 과정을 길게 생성해 질의에 덧붙임', ['BRIGHT의 GPT-4 Reasoning (2025)', 'TongSearch-QR (2025)'], '지연 초과. 3B급 모델로 500토큰 생성에 약 10초'],
+      ['Reasoning Expansion', '추론 과정을 길게 생성해 질의에 덧붙임', ['BRIGHT의 GPT-4 Reasoning (2025)', 'TongSearch-QR (2025)'], '지연 초과. 500토큰 생성에 %s' % NUM.T_EXP],
       ['HyDE', '가상의 답변 문서를 생성해 그 문서로 검색', ['HyDE (2023)', 'Query2doc (2023)'], '부적합. 출력이 길고, 생성한 내용이 틀리면 검색도 틀어짐']]
 
 
@@ -49,10 +53,10 @@ def s_d2():
     s = page_slide('qd_qr', 'D-2', [('Query Rewriting의 종류와 Weave의 선택', INK)])
     y = 100
     y += tbl(s, 'qd/t', X, y, W, [20, 33, 23, 24], ['종류', '하는 일', '대표 연구', '온디바이스 적합성'], D2, hi=(2,), pady=8) + 20
-    y += points(s, 'qd/p', X, y, W, ['**선택 기준은 출력 길이입니다.** 온디바이스에서는 토큰 하나를 생성하는 데 6.5~19ms가 듭니다. 40~80토큰인 Decomposition은 0.5~1.6초에 끝나지만, 500토큰을 쓰는 Expansion은 3B급 모델로 약 10초가 걸립니다.',
+    y += points(s, 'qd/p', X, y, W, ['**선택 기준은 출력 길이입니다.** 온디바이스에서는 토큰 하나를 생성하는 데 %s가 듭니다(FunctionGemma 270M의 NPU 환산부터 Gemma 3 1B의 NPU 실측까지). 40~80토큰인 Decomposition은 %s에 끝나지만, 500토큰을 쓰는 Expansion은 %s가 걸립니다.' % (NUM.TOK_MS, NUM.T_RW, NUM.T_EXP),
                                     '**Decomposition에 Slot을 더했습니다.** 앞 Hop의 결과가 필요한 자리는 Slot으로 비워 두고, 검색된 기록의 메타데이터로 채웁니다. Hop 사이에 LLM을 부르지 않습니다.',
                                     '**추론은 임베딩이 맡습니다.** 추론을 글로 길게 쓰지 않고, Reasoning Embedding이 추론 단서를 직접 검색합니다. (D-5, D-6)'], gap=9) + 14
-    footnote(s, '출력 길이와 지연은 팀의 온디바이스 검토(11-14) 기준. 연구의 출처는 R-1.', y)
+    footnote(s, '생성 시간은 Gemma 3 1B의 NPU 실측과 Gemma 4 E2B, FunctionGemma 270M의 NPU 환산으로 셈한 값(B-5). 연구의 출처는 R-1.', y)
     return s
 
 
@@ -123,8 +127,8 @@ def s_d4():
     label(s, 'qd/l1', X, y, '학습 데이터')
     label(s, 'qd/l2', X + lw + 40, y, 'Query Rewriter의 지표 (검색 지표는 D-8)')
     h1 = points(s, 'qd/p', X, y + 32, lw, ['**합성 기록만 씁니다.** 실제 사용자의 기록은 학습에 쓰지 않습니다. 합성 기록은 정답 기록을 알고 있어서 맞는 계획만 골라 낼 수 있습니다. (D-8)',
-                                         '**분해하지 않는 질의도 넣습니다.** 한 번에 검색되는 질의와 답이 없는 질의를 넣어 과분해를 막습니다. 항상 분해하면 정답률이 60.7에서 57.3으로 떨어집니다.⁵',
-                                         '**작은 모델로도 됩니다.** 2.7억 파라미터 모델도 튜닝하면 정해진 형식으로 출력하는 정확도가 58%에서 85%로 오릅니다.⁴'], gap=9)
+                                         '**분해하지 않는 질의도 넣습니다.** 한 번에 검색되는 질의와 답이 없는 질의를 넣어 과분해를 막습니다. Hi-Q의 실험에서 항상 분해하면 정답률이 60.7에서 57.3으로 떨어졌습니다.⁵',
+                                         '**작은 모델로도 됩니다.** FunctionGemma 270M(2.7억 파라미터)은 튜닝한 뒤 정해진 형식으로 출력하는 정확도가 58%에서 85%로 올랐습니다.⁴'], gap=9)
     h2 = deflist(s, 'qd/m', X + lw + 40, y + 32, W - lw - 40, D4_M)
     y += 32 + max(h1, h2) + 18
     footnote(s, ['¹ Ma et al., EMNLP 2023   ² Zhu et al., EMNLP 2025. Jiang et al., arXiv:2503.00223   ³ Apple (2024. 06): 기기 안의 모델 하나에 기능마다 Adapter를 얹음. Adapter 하나는 수십 MB',
@@ -151,7 +155,7 @@ def s_d5():
     y += label(s, 'qd/l1', X, y, '검색의 세 단계 (BRIGHT¹의 구분). 예시는 본 발표의 와인 질의') + 4
     y += pipeline(s, 'qd/lv', y, None, D5_LV, gap=18, name_pt=13.5, desc_pt=11.5, arrows=False)
     y += data_row(s, 'qd/ex', y, D5_EX, gap=18) + 14
-    y += rich(s, 'qd/drop', X, y, W, 'MTEB 1위였던 일반 임베딩의 점수: Level 2 평가(BEIR) **59.0** → Level 3 평가(BRIGHT) **18.3** (nDCG@10)¹', pt=12.5, color=INK) + 16
+    y += rich(s, 'qd/drop', X, y, W, '일반 임베딩 SFR-Embedding-Mistral (7B, 당시 MTEB 1위)의 점수: Level 2 평가(BEIR) **59.0** → Level 3 평가(BRIGHT) **18.3** (nDCG@10)¹', pt=12.5, color=INK) + 16
     y += label(s, 'qd/l2', X, y, '기록에 사실이 간접적으로 적힌 세 유형 (ImpliRet²의 분류)') + 4
     y += tbl(s, 'qd/t', X, y, W, [16, 28, 34, 22], ['유형', '논문의 예', 'Weave의 예', 'Weave의 처리'], D5_TY, pt=11.5, hi=(0,), pady=7) + 10
     footnote(s, ['¹ Su et al., "BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive Retrieval", ICLR 2025   '
@@ -160,7 +164,7 @@ def s_d5():
 
 
 # ------------------------------------------------------------------ D-6 Reasoning Embedding
-D6_BARS = [('일반 임베딩 (MTEB 1위, 7B)', 18.3, '18.3', False), ('LaSER (0.6B)', 23.1, '23.1', True), ('ReasonIR (8B)', 24.4, '24.4', False),
+D6_BARS = [('SFR-Embedding-Mistral (일반, 7B)', 18.3, '18.3', False), ('LaSER (0.6B)', 23.1, '23.1', True), ('ReasonIR (8B)', 24.4, '24.4', False),
            ('DIVER-Retriever (0.6B)', 25.2, '25.2', True), ('DIVER-Retriever (4B)', 28.9, '28.9', False), ('ReasonEmbed (8B)', 38.1, '38.1', False)]
 D6_STEPS = [('Base Model', 'EmbeddingGemma 2의 텍스트 구성 (2.7억 파라미터)'),
             ('학습 데이터', '합성한 (Sub-query, 단서 기록) 쌍 6만~9만 건과 Hard Negative (D-8)'),
@@ -221,7 +225,7 @@ def s_d7():
     y += rich(s, 'qd/w', X, y, W, 'Weave = **Adaptive Decomposition** (필요할 때만 분해하고 계획은 한 번에 작성) + **LLM-free Hop** (Slot을 메타데이터로 채움)', pt=13.5, color=INK) + 14
     y += points(s, 'qd/p', X, y, W, ['**고른 이유.** 온디바이스에서는 LLM 호출 횟수가 지연과 전력을 정합니다. 그래서 호출을 계획 1회와 답변 1회로 고정했습니다.',
                                     '**한계와 보완.** 계획을 처음에 정하기 때문에 첫 Hop이 빗나가면 뒤 Hop도 영향을 받습니다. Slot 후보 2~3개를 모두 검색해서 보완합니다. (C-6)'], gap=8) + 14
-    footnote(s, ['¹ Self-Ask, Iter-RetGen, EfficientRAG는 EfficientRAG 논문이 MuSiQue에서 잰 값. Hi-Q는 그 논문의 값(GPT-4o-mini). 모두 서버에서 잰 값이어서 Weave의 시간(0.8~1.7초, B-5)과 바로 견줄 수는 없음.'], y)
+    footnote(s, ['¹ Self-Ask, Iter-RetGen, EfficientRAG는 EfficientRAG 논문이 MuSiQue에서 잰 값. Hi-Q는 그 논문의 값(GPT-4o-mini). 모두 서버에서 잰 값이어서 Weave의 시간(%s, B-6)과 바로 견줄 수는 없음.' % NUM.T_UX2], y)
     return s
 
 
@@ -269,11 +273,11 @@ PAGES = [
          more=[('왜 EmbeddingGemma 2인가요?', '기기용으로 나온 임베딩 모델 가운데 가장 최근 것이고, 글과 사진을 같은 공간에 놓을 수 있습니다. 안드로이드가 공식 API로 제공하고 라이선스도 상업 이용이 됩니다.'),
                ('길이를 왜 제한하나요?', '기기 안에서는 읽고 쓰는 길이가 곧 시간입니다. 기록은 256토큰 단위로 색인하고, sLLM이 생성하는 글은 80토큰 안쪽으로 묶었습니다.'),
                ('Gauss 대신 다른 모델도 되나요?', '됩니다. 검색 계획 생성은 2억 7천만 파라미터급 전용 모델로도 할 수 있습니다. 다만 이미 탑재된 Gauss를 쓰면 메모리를 더 쓰지 않습니다.'),
-               ('Gauss의 속도는 재 보셨나요?', '임베딩 속도는 Galaxy S26 Ultra에서 직접 쟀습니다. sLLM은 같은 크기의 공개 모델이 Galaxy S25 Ultra와 S26 Ultra에서 낸 속도로 계산했습니다.'),
+               ('Gauss의 속도는 재 보셨나요?', '임베딩 속도는 Galaxy S26 Ultra의 NPU에서 직접 쟀습니다. sLLM은 같은 크기의 공개 모델로 셈했습니다. Gemma 3 1B는 NPU에서 잰 값을 그대로 쓰고, GPU와 CPU에서 잰 모델은 임베딩에서 확인한 비율로 NPU 값을 환산했습니다.'),
                ('S펜 그림으로 사진을 찾는 것도 이 모델로 되나요?', 'EmbeddingGemma 2는 그림과 사진을 같은 공간에 놓습니다. 그림만으로는 부족해서, 함께 적은 글자와 메모, 대화를 단서로 같이 씁니다.')],
          basis=['Google, "EmbeddingGemma 2"(2026. 10. 06): Gemma 4 기반, 전체 7.4억 파라미터(글 전용 2.7억, 시각 1.7억, 소리 3억), 768차원(512, 256, 128로 줄일 수 있음), 8K 토큰, Apache 2.0. Pixel 11 Pro에서 글 전용 약 191MB.',
                 '모델 카드: 256차원으로 줄이면 MTEB multilingual 평균 61.36 → 60.41. LiteRT-LM 카드(128토큰, 5회 평균): Pixel 11 Pro TPU 8.3ms(112MB), S26 Ultra CPU 27.1ms(334MB), GPU 25.9ms(333MB).',
-                '생성 속도(LiteRT-LM 공개값): FunctionGemma 270M은 S25 Ultra CPU에서 초당 154토큰, Gemma 3 1B는 S25 Ultra NPU에서 85토큰, Gemma 4 E2B는 S26 Ultra GPU에서 52토큰. Apple의 3B는 iPhone 15 Pro에서 30토큰.',
+                '생성 속도(LiteRT-LM 공개값): FunctionGemma 270M은 S25 Ultra CPU에서 초당 154토큰, Gemma 3 1B는 S25 Ultra NPU에서 85토큰, Gemma 4 E2B는 S26 Ultra GPU에서 52토큰. Apple의 3B는 iPhone 15 Pro에서 30토큰. NPU 환산은 B-5의 근거.',
                 'Android ML Kit GenAI Embeddings API(Preview): EmbeddingGemma 2를 AICore가 관리, 입력 한도 256토큰.',
                 '길이(검토 자료 6장의 가정): 재작성 입력 130토큰, 계획 출력 44~82토큰, 답 입력 170~540토큰, 출력 10~80토큰.',
                 'Samsung Gauss2: SDC24 Korea(2024. 11. 21)에서 공개. 콤팩트(온디바이스용), 밸런스드, 슈프림. 3B와 1B의 온디바이스 탑재는 팀 조사 기준.']),
@@ -281,12 +285,12 @@ PAGES = [
          q='질의를 다시 쓴다는 게 정확히 무엇인가요? 여러 방식이 있을 텐데 어떤 걸 쓰나요?',
          a='Query Rewriting에는 여러 종류가 있습니다. 앞 대화를 가리키는 말을 풀어 쓰는 것, 검색에 맞는 표현으로 고치는 것, 질의를 나누는 것, 그리고 질의에 긴 추론을 덧붙이는 것입니다. '
            'Weave가 쓰는 것은 질의를 나누는 Query Decomposition입니다. 한 번에 찾을 수 없는 질의를 순서가 있는 하위 질의로 나누고, 앞의 결과가 필요한 자리는 빈칸으로 둡니다. '
-           '이 방식을 고른 이유는 출력 길이입니다. 검색 계획은 40에서 80토큰이라 기기에서 1초 안팎에 생성합니다. '
-           '추론을 길게 덧붙이는 방식은 수백 토큰을 생성해야 해서 기기에서는 10초 가까이 걸립니다.',
-         more=[('작은 모델이 질의를 나눌 수 있나요?', '튜닝을 전제로 합니다. 2억 7천만 파라미터 모델도 튜닝하면 정해진 형식으로 출력하는 정확도가 58%에서 85%로 오릅니다. 다음 장에 근거를 모았습니다.'),
+           '이 방식을 고른 이유는 출력 길이입니다. 검색 계획은 40에서 80토큰이라 기기에서 1초 안에 생성합니다. '
+           '추론을 길게 덧붙이는 방식은 수백 토큰을 생성해야 해서 기기에서는 몇 초가 걸립니다.',
+         more=[('작은 모델이 질의를 나눌 수 있나요?', '튜닝을 전제로 합니다. 2억 7천만 파라미터인 FunctionGemma도 튜닝한 뒤에는 정해진 형식으로 출력하는 정확도가 58%에서 85%로 올랐습니다. 다음 장에 근거를 모았습니다.'),
                ('추론을 덧붙이는 방식이 성능은 더 좋지 않나요?', '긴 질의를 다루는 벤치마크에서는 그렇습니다. 다만 휴대폰에서 들어오는 질의는 짧고, 저희는 추론을 임베딩이 맡도록 튜닝하는 쪽을 골랐습니다.'),
                ('검색 서비스들도 Query Rewriting을 하나요?', '합니다. Azure AI Search는 질의마다 변형을 최대 10개 만드는 소형 모델을 두고 있고, OpenAI의 파일 검색도 질의를 다시 써서 찾습니다.')],
-         basis=['종류와 길이는 사용자의 검토 자료(11-14) 8장과 11장. 500토큰 ÷ 초당 52토큰(Gemma 4 E2B, S26 Ultra GPU) = 9.6초. 검토 자료는 TongSearch-QR의 설정(최대 500토큰)을 더 느린 구성으로 16초로 적음.',
+         basis=['종류와 길이는 사용자의 검토 자료(11-14) 8장과 11장. 500토큰: Gemma 4 E2B의 NPU 환산(초당 %d토큰)으로 %.1f초, Gemma 3 1B의 NPU 실측(초당 85토큰)으로 %.1f초.' % (round(NUM.E2B.dec_npu), 500 / NUM.E2B.dec_npu, 500 / NUM.G1B.dec_npu),
                 'Google, FunctionGemma 모델 카드: Gemma 3 270M 기반, Mobile Actions 평가에서 기본 모델 58%, 학습 뒤 85%.',
                 'RQ-RAG(Chan et al., arXiv 2404.00610): Llama2-7B 하나가 다시 쓰기, 나누기, 모호함 풀기를 학습. 단일 홉 QA에서 이전 최고보다 평균 1.9% 위.',
                 'HyDE(Gao et al., ACL 2023), Query2doc(Wang et al., EMNLP 2023).',
@@ -367,7 +371,7 @@ PAGES = [
                 'Zhuang et al., EfficientRAG, EMNLP 2024: MuSiQue 질문당 LLM 1회 3.62초, Iter-RetGen 3회 9.68초, Self-Ask 7.18회 27.47초.',
                 'Gutiérrez et al., HippoRAG, NeurIPS 2024: "comparable or better performance than iterative retrieval like IRCoT while being 10-20 times cheaper and 6-13 times faster".',
                 'Kim et al., Hi-Q, NeurIPS 2026: 질문당 LLM 평균 5.7회, 13.5초(GPT-4o-mini). 늘 나누면 60.7 → 57.3 EM.',
-                'Weave의 2회와 0.8~1.7초는 UX2 기준(B-5).']),
+                'Weave의 2회와 %s는 UX2 기준(B-6).' % NUM.T_UX2]),
     Page('D-8', '한국어 데이터와 평가', s_d8,
          q='성능은 무엇으로 어떻게 잴 건가요? 맞는 데이터가 있나요?',
          a='한국어 일상 기록에서 숨은 단서를 찾는 공개 벤치마크는 없습니다. 있는 것은 영어이고, 학술 문서나 긴 대화가 중심입니다. 그래서 직접 만듭니다. '
