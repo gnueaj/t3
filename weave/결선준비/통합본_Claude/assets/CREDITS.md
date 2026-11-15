@@ -118,3 +118,4 @@
 - `next/app-music.png`: Galaxy Store의 Samsung Music 앱 아이콘(galaxystore.samsung.com/detail/com.sec.android.app.music)을 128px로 줄였어요.
 - `next/emoji-sad.png`: Noto Emoji(github.com/googlefonts/noto-emoji, 그림은 Apache License 2.0)의 우는 얼굴(`2D/png/512/emoji_u1f622.png`)을 128px로 줄였어요. 35쪽 카카오톡 말끝에 붙어요.
 - `next/ic-*.png`(펜, 집, 휴대폰, 워치, 노트북, TV, 냉장고, 세탁기, 차): Lucide(lucide.dev, ISC 라이선스, lucide-static 0.460.0)의 선 그림이에요. `src/icons_next.html`에 옮겨 적고 연표 아이콘과 같은 규격(24칸 격자, 굵기 2)에 보라(6B4EFF)로 찍었어요.
+- `apx/ic-*.png`(휴대폰, 구름, 자물쇠, 방패): Appendix 49쪽 '왜 온디바이스인가' 장의 선 그림이에요. 팀원(ysy19)의 저장소에서 그 장과 함께 가져왔고(그쪽의 `tools/ondevice_assets.py`가 만든 것), 다른 아이콘과 같은 규격(24칸 격자, 굵기 2)에 Lucide(ISC 라이선스)의 선 그림 모양이에요.

@@ -22,6 +22,8 @@
   8차(11-13 낮): 발표자가 다시 쓴 대본. 12쪽을 둘로 나눔(patch_gather: 기록 그림만 가운데로 옮겨 오는 장을 11쪽과 12쪽 사이에),
   10쪽 AI 답변 글자를 한 단계 작게 하고 말풍선의 네 변 여백을 맞춤(patch_answer), 15쪽 로고를 조금 오른쪽으로(patch_logo_center),
   비교 장은 다시 Appendix 맨 앞으로(cmp_new.s_cmp_apx2), 모션그래픽은 v25(03 장면의 대화, 탑승권, 링크, 병 사진).
+  10차(11-15): Appendix를 발표 뒤 질의응답용으로 다시 짬(qna.py: 목차, A 기존 기술과의 차이, B 상품화, C 동작 방식, D 모델과 학습, E 시나리오 더 보기, 출처).
+  장마다 코드와 쪽 번호가 있고 목차의 항목을 누르면 그 장으로 감. 9차의 Appendix에서 합치거나 고치거나 뺀 장은 덱 뒤쪽 '이전 판 (9차 Appendix)'에.
   9차(11-14): 비즈니스 임팩트(8차 34쪽)를 본 발표에서 빼고 연표 다음에 '미래의 Weave'(next2_new.s_next)를 넣음. 연표의 두 줄 사이를 조금 좁히고,
   맺는 장은 15쪽처럼 앱들이 실로 이어짐(slides_new.s_bye). How it Works 29, 30쪽의 대본은 '핵심 요소'를 짚는 말로(장표5_claude/build.py).
 """
@@ -89,6 +91,7 @@ PREV5 = HERE / '원본' / '통합본_5차.pptx'                # 11월 12일 5�
 PREV6 = HERE / '원본' / '통합본_6차.pptx'                # 11월 13일 6차 통합본(9c91050)
 PREV7 = HERE / '원본' / '통합본_7차.pptx'                # 11월 13일 7차 통합본(7차 뒤의 손질까지, e0a4e14)
 PREV8 = HERE / '원본' / '통합본_8차.pptx'                # 11월 13일 8차 통합본(c3a5b5d)
+PREV9 = HERE / '원본' / '통합본_9차.pptx'                # 11월 15일 9차 통합본(414bf78). Appendix를 질의응답용으로 다시 짜기 전
 INTRO2 = HERE / '원본' / '통합본_인트로수정_87bf80b.pptx'   # 팀원이 7~14쪽을 손본 덱(jjun-0824/t3 87bf80b). 2~5쪽과 7~14쪽을 여기서 옮김
 MG_MP4 = ROOT / '08_인트로영상' / 'Weave_모션그래픽.mp4'      # 모션그래픽 v25(111.1초). 중간본에 든 v23과 길이와 소리가 같음
 COVER_MP4 = ROOT / '10_표지영상' / '표지_루프.mp4'      # 표지 영상 v9(18초)
@@ -184,6 +187,9 @@ PREV7_KEEP = [2, 3, 4, 5, 7, 8, 9, 10, 11, 12, 14, 18, 21, 22, 23, 24, 25, 29, 3
 # 2쪽은 11월 15일에 더함(통화 음성을 넣고 대본의 첫 문장을 뺌), 17~19쪽과 24, 26쪽도 11월 15일에 더함(17~19쪽의 손글씨 '쓱!', '톡!', '반짝!'을 빼고
 # 17, 24, 26쪽의 대본을 발표자가 고침)
 PREV8_KEEP = [2, 6, 17, 18, 19, 24, 26, 29, 30, 31, 34, 35, 36, 39]
+# 9차 통합본에서: 10차(11-15)에 질의응답용으로 다시 짜면서 합치거나 고치거나 뺀 Appendix 장. 한눈에 보기(42), 모듈과 역할(43), Reasoning Embedding과 질의 재작성(44),
+# AgentIR 후보 방식(45), 지식 그래프 두 장(46, 47), 검색 방식 비교(48, 뺌), 세 UX 공통 파이프라인(49), PDE 질문(50), 같은 날 사진(51), Apple(52), LLM(53)
+PREV9_KEEP = list(range(42, 54))
 
 
 def own_specs():
@@ -746,11 +752,17 @@ def build(dst):
     for item in SEQ:
         main += own[item[1]] if isinstance(item, tuple) else [cover if item == 'cover' else mg if item == 'mg' else intro[item]]
     n_main = len(main)
-    appx = draw(appendix_specs())
+    import qna as Q                                    # 10차(11-15): Appendix를 질의응답용으로 다시 짬(목차, 코드, 쪽 번호. qna.py)
+    appx = Q.assemble(prs, layout, note_tpl, draw, n_main + 1)
     prop = draw([N.s_divider('p0', '제안 장표', ['본 발표에 넣을지 정하지 않은 장'],
                              '여기부터는 제안 장표입니다. 본 발표에서는 넘기지 않습니다.')] + specs['prop']) if specs['prop'] else []      # 6차: 없음
-    prev8, prev7, prev6, prev5, prev4, prev3, prev2, prev1 = (list(Presentation(str(f)).slides)
-                                                              for f in (PREV8, PREV7, PREV6, PREV5, PREV4, PREV3, PREV2, PREV))
+    prev9, prev8, prev7, prev6, prev5, prev4, prev3, prev2, prev1 = (list(Presentation(str(f)).slides)
+                                                                     for f in (PREV9, PREV8, PREV7, PREV6, PREV5, PREV4, PREV3, PREV2, PREV))
+    old9 = draw([N.s_divider('o9', '이전 판 (9차 Appendix)', ['11월 15일 9차 통합본의 Appendix 가운데, 질의응답용으로 다시 짜면서 합치거나 고치거나 뺀 장',
+                                                           '한눈에 보기, 모듈과 역할, Reasoning Embedding과 질의 재작성, AgentIR 후보 방식, 지식 그래프 두 장, 검색 방식 비교',
+                                                           '세 UX 공통 파이프라인, PDE 질문, 같은 날 사진, Apple, LLM (9차의 42~53쪽)'],
+                             '여기부터는 바꾸기 전의 장입니다. 본 발표에서는 넘기지 않습니다.')])
+    old9 += [F.copy_slide(prs, prev9[i - 1], note_tpl) for i in PREV9_KEEP]
     old8 = draw([N.s_divider('o8', '이전 판 (8차)', ['11월 13일 8차 통합본에서 9차에 화면이나 대본이 바뀐 장: 통화(2쪽), 수많은 기록(6쪽), 솔루션 세 장(17~19쪽)',
                                                     '임베딩 검색(24쪽), 중간 단서(26쪽), 02 질의 재작성(29쪽), Hop 1(30쪽), Hop 2(31쪽), 본 발표에서 뺀 비즈니스 임팩트(34쪽)',
                                                     '연표(35쪽), 마무리 ①(36쪽), 맺는 장(39쪽). 노트에 그때의 대본이 그대로 있습니다'],
@@ -787,11 +799,12 @@ def build(dst):
                                                     '노트에 그때의 대본이 그대로 있습니다'],
                              '여기부터는 바꾸기 전의 장입니다. 본 발표에서는 넘기지 않습니다.')])
     old1 += [F.copy_slide(prs, prev1[i - 1], note_tpl) for i in PREV_KEEP] + [F.copy_slide(prs, src[12], note_tpl)]
-    order = [*main, *appx, *prop, *old8, *old7, *old6, *old5, *old4, *old3, *old2, *old1]
+    order = [*main, *appx, *prop, *old9, *old8, *old7, *old6, *old5, *old4, *old3, *old2, *old1]
     drop_slides(prs, [s for s in old if s not in (cover, mg)])
     reorder(prs, order)
     samsung_fonts.remap_prs(prs)
     logo_style(own['back'])                             # 맺는 장의 'Weave' 글자를 표지 제목처럼(Samsung Sharp Sans, 보라 그라데이션)
+    build.n_old9 = len(old9)
     build.n_old8, build.n_old7, build.n_old6, build.n_old5, build.n_old4 = len(old8), len(old7), len(old6), len(old5), len(old4)
     build.n_main, build.n_appx, build.n_prop, build.n_old3, build.n_old2, build.n_old1 = n_main, len(appx), len(prop), len(old3), len(old2), len(old1)
     prs.save(str(dst))
