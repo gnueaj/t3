@@ -20,7 +20,7 @@
 - `intro/floats-a.png`, `intro/floats-b.png`, `intro/floats-c.png`: 같은 조각을 세 층으로 나눈 그림이에요(6차). 3~5쪽에서 층마다 다른 쪽으로 천천히 떠다녀요. `floats.png`는 5차까지 쓰던 한 장짜리예요.
 - `intro/aura-1.png`, `intro/aura-2.png`, `intro/aura-3.png`: 3~5쪽 인물 뒤에 까는 옅은 보라 그라데이션이에요(7차). 팀원 덱 5쪽의 인물 그림 셋에서 윤곽(투명도)만 읽어 크게 흐린 그림이고, `tools/intro_assets.py --aura`가 만들어요.
 - `intro/blur_link.jpg`: 4차까지 13쪽 배경으로 쓰던 그림이에요(우리가 그린 12쪽을 흐리게 함, `tools/intro_assets.py --blur`). 5차부터 13쪽은 팀원이 손본 덱의 장을 그대로 옮겨서, 배경도 그 덱의 것이에요.
-- `intro/call-hook.mp3`: 2쪽의 통화 음성(14.0초). ElevenLabs로 만든 목소리(Chaerin - Clear, Calm (Korean), Eleven v4)에 Carbon(Gemini)이 통화 연결음(440Hz + 480Hz), 수화기를 드는 소리, 전화 음질, 끊는 소리를 입힌 최종후보 B(클래식 전화 음질, 첫 정적 1.85초)에서 목소리를 6dB, 통화 연결음을 5.5dB 키우고, 받는 소리(원본은 0.01초짜리 작은 '틱')를 이 컴퓨터에서 만든 '딸깍'으로 바꿨어요(`tools/call_gain.py --gain 6 --ring 5.5 --click 1.666`. '딸깍'은 첫마디 0.2초 앞에서 끝남. 길이와 말하는 때는 그대로)(`../통합본_Carbon/오프닝통화_후보/최종후보B_Chaerin_클래식전화음질_정적1.85초.mp3`). 11월 15일 새벽까지는 Carbon이 이 컴퓨터에서 Supertonic 3로 합성한 셋째 후보(10.2초)를 임시로 넣어 두었어요.
+- `intro/call-hook.mp3`: 2쪽의 통화 음성(14.4초). ElevenLabs로 만든 목소리(Chaerin - Clear, Calm (Korean), Eleven v4)에 Carbon(Gemini)이 통화 연결음(440Hz + 480Hz), 수화기를 드는 소리, 전화 음질, 끊는 소리를 입힌 최종후보 B(클래식 전화 음질, 첫 정적 1.85초)에서 목소리를 6dB, 통화 연결음을 5.5dB 키우고, 받는 소리(원본은 0.01초짜리 작은 '틱')를 이 컴퓨터에서 만든 '딸깍'으로 바꿨어요(`tools/call_gain.py --gain 6 --ring 5.5 --click 1.666 --click-gap 0.63`. '딸깍'이 끝나고 첫마디까지는 원본의 0.43초에 0.2초를 더한 0.63초. 그만큼 첫마디와 그 뒤가 0.43초 늦어져 길이가 14.0초 → 14.4초)(`../통합본_Carbon/오프닝통화_후보/최종후보B_Chaerin_클래식전화음질_정적1.85초.mp3`). 11월 15일 새벽까지는 Carbon이 이 컴퓨터에서 Supertonic 3로 합성한 셋째 후보(10.2초)를 임시로 넣어 두었어요.
 
 ## 연표의 NPU 아이콘 (`outro/ic-npu.png`)
 
