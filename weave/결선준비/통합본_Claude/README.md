@@ -64,7 +64,7 @@
 ~/.cache/weave-tools/venv/bin/python tools/next_try.py --only 미래의Weave   # 35쪽만 따로: 34쪽의 끝부터 말하며 넘긴 영상, 두 장만 담은 덱, 한눈에.jpg → 미래장표_후보/
 ~/.cache/weave-tools/venv/bin/python -I tools/next_assets.py --src <원본 폴더>   # 35쪽의 손그림, 사진, 앱 아이콘, 이모지 (→ assets/next)
 ~/.cache/weave-tools/venv/bin/python tools/pad_audit.py 30 35               # 떠 있는 조각의 안쪽 여백(왼, 위, 오른, 아래)을 장의 그림에서 잼 (→ out/pad_audit)
-~/.cache/weave-tools/venv/bin/python tools/call_gain.py <원본 wav> --gain 6 --ring 3     # 2쪽 통화 음성의 목소리와 연결음을 따로 키움 → assets/intro/call-hook.mp3
+~/.cache/weave-tools/venv/bin/python tools/call_gain.py <원본 wav> --gain 6 --ring 5.5 --click 1.666   # 2쪽 통화 음성의 목소리와 연결음을 따로 키우고 받는 소리 '딸깍'을 넣음 → assets/intro/call-hook.mp3
 ```
 
 - `원본/`에 열 덱을 둬야 해요(저장소에는 올리지 않아요).
