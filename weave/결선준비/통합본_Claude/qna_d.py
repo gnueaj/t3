@@ -1,9 +1,9 @@
 """Appendix D 묶음의 장들 (11-16 3판, 13차 11-17에 다시 묶음).
 
-D 묶음은 13차에 둘로 나뉜다(qna_lib.SECTIONS). 이 파일에는 그 가운데 아래 장이 있고, D-2 ~ D-4(메모리, 속도 1, 속도 2)는 qna_b.py에 있다(11차까지 상품화 묶음이던 장).
-  모델과 성능: D-1 모델 구성과 스펙
-  학습과 근거 연구: D-5 Query Rewriting의 종류와 Weave의 선택, D-6 작은 모델의 Query Rewriting(Rewrite-Retrieve-Read, ReALM), D-7 Query Rewriter 튜닝 방법,
-                    D-8 Reasoning-intensive Retrieval의 정의와 유형(BRIGHT, ImpliRet), D-9 Reasoning Embedding의 선행 연구와 튜닝 방법,
+D 묶음은 13차에 둘로 나뉜다(qna_lib.SECTIONS, D-7에서 나눔). 이 파일에는 그 가운데 아래 장이 있고, D-2 ~ D-4(메모리, 속도 1, 속도 2)는 qna_b.py에 있다(11차까지 상품화 묶음이던 장).
+  모델과 성능, Query Rewriter: D-1 모델 구성과 스펙, D-5 Query Rewriting의 종류와 Weave의 선택, D-6 작은 모델의 Query Rewriting(Rewrite-Retrieve-Read, ReALM),
+                    D-7 Query Rewriter 튜닝 방법
+  Reasoning Embedding과 데이터: D-8 Reasoning-intensive Retrieval의 정의와 유형(BRIGHT, ImpliRet), D-9 Reasoning Embedding의 선행 연구와 튜닝 방법,
                     D-10 Multi-hop Retrieval 연구와 Weave의 위치, D-11 한국어 일상 기록 데이터와 평가
 13차에 뺀 장: FunctionGemma('쿼리 재작성에 알맞지 않은 모델이니 들어간 페이지 모두 빼 줘, 특히 그 장은 삭제')와 '직접 측정하거나 확인한 것'('따로 뺄 필요 없을 것 같고').
   직접 잰 값(임베딩 8ms, PC의 벡터 검색 시간)은 속도 1 장(D-3)에 그대로 있고, 설문은 새 장(B-1)이 됐다. FunctionGemma를 근거로 들던 곳은 다른 근거로 바꿨다.

@@ -1,6 +1,6 @@
 """Appendix(발표 뒤 질의응답용, 11-15)의 차례와 조립.
 
-차례(13차, 11-17): 목차 → A 기존 기술과의 차이 → B 상품화와 사업성 → C 시나리오 더 보기, 동작 방식 → D 모델과 성능, 학습과 근거 연구 → 출처.
+차례(13차, 11-17): 목차 → A 기존 기술과의 차이 → B 상품화와 사업성 → C 시나리오 더 보기, 동작 방식 → D 모델과 성능, Query Rewriter(D-1 ~ D-7), Reasoning Embedding과 데이터(D-8 ~ D-11) → 출처.
 왜 필요한가(A, B)에서 어떻게 쓰이는가(C의 시나리오), 어떻게 동작하는가(C의 동작 방식), 무엇으로 만드는가(D)로 내려가는 순서다.
 장마다 코드(A-2)와 쪽 번호가 있고, 목차의 항목을 누르면 그 장으로 간다. 장의 차례는 코드의 차례다(모듈이 어디에 있든 pages()가 코드로 정렬).
 make.py(통합본)와 qna_make.py(Appendix만 담은 덱)가 assemble()을 함께 쓴다.
@@ -46,10 +46,25 @@ def numbers(first, pgs=None):
 
 
 # ------------------------------------------------------------------ 목차
-TOC_W, TOC_GAP, ROW_H, HEAD_H = 368, 18, 25, 44
-# 묶음이 놓이는 자리(두 줄). 11차(11-16): 시나리오 더 보기와 출처는 한 칸에 위아래로('E 시나리오 더 보기 / 출처 한 컬럼에')
-# 13차(11-17): 위 줄에 A, B, C(시나리오 더 보기)와 출처, 아래 줄에 C(동작 방식), D 둘
-TOC_GRID = [['A', 'B', ('C1', 'R')], ['C2', 'D1', 'D2']]
+TOC_W, TOC_GAP, ROW_H, HEAD_H, TOC_PAD, TAIL_SEP = 368, 18, 25, 44, 12, 5
+# 묶음이 놓이는 자리(두 줄). 줄을 따라 읽는 차례가 코드와 쪽의 차례다: A, B, C(시나리오 더 보기) / C(동작 방식), D, D와 출처.
+# 칸이 (묶음, 덧붙는 묶음)이면 그 카드의 아래에 가름줄을 긋고 덧붙는 묶음의 항목을 이어 적는다.
+# 13차 고침(11-17, 사용자의 말 'D-7까지를 한 컬럼에 해 주면 오른쪽 아래 남는 공간이 있으니 거기 출처를'):
+#   D는 D-7에서 나누고(qna_lib.SPLIT), 출처는 맨 끝인 오른쪽 아래 카드의 남는 세 줄에 놓음. D-8 ~ D-11의 네 줄과 출처 세 줄이 D-1 ~ D-7의 일곱 줄과 같은 높이.
+TOC_GRID = [['A', 'B', 'C1'], ['C2', 'D1', ('D2', 'R')]]
+
+
+def toc_rows(s, items, x, y, num, lead=None):
+    """목차의 항목 줄(누르면 그 장으로 감). lead = 코드가 없는 묶음(출처)의 이름: 첫 줄의 코드 자리에 적는다."""
+    for i, p in enumerate(items):
+        ry = y + i * ROW_H
+        coded = p.code[0] != 'R'
+        code = p.code if coded else (lead if (lead and i == 0) else '')
+        s.add('toc/' + p.code, [R('toc/%s/bg' % p.code, x + 8, ry, TOC_W - 16, ROW_H, prst='roundRect', radius=8, fill='FFFFFF', line=None),
+                                T('toc/%s/c' % p.code, x + 20, ry, 40, ROW_H, code, size=11 if coded else 12, color=PURPLE, weight='b', anchor='ctr'),
+                                T('toc/%s/t' % p.code, x + (60 if coded or lead else 20), ry, TOC_W - 120, ROW_H, p.toc, size=11.5, color=INK, anchor='ctr'),
+                                T('toc/%s/p' % p.code, x + TOC_W - 60, ry, 40, ROW_H, str(num[p.code]), size=12.5, color=PURPLE, weight='b', align='r',
+                                  anchor='ctr')])
 
 
 def s_toc(first, pgs=None):
@@ -65,37 +80,35 @@ def s_toc(first, pgs=None):
         by.setdefault(group_of(p.code), []).append(p)
     y = 100
     for row in TOC_GRID:
-        hmax = 0
-        cells = [(ci, sec, 0) for ci, cell in enumerate(row) for sec in ([cell] if isinstance(cell, str) else [])]
-        for ci, cell in enumerate(row):                    # 한 칸에 위아래로 놓는 묶음들
-            if not isinstance(cell, str):
-                dy = 0
-                for sec in cell:
-                    cells.append((ci, sec, dy))
-                    dy += HEAD_H + ROW_H * len(by.get(sec, [])) + 12 + 14
-        for ci, sec, dy in cells:
-            items = by.get(sec, [])
-            if not items:
-                continue
+        cells = []
+        for ci, cell in enumerate(row):
+            sec, tail = (cell, None) if isinstance(cell, str) else cell
+            items, more = by.get(sec, []), by.get(tail, []) if tail else []
+            if not items:                                  # 확인용 덱(--only)에는 없는 묶음이 있음: 덧붙는 묶음만 있으면 그것을 카드로
+                sec, items, more = tail, more, []
+            if items:
+                cells.append((ci, sec, items, tail, more, HEAD_H + ROW_H * len(items) + (TAIL_SEP + ROW_H * len(more) if more else 0) + TOC_PAD))
+        if not cells:
+            continue
+        hmax = max(c[-1] for c in cells)
+        for ci, sec, items, tail, more, h in cells:
+            if hmax - h < ROW_H:                           # 줄 수가 같은 카드는 아래 끝도 같게(가름줄만큼의 차이를 없앰)
+                h = hmax
             x = 70 + ci * (TOC_W + TOC_GAP)
-            h = HEAD_H + ROW_H * len(items) + 12
-            hmax = max(hmax, dy + h)
             lab = SECTIONS[sec] if sec == 'R' else '%s  %s' % (sec[0], SECTIONS[sec])
             rng = '%d~%d쪽' % (num[items[0].code], num[items[-1].code]) if len(items) > 1 else '%d쪽' % num[items[0].code]
-            cy = y + dy
-            s.add('toc/card/' + sec, [box('toc/card/%s/bg' % sec, x, cy, TOC_W, h),
-                                      T('toc/card/%s/t' % sec, x + 20, cy + 9, 250, 28, lab, size=13.5, color=PURPLE, weight='b', anchor='ctr'),
-                                      T('toc/card/%s/r' % sec, x + TOC_W - 120, cy + 9, 100, 28, rng, size=10.5, color=MUTE, align='r', anchor='ctr'),
-                                      R('toc/card/%s/ln' % sec, x + 16, cy + HEAD_H - 4, TOC_W - 32, 1, fill='EEE9F8', line=None)])
-            for i, p in enumerate(items):
-                ry = cy + HEAD_H + i * ROW_H
-                code = '' if sec == 'R' else p.code
-                s.add('toc/' + p.code, [R('toc/%s/bg' % p.code, x + 8, ry, TOC_W - 16, ROW_H, prst='roundRect', radius=8, fill='FFFFFF', line=None),
-                                        T('toc/%s/c' % p.code, x + 20, ry, 40, ROW_H, code, size=11, color=PURPLE, weight='b', anchor='ctr'),
-                                        T('toc/%s/t' % p.code, x + (20 if sec == 'R' else 60), ry, TOC_W - 120, ROW_H, p.toc, size=11.5, color=INK, anchor='ctr'),
-                                        T('toc/%s/p' % p.code, x + TOC_W - 60, ry, 40, ROW_H, str(num[p.code]), size=12.5, color=PURPLE, weight='b', align='r',
-                                          anchor='ctr')])
-        y += hmax + 14
+            card = [box('toc/card/%s/bg' % sec, x, y, TOC_W, h),
+                    T('toc/card/%s/t' % sec, x + 20, y + 9, 250, 28, lab, size=13.5, color=PURPLE, weight='b', anchor='ctr'),
+                    T('toc/card/%s/r' % sec, x + TOC_W - 120, y + 9, 100, 28, rng, size=10.5, color=MUTE, align='r', anchor='ctr'),
+                    R('toc/card/%s/ln' % sec, x + 16, y + HEAD_H - 4, TOC_W - 32, 1, fill='EEE9F8', line=None)]
+            ty = y + HEAD_H + ROW_H * len(items)
+            if more:
+                card.append(R('toc/card/%s/ln2' % sec, x + 16, ty + TAIL_SEP / 2 - 0.5, TOC_W - 32, 1, fill='EEE9F8', line=None))
+            s.add('toc/card/' + sec, card)
+            toc_rows(s, items, x, y + HEAD_H, num)
+            if more:
+                toc_rows(s, more, x, ty + TAIL_SEP, num, lead=SECTIONS[tail])
+        y += hmax + TOC_GAP
     return s
 
 

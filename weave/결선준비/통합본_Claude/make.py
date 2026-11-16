@@ -31,7 +31,7 @@
   10쪽 AI 답변을 15pt로(ANSWER_PT, ANS_PAD_B), 33쪽은 한 번의 클릭에 세 칸이 왼쪽부터 차례로(fx_new.FX_STEP),
   35쪽은 두 줄이 Weave 아이콘 아래에서 뻗어 나오게(next2_new.lane_bends). 덱 뒤쪽에 차수마다 쌓아 두던 '이전 판' 묶음은 덱에서 뺌
   (OLD_GROUPS = False: 'ppt에서 이전 판 장표는 이제 지워 줘'). 덱은 본 발표 39장 + Q&A + Appendix 42장 = 82장.
-  13차(11-17): Appendix만 다시 짬(본 발표와 영상은 그대로). 묶음을 A 기존 기술과의 차이, B 상품화와 사업성, C 시나리오 더 보기와 동작 방식, D 모델과 성능, 학습과 근거 연구로
+  13차(11-17): Appendix만 다시 짬(본 발표와 영상은 그대로). 묶음을 A 기존 기술과의 차이, B 상품화와 사업성, C 시나리오 더 보기와 동작 방식, D 모델과 성능, Query Rewriter / Reasoning Embedding과 데이터로
   다시 묶고(qna_lib.SECTIONS), 설문 장과 1년 상품화 계획 장을 새로 그리고, UX3 장과 Gate 장을 한 장으로 합침. Appendix 40장(41~80쪽), 덱은 80장.
 """
 import argparse

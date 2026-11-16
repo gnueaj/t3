@@ -660,7 +660,7 @@
 - Vectara Hallucination Leaderboard(github.com/vectara/hallucination-leaderboard, 2026. 10. 22 갱신, HHEM-2.3, 글 7,700여 편의 요약): qwen3-4b 5.7%, gemma-3-4b-it 6.4%, gemma-3-12b-it 4.4%, gpt-4o-2024-08-06 9.6%, 가장 낮은 모델 1.8%. Gauss의 값은 없어서 비슷한 크기의 공개 모델 값으로 적음.
 - 11차(11-16): 팀 검토의 예상 질문 7번(Hallucination)과 Q3을 합침. 사용자의 생각(검색은 임베딩으로 대부분 풀고, 요약은 틀릴 수 있지만 근거를 눌러 확인할 수 있다)을 찾을 때와 요약할 때로 나눠 적음.
 
-## D. 모델과 성능
+## D. 모델과 성능, Query Rewriter
 
 ### D-1 (67쪽) 모델 구성과 스펙
 
@@ -778,8 +778,6 @@
 - 출력 한도(검색 계획 100토큰, 요약 150토큰)는 11차에 내가 둔 값: 검토 자료의 계획 72~82토큰과 화면의 3줄 요약 예시에 여유를 둠. 토큰 수의 가정은 사용자의 검토 자료(11-14) 6장.
 - sLLM의 출력 합계: UX1 82 + 80 = 162토큰(요약이 150토큰이면 232토큰), UX2 82토큰, UX3 97토큰.
 
-## D. 학습과 근거 연구
-
 ### D-5 (71쪽) Query Rewriting의 종류
 
 **Q.** 질의를 다시 쓴다는 게 정확히 무엇인가요? 여러 방식이 있을 텐데 어떤 걸 쓰나요?
@@ -843,6 +841,8 @@
 - Apple, "Introducing Apple's On-Device and Server Foundation Models"(2024. 06. 10): "adapters, each fine-tuned for a specific feature", "the parameters for a rank 16 adapter typically require 10s of megabytes", "dynamically loaded, temporarily cached in memory, and swapped".
 - LiteRT-LM의 constrained decoding(Google Developers Blog). Hi-Q: 늘 나누는 정책 60.7 → 57.3 EM.
 - 계획의 모양(검토 자료): 하위 질의, 빈칸, 검색할 앱, 필터. 예: 1 ‘지은이네 집들이는 언제였지?’(카카오톡, 캘린더, [그날] ← 날짜), 2 ‘[그날] 마셨던 와인은?’(갤러리).
+
+## D. Reasoning Embedding과 데이터
 
 ### D-8 (74쪽) Reasoning 검색의 정의와 유형
 
