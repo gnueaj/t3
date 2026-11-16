@@ -608,7 +608,7 @@
 - 화면의 Sub-query 둘(‘가족이 부탁한 물건은?’, ‘부탁한 물건의 정식 이름은?’)은 검토 자료의 흐름(가족 대화의 부탁 → 같은 대화의 링크 미리보기)을 내가 한 줄로 적은 것. ‘통과한 까닭’ 세 줄과 ‘챙길 일: 부탁 (살 것)’은 13차에 내가 붙임. 시간(앞이 기준 속도이고 뒤가 Gemma 3 1B의 NPU 실측) 0.67초, 1.29초.
 - Pielot, Church, de Oliveira, "An In-Situ Study of Mobile Phone Notifications", MobileHCI 2014: "our participants had to deal with 63.5 notifications on average per day, mostly from messengers and email"(15명, 일주일). 원문 PDF에서 확인(11-16).
 - Reuters Institute, "Digital News Report 2025"의 알림 장: "Across countries, more than four in ten (43%) of those that do not get alerts say they actively disabled them". 평소 한 주에 뉴스 알림을 받지 않는 사람은 79%. 끈 이유는 너무 많아서 19%, 앱을 받을 때 꺼서 15%, 쓸모가 없어서 10%(Press Gazette가 옮긴 표). 조사한 나라 수는 자료마다 달라(28개국, 8개국) 적지 않음.
-- 11차의 Gate 장에 있던 두 근거는 화면에서 빼고 여기에 남김: Apple, Human Interface Guidelines, Notifications("If you send multiple notifications for the same thing, you fill up Notification Center, and people may turn off all notifications from your app."), Mehrotra et al., CHI 2016(알림 10,372건, 설문 474건, 20명): "We found that even a notification that contains important or useful content can cause disruption."
+- 알림 피로의 근거 넷은 11-16에 사용자가 장에 넣으라고 준 자료(63.5건, 43%와 ‘너무 많아서’, Apple의 지침, Mehrotra). 13차에 두 장을 합치며 뒤의 둘과 ‘너무 많아서’를 화면에서 뺐던 것을 11-17에 되돌림(오른쪽 아래 칸의 둘째, 셋째 줄과 각주 ³, ⁴. sLLM 줄은 가운데 칸으로 옮김). 원문: Apple, Human Interface Guidelines, Notifications("If you send multiple notifications for the same thing, you fill up Notification Center, and people may turn off all notifications from your app."), Mehrotra et al., CHI 2016(알림 10,372건, 설문 474건, 20명): "We found that even a notification that contains important or useful content can cause disruption."
 
 ### C-8 (65쪽) 질의를 나누는 기준, 멈추는 기준
 

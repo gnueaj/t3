@@ -203,13 +203,13 @@ def s_c4():
         if i in C4_GATE:
             c, _ = chip('qc/g%d' % i, cx + cw - 12, 120 + 10, C4_GATE[i], 'soft', pt=9, h=18, padx=8, align='r')
             s.add('qc/g%d' % i, c)
-    y += data_row(s, 'qc/d', y, C4_DATA, gap=gap, weights=C4_W) + 16
+    y += data_row(s, 'qc/d', y, C4_DATA, gap=gap, weights=C4_W) + 10
     # 아래 세 칸: Trigger의 종류, 두 모델, 제안 기준
-    g3 = 30
+    g3, HB = 30, 37                    # 칸 사이, 칸 제목에서 본문까지
     cw3 = (W - 2 * g3) / 3
     xs = [X + k * (cw3 + g3) for k in range(3)]
     out = col_head('qc/t0', xs[0], y, cw3, 'Trigger의 종류: 형식은 하나')
-    ry = y + 40
+    ry = y + HB
     for k, (a, b, c) in enumerate(C4_TRIG):
         if k:
             out.append(R('qc/t0/ln%d' % k, xs[0], ry - 2, cw3, 1, fill='E9E4F5', line=None))
@@ -223,16 +223,19 @@ def s_c4():
     s.add('qc/t0', out)
     h0 = ry + 4 + lh * len(tl) - y
     s.add('qc/t1', col_head('qc/t1', xs[1], y, cw3, '작은 모델 둘 (D-1)'))
-    h1 = 40 + points(s, 'qc/p1', xs[1], y + 40, cw3, ['**챙길 일 분류기**: 기록의 벡터(256-dim)로 부탁, 약속, 살 것, 기한을 분류하는 Linear 층입니다. 색인할 때 만든 벡터를 그대로 씁니다.',
-                                                        '**Gate 모델**: 유사도, 사람 일치, 기한, 최근성, 처리 여부의 다섯 값으로 점수를 냅니다. 기준값은 평가셋에서 정합니다. (D-11)'], gap=7, pt=11)
-    s.add('qc/t2', col_head('qc/t2', xs[2], y, cw3, '제안 기준과 알림 피로'))
-    h2 = 40 + points(s, 'qc/p2', xs[2], y + 40, cw3, ['**하루 3회**까지만 제안하고 닫은 제안은 다시 띄우지 않습니다. 상한과 기준값은 사용자가 조절합니다.',
-                                                        '알림은 이미 **하루 평균 63.5건**입니다.¹ 뉴스 알림을 받지 않는 사람의 43%는 직접 껐습니다.²',
+    h1 = HB + points(s, 'qc/p1', xs[1], y + HB, cw3, ['**챙길 일 분류기**: 기록의 벡터(256-dim)로 부탁, 약속, 살 것, 기한을 분류하는 Linear 층입니다. 색인할 때 만든 벡터를 그대로 씁니다.',
+                                                        '**Gate 모델**: 유사도, 사람 일치, 기한, 최근성, 처리 여부의 다섯 값으로 점수를 냅니다. 기준값은 평가셋에서 정합니다. (D-11)',
                                                         '**sLLM은 Gate 2를 통과한 뒤에만** 실행합니다. 백그라운드에서 %s입니다.' % NUM.T_UX3], gap=7, pt=11)
+    # 알림 피로의 근거 넷은 11차(11-16)에 사용자가 장에 넣으라고 준 자료. 13차에 장을 합치며 ³과 ⁴를 화면에서 뺐던 것을 되돌림(11-17).
+    s.add('qc/t2', col_head('qc/t2', xs[2], y, cw3, '제안 기준과 알림 피로'))
+    h2 = HB + points(s, 'qc/p2', xs[2], y + HB, cw3, ['**하루 3회**까지만 제안하고 닫은 제안은 다시 띄우지 않습니다. 상한과 기준값은 사용자가 조절합니다.',
+                                                        '알림은 이미 **하루 평균 63.5건**입니다.¹ 뉴스 알림을 받지 않는 사람의 43%는 직접 껐고, 가장 많이 든 이유는 ‘너무\u00a0많아서’였습니다.²',      # 따옴표 안이 줄에서 갈리지 않게 붙임
+                                                        '같은 일을 여러 번 알리면 그 앱의 **알림을 모두 끌 수 있고**,³ 유용한 알림도 **방해가 될 수 있습니다.**⁴'], gap=7, pt=11)
     y += max(h0, h1, h2) + 14
     footnote(s, ['¹ Pielot et al., "An In-Situ Study of Mobile Phone Notifications", MobileHCI 2014   ² Reuters Institute, "Digital News Report 2025"   '
-                 '요청이 담긴 글을 가려내는 분류의 선례: Lampert et al., NAACL 2010',
-                 '기록의 글은 본 발표 19쪽의 화면과 같음. 시간의 근거는 D-3과 D-4. 다른 Trigger의 장면은 C-3.'], y)
+                 '³ Apple, Human Interface Guidelines, Notifications   기록의 글은 본 발표 19쪽의 화면과 같음.',
+                 '⁴ Mehrotra et al., "My Phone and Me: Understanding People\'s Receptivity to Mobile Notifications", CHI 2016   '
+                 '요청이 담긴 글을 가려내는 분류의 선례: Lampert et al., NAACL 2010   시간의 근거는 D-3과 D-4. 다른 Trigger의 장면은 C-3.'], y)
     return s
 
 
@@ -400,7 +403,7 @@ PAGES = [
                 'Pielot, Church, de Oliveira, "An In-Situ Study of Mobile Phone Notifications", MobileHCI 2014: "our participants had to deal with 63.5 notifications on average per day, mostly from messengers and email"(15명, 일주일). 원문 PDF에서 확인(11-16).',
                 'Reuters Institute, "Digital News Report 2025"의 알림 장: "Across countries, more than four in ten (43%) of those that do not get alerts say they actively disabled them". 평소 한 주에 뉴스 알림을 받지 않는 사람은 79%. '
                 '끈 이유는 너무 많아서 19%, 앱을 받을 때 꺼서 15%, 쓸모가 없어서 10%(Press Gazette가 옮긴 표). 조사한 나라 수는 자료마다 달라(28개국, 8개국) 적지 않음.',
-                '11차의 Gate 장에 있던 두 근거는 화면에서 빼고 여기에 남김: Apple, Human Interface Guidelines, Notifications("If you send multiple notifications for the same thing, you fill up Notification Center, and people may turn off all notifications from your app."), '
+                '알림 피로의 근거 넷은 11-16에 사용자가 장에 넣으라고 준 자료(63.5건, 43%와 ‘너무 많아서’, Apple의 지침, Mehrotra). 13차에 두 장을 합치며 뒤의 둘과 ‘너무 많아서’를 화면에서 뺐던 것을 11-17에 되돌림(오른쪽 아래 칸의 둘째, 셋째 줄과 각주 ³, ⁴. sLLM 줄은 가운데 칸으로 옮김). 원문: Apple, Human Interface Guidelines, Notifications("If you send multiple notifications for the same thing, you fill up Notification Center, and people may turn off all notifications from your app."), '
                 'Mehrotra et al., CHI 2016(알림 10,372건, 설문 474건, 20명): "We found that even a notification that contains important or useful content can cause disruption."']),
     Page('C-8', '질의를 나누는 기준, 멈추는 기준', s_c5,
          q='질의를 항상 둘로 나누나요? 잘 나눴는지, 몇 번 검색해야 하는지는 어떻게 아나요?',
