@@ -4,17 +4,18 @@
   python qna_doc.py
 
 장마다 물음(Q), 답(A, 실제로 말할 문장), 이어서 나올 물음과 답, 근거를 적는다. 글은 qna_a.py ~ qna_r.py의 PAGES에서 가져온다(덱의 노트와 같은 글).
-쪽 번호는 통합본 기준이다(목차가 40쪽).
+쪽 번호는 통합본 기준이다(목차가 41쪽. 40쪽은 질의응답 동안 띄워 두는 Q&A 장).
 """
 import re
 from pathlib import Path
 
 import make as M  # noqa: F401  (How it Works 엔진의 경로를 잡아 줌)
 import qna as Q
+from qna_lib import group_of
 
 HERE = Path(__file__).resolve().parent
 DST = HERE / 'Appendix_QnA_대본.md'
-FIRST = 40
+FIRST = 41                       # 11차(11-16): 본 발표 39쪽 뒤에 Q&A 장(40쪽)이 들어가 목차가 41쪽
 RATE = 5.0                       # 말하는 속도(음절/초). 본 발표의 낭독은 299음절에 54초(쉬는 틈 포함 5.5음절/초)
 
 
@@ -30,12 +31,12 @@ def secs(text):
 
 HEAD = """# Weave Appendix 질의응답 대본
 
-발표 뒤 질문이 나왔을 때 쓰는 대본이에요. 덱(`Weave_통합본_Claude.pptx`)의 40쪽부터가 Appendix이고, 같은 장을 `Weave_Appendix_Claude.pptx`에 따로 담아 두었어요(그 덱에서는 목차가 1쪽).
+발표 뒤 질문이 나왔을 때 쓰는 대본이에요. 덱(`Weave_통합본_Claude.pptx`)의 41쪽부터가 Appendix이고(40쪽은 질의응답 동안 띄워 두는 Q&A 장), 같은 장을 `Weave_Appendix_Claude.pptx`에 따로 담아 두었어요(그 덱에서는 목차가 1쪽).
 
 ## 쓰는 법
 
 - 질문을 들으면 아래 '질문으로 찾기' 표에서 쪽을 찾아 오퍼레이터에게 "Appendix NN쪽 가 주세요"라고 말해요. 발표 중인 PowerPoint에서 쪽 번호를 누르고 Enter를 치면 그 장이 열려요.
-- 40쪽 목차의 항목을 눌러도 그 장으로 가고, 장마다 오른쪽 위의 '목차'를 누르면 목차로 돌아와요.
+- 41쪽 목차의 항목을 눌러도 그 장으로 가고, 장마다 오른쪽 위의 '목차'를 누르면 목차로 돌아와요.
 - 화면에는 답의 뼈대(그림, 숫자, 질문과 답)가 있어요. A를 말하고, 더 물으면 그 아래의 답을 써요.
 - A는 실제로 말할 문장으로 적었고 30초에서 1분 30초 사이예요. 시간은 1초에 5음절로 어림한 값이에요.
 - 근거는 말하지 않아도 되는 확인용 자료예요. 숫자를 되물으면 여기서 찾아요.
@@ -56,9 +57,9 @@ def main():
     for p in pgs:
         if p.plain:
             continue
-        if p.code[0] != sec:
-            sec = p.code[0]
-            L += ['## %s. %s' % (sec, p.sec), '']
+        if group_of(p.code) != sec:
+            sec = group_of(p.code)
+            L += ['## %s. %s' % (sec[0], p.sec), '']
         t = secs(p.a)
         if not 25 <= t <= 95:
             over.append((p.code, round(t)))

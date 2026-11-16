@@ -15,7 +15,7 @@ from appendix import head
 from ui import INK, LINE2, MUTE, PURPLE, SUB, R, T
 
 import foreign as F
-from qna_lib import SECTIONS, Slide, box, draw_on, finish
+from qna_lib import SECTIONS, Slide, box, draw_on, finish, group_of
 
 MODULES = ['qna_a', 'qna_b', 'qna_c', 'qna_d', 'qna_e', 'qna_r']
 
@@ -41,8 +41,9 @@ def numbers(first, pgs=None):
 
 
 # ------------------------------------------------------------------ 목차
-TOC_W, TOC_GAP, ROW_H, HEAD_H = 368, 18, 27, 46
-TOC_GRID = [['A', 'B', 'C'], ['D', 'E', 'R']]       # 묶음이 놓이는 자리(두 줄)
+TOC_W, TOC_GAP, ROW_H, HEAD_H = 368, 18, 25, 44
+# 묶음이 놓이는 자리(두 줄). 11차(11-16): B를 둘로 나누고, 시나리오 더 보기와 출처는 한 칸에 위아래로('E 시나리오 더 보기 / 출처 한 컬럼에')
+TOC_GRID = [['A', 'B1', 'B2'], ['C', 'D', ('E', 'R')]]
 
 
 def s_toc(first, pgs=None):
@@ -55,32 +56,40 @@ def s_toc(first, pgs=None):
     s.add('qna/pg', [T('qna/pg', 1150, 28, 60, 24, '0', size=11, color=MUTE, weight='b', align='r', anchor='ctr')])
     by = {}
     for p in pgs:
-        by.setdefault(p.code[0], []).append(p)
-    y = 104
+        by.setdefault(group_of(p.code), []).append(p)
+    y = 100
     for row in TOC_GRID:
         hmax = 0
-        for ci, sec in enumerate(row):
+        cells = [(ci, sec, 0) for ci, cell in enumerate(row) for sec in ([cell] if isinstance(cell, str) else [])]
+        for ci, cell in enumerate(row):                    # 한 칸에 위아래로 놓는 묶음들
+            if not isinstance(cell, str):
+                dy = 0
+                for sec in cell:
+                    cells.append((ci, sec, dy))
+                    dy += HEAD_H + ROW_H * len(by.get(sec, [])) + 12 + 14
+        for ci, sec, dy in cells:
             items = by.get(sec, [])
             if not items:
                 continue
             x = 70 + ci * (TOC_W + TOC_GAP)
             h = HEAD_H + ROW_H * len(items) + 12
-            hmax = max(hmax, h)
-            lab = SECTIONS[sec] if sec == 'R' else '%s  %s' % (sec, SECTIONS[sec])
+            hmax = max(hmax, dy + h)
+            lab = SECTIONS[sec] if sec == 'R' else '%s  %s' % (sec[0], SECTIONS[sec])
             rng = '%d~%d쪽' % (num[items[0].code], num[items[-1].code]) if len(items) > 1 else '%d쪽' % num[items[0].code]
-            s.add('toc/card/' + sec, [box('toc/card/%s/bg' % sec, x, y, TOC_W, h),
-                                      T('toc/card/%s/t' % sec, x + 20, y + 10, 230, 28, lab, size=14, color=PURPLE, weight='b', anchor='ctr'),
-                                      T('toc/card/%s/r' % sec, x + TOC_W - 120, y + 10, 100, 28, rng, size=10.5, color=MUTE, align='r', anchor='ctr'),
-                                      R('toc/card/%s/ln' % sec, x + 16, y + HEAD_H - 4, TOC_W - 32, 1, fill='EEE9F8', line=None)])
+            cy = y + dy
+            s.add('toc/card/' + sec, [box('toc/card/%s/bg' % sec, x, cy, TOC_W, h),
+                                      T('toc/card/%s/t' % sec, x + 20, cy + 9, 250, 28, lab, size=13.5, color=PURPLE, weight='b', anchor='ctr'),
+                                      T('toc/card/%s/r' % sec, x + TOC_W - 120, cy + 9, 100, 28, rng, size=10.5, color=MUTE, align='r', anchor='ctr'),
+                                      R('toc/card/%s/ln' % sec, x + 16, cy + HEAD_H - 4, TOC_W - 32, 1, fill='EEE9F8', line=None)])
             for i, p in enumerate(items):
-                ry = y + HEAD_H + i * ROW_H
+                ry = cy + HEAD_H + i * ROW_H
                 code = '' if sec == 'R' else p.code
                 s.add('toc/' + p.code, [R('toc/%s/bg' % p.code, x + 8, ry, TOC_W - 16, ROW_H, prst='roundRect', radius=8, fill='FFFFFF', line=None),
                                         T('toc/%s/c' % p.code, x + 20, ry, 40, ROW_H, code, size=11, color=PURPLE, weight='b', anchor='ctr'),
                                         T('toc/%s/t' % p.code, x + (20 if sec == 'R' else 60), ry, TOC_W - 120, ROW_H, p.toc, size=11.5, color=INK, anchor='ctr'),
                                         T('toc/%s/p' % p.code, x + TOC_W - 60, ry, 40, ROW_H, str(num[p.code]), size=12.5, color=PURPLE, weight='b', align='r',
                                           anchor='ctr')])
-        y += hmax + 16
+        y += hmax + 14
     return s
 
 

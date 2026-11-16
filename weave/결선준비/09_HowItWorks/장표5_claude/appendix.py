@@ -472,8 +472,8 @@ CREDITS = [('와인 잔 (임베딩 장)', 'Davide Restivo, "A glass of red wine"
 
 
 def a_credits():
-    s = Slide('apx_credit', trans=('fade', 400), bar=False, notes='How it Works에 쓴 사진의 출처입니다.')
-    head(s, [('사진 출처', INK)], 'How it Works 장표 내 갤러리 예시 사진 출처')
+    s = Slide('apx_credit', trans=('fade', 400), bar=False, notes='How it works에 쓴 사진의 출처입니다.')
+    head(s, [('사진 출처', INK)], 'How it works 장표 내 갤러리 예시 사진 출처')
     out = []
     for i, (a, b) in enumerate(CREDITS):
         y = 160 + i * 64

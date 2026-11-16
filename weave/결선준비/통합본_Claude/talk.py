@@ -128,7 +128,11 @@ def build_auto(dst, fu, says, part=None):
     cover, mg = old[0], old[3]
     layout = old[5].slide_layout
     note_tpl = [copy.deepcopy(sh._element) for sh in old[5].notes_slide.placeholders]
-    own = own_specs()               # 낭독 뒤에 다시 만든다(말에 맞춰 뜨는 효과의 때가 낭독에서 나옴)
+    HW.LIVE = False                 # 녹화용 사본: 클릭 뒤의 효과를 말에 맞춤(발표자가 직접 누르는 덱은 곧바로 이음. build.LIVE)
+    try:
+        own = own_specs()           # 낭독 뒤에 다시 만든다(말에 맞춰 뜨는 효과의 때가 낭독에서 나옴)
+    finally:
+        HW.LIVE = True
     plan, k = [], 0
 
     def draw(specs, k):
@@ -439,7 +443,7 @@ def finish(silent, mp4, plan, clips, tail=1.0):
 # ------------------------------------------------------------------ 시간표
 SECTIONS = [('표지와 인트로', lambda k: k == 'cover' or k.startswith('in') or k in ('hook', 'hub2', 'scat', 'gath', 'link', 'bridge')),
             ('모션그래픽', lambda k: k == 'mg'),
-            ('솔루션과 How it Works', lambda k: k in HW.SLIDE_KEYS),
+            ('솔루션과 How it works', lambda k: k in HW.SLIDE_KEYS),
             ('뒷부분', lambda k: True)]
 
 

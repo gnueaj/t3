@@ -1,7 +1,9 @@
-"""Appendix A 묶음: 기존 기술과의 차이 (11-16 3판).
+"""Appendix A 묶음: 기존 기술과의 차이 (11-16 3판, 저녁에 11차로 고침).
 
 A-1 비교 지도(cmp_new 그대로), A-2 기능별 비교(표 하나), A-3 Finder(팀원 SB-Jo의 장을 옮겨 옴), A-4 Personal Data Engine(Knowledge Graph)과의 차이(두 줄 흐름 그림),
-A-5 PDE와 함께 쓰는 방법(주고받는 그림 + 세 단계), A-6 AI Agent(Pickle, Muse)와의 관계, A-7 LLM에게 전부 읽히는 방식과의 차이, A-8 Apple과 Google의 개인 기록 검색.
+A-5 PDE와 함께 쓰는 방법(주고받는 그림 + 세 단계), A-6 AI Agent(Pickle, Muse)와의 관계, A-7 Apple과 Google의 개인 기록 검색, A-8 Galaxy AI 안에서의 구성.
+11차(팀 검토): 10차의 A-7(LLM에게 전부 읽히는 방식과의 차이)은 Q1만 속도 1 장(B-2)으로 옮기고 뺌. Apple과 Google 장(10차 A-8 → A-7)은 기능마다 무엇을 하는지를
+더 자세히 적고 쓰는 자리(진입점)를 보탬. A-3의 Q2는 Query Rewriting을 Reasoning Embedding 앞으로. 새 장 A-8(Galaxy AI에 들어간다면 어떤 구성인지).
 3판: 문장 제목과 부제를 버리고, A-6과 A-7은 질문과 답 세 줄 + 작은 그림(A-3과 같은 짜임), A-4와 A-5는 그림 + 짧은 설명, A-2와 A-8은 표 하나.
 (11-15: '가전과 TV에서는 이미 하고 있지 않나요?' 장은 만들었다가 필요 없다는 검토를 받아 뺌.)
 숫자와 출처는 `Appendix_QnA_대본.md`의 근거에 있다.
@@ -11,7 +13,8 @@ from pathlib import Path
 from ui import (BODY, INK, LAV, LAV2, MUTE, PURPLE, PURPLE2, RING, SUB, R, T)
 
 import qna_num as NUM
-from qna_lib import (GRAY_BG, Page, Slide, arrow, box, footnote, frame, label, notes3, page_slide, pipeline, points, qrow, step, tbl, vis_bars, vis_nums, vis_steps)
+from qna_lib import (GRAY_BG, Page, Slide, arrow, box, footnote, frame, label, lh_of, notes3, page_slide, pipeline, points, qrow, step, tbl, vis_bars, vis_nums,
+                     vis_steps)
 
 HERE = Path(__file__).resolve().parent
 FINDER_SRC = HERE / '원본' / 'Appendix_Finder와의_차별점_QA_SB-Jo.pptx'
@@ -37,7 +40,7 @@ A2_S = [['키워드 검색 (BM25)', '같은 단어가 있는 기록을 검색', 
 def s_a2():
     s = page_slide('qa_tbl', 'A-2', [('기존 기능, 검색 방식과의 비교', INK)])
     y = 98
-    y += label(s, 'qa/l1', X, y, 'Galaxy AI와 다른 서비스 (Apple과 Google은 A-8)') + 4
+    y += label(s, 'qa/l1', X, y, 'Galaxy AI와 다른 서비스 (Apple과 Google은 A-7)') + 4
     y += tbl(s, 'qa/t', X, y, W, [19, 39, 42], ['기능', '하는 일', 'Weave가 다른 점'], A2, pady=10) + 22
     y += label(s, 'qa/l2', X, y, '검색 방식') + 4
     y += tbl(s, 'qa/t2', X, y, W, [19, 39, 42], ['방식', '하는 일', 'Weave가 다른 점'], A2_S, pady=10) + 12
@@ -61,6 +64,32 @@ def patch_finder(slide):
             t.text = t.text.replace('(자세한 설명은 Appendix 참조)', next(refs))
             n += 1
     assert n == 2, 'Finder 장의 글이 바뀜: Appendix 참조 %d곳' % n
+    # 11차(11-16) 'q2 query rewriting이랑 reasoning embedding 순서 바꾸기': 파이프라인의 차례(02 질의 재작성 → 03 연쇄 탐색)대로 Query Rewriting을 앞에.
+    # 답의 글 토막 셋을 바꾸고, 오른쪽 그림의 두 칸(Reasoning Embedding 144px, Query Rewriting 119px)과 그 사이의 +를 자리만 맞바꾼다
+    swaps = [('검색어 의도 분류만으로는 충분하지 않습니다. 단서 추론을 위한', '검색어 의도 분류만으로는 충분하지 않습니다. 여러 단서를 연달아 찾기 위한'),
+             ('과, 여러 단서를 연달아 찾기 위한', '과, 단서 추론을 위한')]
+    done = 0
+    for t in live_tree(slide).iter('{%s}t' % A_NS):
+        for old, new in swaps:
+            if t.text == old:
+                t.text = new
+                done += 1
+    assert done == 2, done
+    names = [t for t in live_tree(slide).iter('{%s}t' % A_NS) if t.text in ('Reasoning Embedding', 'Query Rewriting')]
+    in_answer = [t for t in names if int(t.getparent().find('{%s}rPr' % A_NS).get('sz')) == 1250]      # 답 안의 보라 낱말 둘(12.5pt). 그림 속 이름은 10pt
+    assert [t.text for t in in_answer] == ['Reasoning Embedding', 'Query Rewriting'], [t.text for t in in_answer]
+    in_answer[0].text, in_answer[1].text = 'Query Rewriting', 'Reasoning Embedding'
+    from make import box as box_of, place
+    P_NS = 'http://schemas.openxmlformats.org/presentationml/2006/main'
+    sps = {sp.find('.//{%s}cNvPr' % P_NS).get('id'): sp for sp in live_tree(slide).iter('{%s}sp' % P_NS)}
+    re_box, plus, qr_box = [sps[i] for i in ('52', '53', '54')], sps['55'], [sps[i] for i in ('56', '57', '58')]      # 도형 번호는 팀원 덱의 것(원본/…SB-Jo.pptx)
+    x0, w_re, w_plus, w_qr = box_of(re_box[0])[0], box_of(re_box[0])[2], box_of(plus)[2], box_of(qr_box[0])[2]
+    assert abs(x0 - 898.6) < 1 and abs(w_re - 144.0) < 1 and abs(w_qr - 119.0) < 1, (x0, w_re, w_qr)
+    for sp in qr_box:
+        place(sp, x=x0)
+    place(plus, x=x0 + w_qr)
+    for sp in re_box:
+        place(sp, x=x0 + w_qr + w_plus)
     s = Slide('qa_finder', trans=('fade', 400), bar=False, notes='')
     frame(s, 'A-3')
     s.add('qa/ffoot', [T('qa/ffoot', 50, 678, 1180, 18, FINDER_FOOT, size=8.5, color='8E88A0')])   # 옮겨 온 장의 각주(x=50)에 맞춤
@@ -160,9 +189,9 @@ def s_a6():
          '기기 안의 메모와 사진, 받은 메시지를 찾으려면 서버로 올려야 합니다.',
          n=1, vis=vis_layers('AI Agent: 예약, 주문, 전화 (서버에서 실행)', 'Weave: 개인 기록 검색 (온디바이스)', '찾은 답만 전달'))
     qrow(s, 'qa/q2', y + h + gap, h, 'Agent가 직접 검색하면 무엇이 문제인가요?',
-         'Agent는 추론과 검색을 여러 번 반복합니다. 공개 실험에서 이런 방식은 질의 하나에 **10~27초**가 걸렸습니다.² Weave는 기록을 미리 색인해 두고 sLLM을 두 번만 불러서 **1초 안팎**에 답합니다.',
-         n=2, vis=vis_bars('질의 1건의 소요 시간', [('Self-Ask²', 27.47, '27.5초', False), ('Iter-RetGen²', 9.68, '9.7초', False), ('Weave (UX2)', max(NUM.TOT['ux2']), NUM.T_UX2, True)], vmax=34,
-                           note='Self-Ask와 Iter-RetGen은 서버 실험값, Weave는 온디바이스 값 (B-6)'))
+         'Agent는 추론과 검색을 여러 번 반복합니다. 공개 실험에서 이런 방식은 질의 하나에 **10~27초**가 걸렸습니다.² Weave는 기록을 미리 색인해 두고 sLLM을 두 번만 불러서 **1초 안에** 답합니다.',
+         n=2, vis=vis_bars('질의 1건의 소요 시간', [('Self-Ask²', 27.47, '27.5초', False), ('Iter-RetGen²', 9.68, '9.7초', False), ('Weave (UX2)', NUM.total('ux2', NUM.REF, NUM.REF), NUM.T_UX2, True)], vmax=34,
+                           note='Self-Ask와 Iter-RetGen은 서버 실험값, Weave는 온디바이스 값 (B-3)'))
     qrow(s, 'qa/q3', y + 2 * (h + gap), h, '그러면 Agent와는 어떤 관계인가요?',
          'Weave는 **Agent가 호출하는 도구**가 됩니다. Agent가 사용자의 기억이 필요할 때 Weave에 묻고, Weave는 기기 안에서 찾은 답만 건넵니다. 기록 전체와 색인은 기기에 남습니다.',
          n=3, vis=vis_steps([('Agent', '무엇을 주문할지 질의'), ('Weave', '기기 안에서 검색'), ('Agent', '주문 실행')], on=(1,), note='예: “집들이 때 마신 와인 다시 주문해 줘”'))
@@ -171,42 +200,61 @@ def s_a6():
     return s
 
 
-# ------------------------------------------------------------------ A-7 LLM에게 전부 읽히면
+# ------------------------------------------------------------------ A-7 Apple과 Google (10차의 A-8. 10차의 A-7 'LLM에게 전부 읽히면'은 Q1만 B-2로 옮기고 뺌)
+A7 = [[['Apple Siri AI', '(2026. 09)'], '메시지, 메일, 사진에서 필요한 정보를 찾아 답하는 개인 맥락 이해. 화면 인식과 앱 동작까지 Siri 안에서 제공¹', '기기 + 서버 (Private Cloud Compute)',
+       'Apple 기본 앱, App Intents를 연동한 앱', 'Siri를 호출'],
+      [['Gemini Personal Intelligence', '(2026. 01)'], 'Gemini 앱에 Gmail, Google 포토, YouTube, 검색을 연결해 여러 출처를 함께 보고 답변²', '서버 (Google 계정의 데이터)',
+       'Google 서비스 (연결할 앱을 사용자가 선택)', 'Gemini 앱을 실행'],
+      [['Pixel Magic Cue', '(2025. 08)'], '메시지나 통화 화면의 내용에 맞춰 Gmail, 캘린더, 스크린샷의 정보를 먼저 제안³', '기기 (Gemini Nano)',
+       'Google 앱 중심. Pixel 10, 한국 미제공', '쓰던 화면에 자동 표시'],
+      [['Pixel Screenshots', '(2024. 08)'], '사용자가 찍은 스크린샷을 기기 안에서 분석해 두고 자연어로 검색⁴', '기기 (Gemini Nano)', '스크린샷', '전용 앱을 실행'],
+      [('Weave', HI), ('여러 앱의 기록을 단서로 이어서 답하고, 상황에 맞춰 먼저 제안', HI), ('전부 기기 안에서 처리', HI), ('갤러리, 노트, 캘린더, 메일 등 기기 안의 기록', HI),
+       ('키보드의 버튼, 통화 중 검색창', HI)]]
+
+
 def s_a7():
-    s = page_slide('qa_llm', 'A-7', [('LLM에게 기록을 전부 읽히는 방식과의 차이', INK)])
-    y, h, gap = 100, 150, 14
-    qrow(s, 'qa/q1', y, h, '기록을 전부 LLM에게 읽히면 되지 않나요?',
-         'LLM은 토큰마다 연산하기 때문에 수만 건의 기록을 질의마다 읽기 어렵습니다. 임베딩은 기록마다 한 번만 미리 계산해 두고, 질의가 오면 벡터끼리 비교해서 **0.02초**에 후보를 고릅니다. '
-         'sLLM은 질의를 다시 쓸 때와 답변을 만들 때만 씁니다.',
-         n=1, vis=vis_nums([('0.02초', ['임베딩 검색 1회']), ('2회', ['질의 1건의', 'sLLM 호출'])], pt=20))
-    qrow(s, 'qa/q2', y + h + gap, h, '후보 기록을 많이 넣어 주면 LLM이 그중에서 고를 수 있지 않나요?',
-         '후보가 많아지면 LLM의 정확도가 크게 떨어집니다. 암시된 사실을 찾는 벤치마크에서 GPT-4.1은 정답 기록만 받으면 88점을 내지만, 헷갈리는 기록 29건과 함께 받으면 23점이 됩니다.¹ '
-         '먼저 정확히 검색해야 하는 이유입니다.',
-         n=2, vis=vis_bars('ImpliRet 벤치마크에서 GPT-4.1의 정답률¹', [('정답 기록만 제공', 88.05, '88.1', True), ('헷갈리는 기록 29건과 함께', 22.9, '22.9', False)], vmax=110))
-    qrow(s, 'qa/q3', y + 2 * (h + gap), h, '임베딩 검색이 놓치면 LLM도 볼 수 없지 않나요?',
-         '그래서 후보를 여러 건 가져오고 키워드 검색(BM25)도 함께 씁니다. 날짜와 사람 같은 메타데이터로 한 번 더 필터링하고, 그래도 근거가 없으면 찾지 못했다고 답합니다.',
-         n=3, vis=vis_steps([('두 가지 검색', '임베딩 + BM25'), ('필터링', '날짜, 사람'), ('답변', '근거와 함께')], on=(2,)))
-    footnote(s, '¹ Taghavi et al., "ImpliRet: Benchmarking the Implicit Fact Retrieval Challenge", arXiv:2506.14407. 정답 문서만 줄 때 88.05, 문서 30건(정답 1 + 헷갈리는 문서 29)을 줄 때 22.90.',
-             y + 3 * h + 2 * gap + 12)
+    s = page_slide('qa_apple', 'A-7', [('Apple, Google의 개인 기록 검색과의 차이', INK)])
+    y = 98
+    y += tbl(s, 'qa/t', X, y, W, [19, 33, 17, 18, 13], ['서비스', '하는 일', '처리 위치', '대상 기록', '쓰는 자리'], A7, hi=(4,), pady=8, pt=11.5) + 22
+    y += notes3(s, 'qa/n', y, [('쓰는 자리: 쓰던 화면에서 바로', 'Siri는 비서를 부르고, Gemini와 Pixel Screenshots는 앱을 엽니다. Weave는 **쓰던 화면에서 바로** 씁니다. 글을 입력하는 화면에서는 키보드의 버튼으로, 통화 중에는 화면을 쓸어 올려 엽니다.'),
+                               ('처리 위치: 전부 기기 안에서', 'Siri AI와 Gemini는 서버를 함께 씁니다. Weave는 색인부터 답변까지 **기기 안에서** 끝나고, ‘기기에서만 처리’ 설정에서도 그대로 동작합니다.'),
+                               ('찾는 방식: 단서를 이어서', '한 번 찾고 끝나지 않고 **찾은 단서로 다시 찾습니다.** 질의에 없던 날짜나 이름을 먼저 찾아 다음 검색에 넣어서, 한 번의 검색으로는 닿지 않는 기록까지 찾습니다.')], pt=12) + 18
+    footnote(s, ['¹ Apple Newsroom, Siri AI 발표 (2026. 09. 14, 한국어는 10. 26): "These latest models run on device and on servers using Private Cloud Compute"   ² Google, Personal Intelligence 발표 (2026. 01. 14)',
+                 '³ Google, Pixel 10 발표 (2025. 08). 제공 국가는 Google 지원 페이지 기준   ⁴ Google, Pixel 9 발표 (2024. 08)'], y)
     return s
 
 
-# ------------------------------------------------------------------ A-8 Apple과 Google
-A8 = [[['Apple Siri AI', '(2026. 09)'], '메시지, 메일, 미리 알림을 이어서 답변¹', '기기 + 서버 (Private Cloud Compute)', 'Apple 기본 앱'],
-      [['Gemini Personal Intelligence', '(2026. 01)'], 'Gmail, Google 포토의 기록을 이어서 답변²', '서버 (Google 계정의 데이터)', 'Google 서비스'],
-      [['Pixel Magic Cue', '(2025. 08)'], 'Gmail, 캘린더, 스크린샷을 이어서 먼저 제안³', '기기 (Gemini Nano)', 'Google 앱. 한국 미제공'],
-      [('Weave', HI), ('여러 앱의 기록을 단서로 이어서 답변하고 먼저 제안', HI), ('전부 기기 안에서 처리', HI), ('삼성 기본 앱과, 알림으로 받는 외부 메신저', HI)]]
+# ------------------------------------------------------------------ A-8 Galaxy AI 안에서의 구성 (11차에 새로 넣음)
+A8 = [('진입점', ['삼성 키보드 (Writing Assist)', 'Now Nudge, Now Brief', 'Bixby'], ['통화 중 Swipe-up 검색창 (UX1)', '키보드의 실타래 버튼 (UX2)', '키보드 위의 제안 (UX3)', 'Bixby와 Agent가 호출하는 도구 (A-6)']),
+      ('데이터와 보안', ['Personal Data Engine (Knowledge Graph)', 'PDI: 알림에서 예약 정보 수집', 'KEEP, Knox Vault'], ['원문의 벡터 색인과 메타데이터', 'PDE의 사실을 필터로 사용 (A-5)', '같은 보호 구조 위에서 동작 (B-6)']),
+      ('모델', ['기기에 탑재된 Samsung Gauss', 'NPU'], ['Reasoning Embedding 약 0.19GB', 'Query Rewriter Adapter 수십 MB', 'sLLM은 새로 탑재하지 않음 (B-1)'])]
 
 
 def s_a8():
-    s = page_slide('qa_apple', 'A-8', [('Apple, Google의 개인 기록 검색과의 차이', INK)])
-    y = 100
-    y += tbl(s, 'qa/t', X, y, W, [25, 30, 23, 22], ['서비스', '하는 일', '처리 위치', '대상'], A8, hi=(3,), pady=10) + 26
-    y += notes3(s, 'qa/n', y, [('같은 방향이라는 신호', 'Apple과 Google이 모두 개인 기록을 이어 답하는 기능을 내놓았습니다. 개인 기록 검색이 스마트폰 AI의 **다음 경쟁 축**이라는 신호입니다.'),
-                               ('키보드에서 바로', '음성 비서를 따로 부르지 않습니다. 검색창, 통화 화면, 메신저 어디서든 **키보드의 버튼 하나**로 동작합니다.'),
-                               ('Galaxy 생태계와 결합', '삼성 기본 앱과 월렛, 위치 신호, Personal Data Engine, SmartThings로 이어집니다. ‘기기에서만 처리’ 설정에서도 그대로 동작합니다.')]) + 20
-    footnote(s, ['¹ Apple Newsroom, Siri AI 발표 (2026. 09. 14, 한국어는 10. 26): "These latest models run on device and on servers using Private Cloud Compute"',
-                 '² Google, Personal Intelligence 발표 (2026. 01)   ³ Google, Pixel 10 발표 (2025. 08). 제공 국가는 Google 지원 페이지 기준.'], y)
+    s = page_slide('qa_gai', 'A-8', [('Galaxy AI 안에서의 구성', INK)])
+    y, gap = 102, 18
+    cw = (W - 2 * gap) / 3
+    lh = lh_of(11.5, 1.6)
+    rows = max(len(a) for _, a, _ in A8), max(len(b) for _, _, b in A8)
+    h1, h2 = 30 + lh * rows[0] + 12, 30 + lh * rows[1] + 12
+    ch = 46 + h1 + 30 + h2 + 16
+    for i, (name, have, add) in enumerate(A8):
+        x = X + i * (cw + gap)
+        out = [box('qa/g%d/bg' % i, x, y, cw, ch, radius=18),
+               T('qa/g%d/t' % i, x + 22, y + 14, cw - 44, 26, name, size=15, color=INK, weight='b', anchor='ctr'),
+               R('qa/g%d/a' % i, x + 14, y + 46, cw - 28, h1, prst='roundRect', radius=12, fill=GRAY_BG, line=None),
+               T('qa/g%d/al' % i, x + 28, y + 46 + 8, cw - 56, 20, 'Galaxy AI에 이미 있는 것', size=10, color=MUTE, weight='b', anchor='ctr'),
+               T('qa/g%d/at' % i, x + 28, y + 46 + 30, cw - 56, lh * len(have) + 4, have, size=11.5, color=BODY, lnspc=lh * 0.75),
+               arrow('qa/g%d/ar' % i, (x + cw / 2, y + 46 + h1 + 4), (x + cw / 2, y + 46 + h1 + 26), w=1.8),
+               R('qa/g%d/b' % i, x + 14, y + 46 + h1 + 30, cw - 28, h2, prst='roundRect', radius=12, fill=LAV, line=RING, line_w=1.4),
+               T('qa/g%d/bl' % i, x + 28, y + 46 + h1 + 30 + 8, cw - 56, 20, 'Weave가 더하는 것', size=10, color=PURPLE, weight='b', anchor='ctr'),
+               T('qa/g%d/bt' % i, x + 28, y + 46 + h1 + 30 + 30, cw - 56, lh * len(add) + 4, add, size=11.5, color=INK, weight='m', lnspc=lh * 0.75)]
+        s.add('qa/g%d' % i, out)
+    y += ch + 22
+    y += points(s, 'qa/p', X, y, W, ['**새로 만드는 것은 검색 계층 하나입니다.** 진입점은 키보드, 데이터와 보안은 PDE와 KEEP, sLLM은 Gauss를 그대로 씁니다.',
+                                    '**기존 기능과 역할이 나뉩니다.** Writing Assist는 쓴 글을 다듬고, Now Nudge는 지금 화면에 맞춰 제안하고, Finder는 앱과 파일을 찾습니다. Weave는 여러 앱의 기록을 이어 찾습니다. (A-2)',
+                                    '**적용 순서도 Galaxy AI와 같습니다.** 플래그십에서 시작해 One UI 업데이트로 넓힙니다. (B-4)'], gap=8, pt=12.5) + 14
+    footnote(s, 'Galaxy AI의 기능과 구조는 A-2, A-4, A-5, B-6에 적은 공개 자료 기준. Weave가 더하는 것의 크기는 B-1.', y)
     return s
 
 
@@ -219,7 +267,7 @@ PAGES = [
            '(클릭) Weave는 여러 앱에 흩어진 단서를 찾을 뿐 아니라, 이들을 연결함으로써 사용자가 정말 원하는 답이 무엇인지 찾아줍니다.',
          more=[('가로와 세로는 무엇인가요?', '가로는 찾는 범위입니다. 한 앱 안인지, 여러 앱인지입니다. 세로는 찾는 깊이입니다. 한 번 찾고 끝나는지, 찾은 단서로 다시 찾는지입니다.'),
                ('왜 꼭 키보드인가요?',
-                '기록을 찾는 순간은 대부분 무언가를 입력하는 순간입니다. 검색창이든 메신저든 메일이든 키보드는 떠 있어서, 앱을 옮기지 않고 그 자리에서 찾아 넣을 수 있습니다. 통화 중이나 조용한 곳에서는 음성 비서를 부르기 어렵습니다.')],
+                '기록을 찾는 순간은 대부분 무언가를 입력하는 순간입니다. 어느 화면에서든 글을 입력할 때는 키보드가 떠 있어서, 앱을 옮기지 않고 그 자리에서 찾아 넣을 수 있습니다. 통화 중이나 조용한 곳에서는 음성 비서를 부르기 어렵습니다.')],
          basis=['대본은 8차에 발표자가 쓴 글 그대로(slides_new.NOTES의 cmp).']),
     Page('A-2', '기능별 비교', s_a2,
          q='하나씩 짚어 주시겠어요? 키워드 검색이나 임베딩 검색과는 무엇이 다른가요?',
@@ -254,7 +302,8 @@ PAGES = [
                ('모든 대화를 미리 그래프로 만들어 두면 되지 않나요?',
                 '나중에 무엇을 물을지 모르는 상태에서 매일 쌓이는 메시지를 모두 미리 해석해 두려면 연산 부담이 큽니다. '
                 '그래프 기반 검색을 분석한 연구에서도 오류 100건 가운데 76건이 정보를 미리 추출하는 단계에서 나왔습니다.'),
-               ('그러면 그래프는 필요 없다는 말인가요?', '아닙니다. 날짜와 사람, 장소처럼 정리된 사실은 그래프가 가장 빠르고 정확합니다. 다음 장처럼 함께 쓸 때 가장 좋습니다.')],
+               ('그러면 그래프는 필요 없다는 말인가요?', '아닙니다. 날짜와 사람, 장소처럼 정리된 사실은 그래프가 가장 빠르고 정확합니다. 다음 장처럼 함께 쓸 때 가장 좋습니다.'),
+               ('PDE의 Knowledge Graph나 차세대 Bixby 과제와 겹치지 않나요?', '겹치기보다 이어집니다. PDE는 기록이 들어올 때 사실을 정리하고, Weave는 질의가 들어올 때 원문에서 단서를 찾습니다. Bixby는 일을 대신 하는 쪽이고, Weave는 그때 필요한 내 기록을 찾아 주는 쪽입니다. 함께 쓰는 구성은 A-5와 A-8에 있습니다.')],
          basis=['Crocker, Horrocks, Nenov, "Semantic Technology in Your Pocket", ISWC 2025 Industry Track (CEUR-WS Vol-4085): "The PDE analyses this data using appropriate AI technologies including machine learning and LLMs. The result of this analysis is stored in the user\'s personal knowledge graph where it is augmented with triples entailed by the ontology."',
                 'Gutiérrez et al., "HippoRAG", NeurIPS 2024, 부록 F: MuSiQue 오류 100건 가운데 질의 개체 추출 48건 + 문서 정보 추출 28건 = 76건.',
                 '삼성 PDE 자료에는 ‘knowledge graph’라는 말이 없고, 지식 그래프 기반이라는 근거는 OST(자회사)의 글과 발표. 그래서 "삼성이 지식 그래프라고 발표했다"고는 말하지 않음.']),
@@ -274,34 +323,46 @@ PAGES = [
          a='에이전트는 예약이나 주문처럼 일을 대신 해 주는 층이고, Weave는 그 아래에서 내 기록을 찾아 주는 층입니다. '
            '지금의 에이전트는 서버에서 동작하기 때문에, 기기 안의 메모와 사진, 받은 메시지를 찾으려면 서버로 올려야 합니다. '
            '또 추론과 검색을 여러 번 반복해서, 공개 실험에서는 질의 하나에 10초에서 27초가 걸렸습니다. '
-           'Weave는 기기 안에서 미리 색인해 두고 1초 안팎에 답합니다. '
+           'Weave는 기기 안에서 미리 색인해 두고 1초 안에 답합니다. '
            '그래서 에이전트가 사용자의 기억이 필요할 때 호출하는 도구로 함께 쓸 수 있습니다.',
          more=[('에이전트가 Weave를 부르면 결국 기록이 서버로 가는 것 아닌가요?', '에이전트에게 가는 것은 찾아낸 답 한 줄입니다. 기록 전체와 색인은 기기 안에 남고, 무엇을 건넬지는 사용자가 정합니다.'),
                ('Bixby가 에이전트가 되면 Weave는 필요 없지 않나요?', 'Bixby가 일을 대신 하게 될수록 내 기록을 정확히 찾아 주는 검색이 더 필요합니다. Weave는 그 검색을 맡습니다.')],
          basis=['Zhuang et al., "EfficientRAG", EMNLP 2024: MuSiQue 200문항에서 질문당 Iter-RetGen 9.68초, SelfAsk 27.47초, EfficientRAG 3.62초.',
                 'Pickle(Pickle, Inc.): 전화, 예약, 쇼핑을 대신 하는 개인 AI 에이전트 앱. 격리된 클라우드 실행 환경과 가상 브라우저에서 일하고, 연결한 계정(캘린더, 메일, 쇼핑)을 씀(소개 글 기준).',
                 'Meta Muse: 2026. 09. 08 발표. 자체 클라우드 컴퓨터(격리된 가상 머신과 브라우저)에서 일하고 기억 기능이 있음(보도 기준).',
-                'Weave의 %s는 UX2의 온디바이스 값(B-6).' % NUM.T_UX2]),
-    Page('A-7', 'LLM에게 전부 읽히면', s_a7,
-         q='요즘 LLM은 긴 글도 읽습니다. 기록을 전부 LLM에게 읽히면 되지 않나요?',
-         a='기록이 수만 건이면 질의마다 전부 읽히기에는 연산량이 너무 큽니다. 그래서 찾는 일은 임베딩에 맡겼습니다. '
-           '기록의 벡터는 충전 중에 미리 만들어 두기 때문에, 질의가 들어왔을 때는 벡터끼리 비교만 하면 되고 0.02초면 끝납니다. '
-           'sLLM은 질의를 다시 쓸 때와, 추려진 기록 몇 건으로 답변을 만들 때만 씁니다. '
-           '후보를 많이 넣어 주는 것도 답이 아닙니다. 공개 벤치마크에서 헷갈리는 기록이 섞이면 GPT-4.1의 점수가 88점에서 23점으로 떨어졌습니다.',
-         more=[('임베딩이 놓치면 LLM도 못 보는 것 아닌가요?', '그래서 후보를 여러 건 가져오고 키워드 검색도 함께 씁니다. 그래도 근거가 없으면 찾지 못했다고 답합니다.')],
-         basis=['ImpliRet(arXiv 2506.14407): 정답 문서만 줄 때와 30건을 줄 때 GPT-4.1 88.05 → 22.90, o4-mini 92.74 → 55.54, Llama 3.3 70B 81.92 → 10.71.',
-                'Hop 하나 0.02초 = 임베딩 8ms + 벡터 검색 10ms + 필터링과 Slot 2ms(B-5).',
-                'How it Works Appendix에 있던 장(q_llm)의 답을 질문과 답 줄로 다시 짬.']),
-    Page('A-8', 'Apple, Google과의 차이', s_a8,
-         q='Apple의 Siri AI나 Google의 Gemini도 개인 기록을 찾아 주지 않나요?',
-         a='맞습니다. Apple은 올해 9월 Siri AI에서 메시지와 메일, 미리 알림을 이어 답하는 예시를 보여 줬고, Gemini의 Personal Intelligence도 Gmail과 Google 포토를 이어 답합니다. '
-           '저희는 이것을 개인 기록 검색이 스마트폰 AI의 다음 경쟁 축이라는 신호로 봅니다. Weave의 차이는 세 가지입니다. '
-           '서버를 함께 쓰는 두 서비스와 달리 모든 처리를 기기 안에서 하고, 음성 비서를 부르지 않고 키보드에서 바로 쓰며, '
-           '삼성 기본 앱과 PDE, SmartThings로 이어지는 Galaxy 생태계 위에서 동작합니다.',
+                'Weave의 %s는 UX2의 온디바이스 값(B-3).' % NUM.T_UX2]),
+    Page('A-7', 'Apple, Google과의 차이', s_a7,
+         q='Apple의 Siri AI나 Google의 Gemini, Pixel도 개인 기록을 찾아 주지 않나요? 무엇이 다른가요?',
+         a='방향은 같지만 세 가지가 다릅니다. 쓰는 자리와 처리 위치, 그리고 찾는 방식입니다. '
+           '첫째는 쓰는 자리입니다. 비서를 부르거나 앱을 여는 대신, 키보드의 버튼이나 통화 화면의 검색창으로 쓰던 화면에서 바로 찾습니다. '
+           '둘째는 처리 위치입니다. 서버를 함께 쓰는 Siri AI나 Gemini와 달리 색인부터 답변까지 기기 안에서 끝납니다. '
+           '셋째는 찾는 방식입니다. 한 번 찾고 끝나지 않고, 찾은 단서로 다시 찾습니다. '
+           'Apple은 Siri AI에서 메시지와 메일, 사진을 이어 답하는 기능을 내놓았고, Google은 Gemini의 Personal Intelligence와 Pixel의 Magic Cue를 내놓았습니다. '
+           '저희는 이것을 개인 기록 검색이 스마트폰 AI의 다음 경쟁 축이라는 신호로 봅니다.',
          more=[('Apple이 먼저 한 것 아닌가요?', '방향은 같습니다. 그래서 Galaxy에도 필요하다고 봅니다. 저희는 기기 안 처리와 키보드라는 자리로 차별화합니다.'),
                ('Pixel의 Magic Cue는요?',
-                'Gmail과 캘린더, 스크린샷을 이어 먼저 제안하는 기능으로 방향이 같습니다. 다만 Google 앱이 중심이고 한국에는 제공되지 않습니다.')],
+                'Gmail과 캘린더, 스크린샷을 이어 먼저 제안하는 기능으로 방향이 같습니다. 다만 Google 앱이 중심이고 한국에는 제공되지 않습니다.'),
+               ('Pixel Screenshots는요?', '사용자가 찍은 스크린샷만 대상입니다. 기기 안에서 분석해 두고 자연어로 찾는 전용 앱입니다. Weave는 스크린샷을 포함해 여러 앱의 기록을 함께 봅니다.'),
+               ('왜 꼭 키보드인가요?', '기록을 찾는 순간은 대부분 무언가를 입력하는 순간입니다. 어느 화면에서든 글을 입력할 때는 키보드가 떠 있어서, 앱을 옮기지 않고 그 자리에서 찾아 넣을 수 있습니다. 통화 중이나 조용한 곳에서는 음성 비서를 부르기 어렵습니다.')],
          basis=['Apple Newsroom(2026. 09. 14): "if a user asks Siri what a family member suggested as an activity during an upcoming visit, Siri can search the user\'s messages … pull up the cooking instructions from an email … add the ingredients to their grocery list in the Reminders app". "These latest models run on device and on servers using Private Cloud Compute." 한국어는 2026. 10. 26.',
-                'Google(2026. 01. 14): "Personal Intelligence has two core strengths: reasoning across complex sources and retrieving specific details from, say, an email or photo". "this data already lives at Google".',
-                'Pixel Magic Cue(2025. 08. 20): Gmail, 캘린더, 스크린샷, 메시지를 이어 먼저 제안. Google의 소개 글은 Tensor G5와 Gemini Nano로 기기에서 돈다고 설명(11-16 검색으로 확인). 제공 국가 9곳에 한국은 없음(Google 지원 페이지).']),
+                'Siri AI의 구성(11-16 저녁 검색으로 다시 확인, WWDC26 보도): 개인 맥락 이해(메시지, 메일, 사진에서 정보를 찾음), 화면 인식(화면의 내용을 보고 답하거나 동작), 앱 동작(App Intents로 앱이 내용과 기능을 Siri AI에 내어 줌).',
+                'Google(2026. 01. 14): "Personal Intelligence has two core strengths: reasoning across complex sources and retrieving specific details from, say, an email or photo". "this data already lives at Google". Gmail, 포토, YouTube, 검색을 연결하고 연결은 기본으로 꺼져 있음(사용자가 고름). 처음에는 미국의 AI Pro, AI Ultra 구독자 대상 베타.',
+                'Pixel Magic Cue(2025. 08. 20): Gmail, 캘린더, 스크린샷, 메시지를 이어 먼저 제안. Google의 소개 글은 Tensor G5와 Gemini Nano로 기기에서 돈다고 설명(11-16 검색으로 확인). 제공 국가 9곳에 한국은 없음(Google 지원 페이지). 2026년 5월에 Wallet, Tasks가 더해짐(9to5Google).',
+                'Pixel Screenshots(2024. 08. 13, Pixel 9): 사용자가 찍은 스크린샷을 기기 안의 Gemini Nano로 분석해 색인하고 자연어로 검색. 화면을 계속 찍어 두는 방식이 아니라 사용자가 찍은 스크린샷만 대상(9to5Google, Android Authority).',
+                '11차(11-16): 팀 검토(표만 보고는 어떤 기능인지 모르겠다, 차별점을 더 보충, UX 진입점을 넣기)로 표의 ‘하는 일’을 풀어 쓰고 ‘쓰는 자리’ 칸과 Pixel Screenshots 줄을 더함. 아래 설명 세 칸을 쓰는 자리, 처리 위치, 찾는 방식으로 다시 씀. 답에서는 예시를 들지 않고 차이만 설명함.',
+                '11-16 저녁: 서드파티 앱과 메신저를 차별점으로 적은 곳을 뺌(사용자의 지시: 협약이 필요할 수도 있어 장점으로 내세우지 않음). 표의 대상 기록 ‘삼성 기본 앱, 알림으로 받는 외부 메신저’ → ‘갤러리, 노트, 캘린더, 메일 등 기기 안의 기록’, 설명 칸과 답의 ‘카카오톡 같은 외부 메신저의 단서도 알림으로 읽어’를 뺌.']),
+    Page('A-8', 'Galaxy AI 안에서의 구성', s_a8,
+         q='이 기능이 Galaxy AI에 들어간다면 어떤 구성이 되나요? 기존 기능이나 진행 중인 과제와 겹치지 않나요?',
+         a='기존 Galaxy AI의 자산을 그대로 쓰고, 그 위에 검색 계층 하나를 더하는 구성입니다. '
+           '진입점은 삼성 키보드와 통화 화면의 검색창입니다. 키보드에는 Writing Assist가 있는 자리에 실타래 버튼을 두고, 먼저 건네는 제안은 Now Nudge처럼 키보드 위에 띄웁니다. '
+           '데이터와 보안은 PDE와 PDI가 모으는 경로, 그리고 KEEP과 Knox Vault의 보호 구조를 그대로 쓰고, Weave는 여기에 원문의 벡터 색인을 더합니다. '
+           '모델은 기기에 탑재된 Gauss를 함께 쓰고, 새로 탑재하는 것은 임베딩 모델 하나와 작은 어댑터입니다. '
+           '기존 기능과는 역할이 나뉩니다. Writing Assist는 쓴 글을 다듬고, Now Nudge는 지금 화면에 맞춰 제안하고, Finder는 앱과 파일을 찾습니다. '
+           'Weave는 그 사이에서 여러 앱의 기록을 단서로 이어 찾는 일을 맡습니다.',
+         more=[('PDE 과제나 차세대 Bixby와 겹치지 않나요?', 'PDE는 기록이 들어올 때 사실을 정리하고, Weave는 질의가 들어올 때 원문에서 단서를 찾습니다. Bixby가 일을 대신 하게 될수록 내 기록을 정확히 찾아 주는 검색이 더 필요합니다. 겹치기보다 이어지는 관계입니다. A-4, A-5, A-6에 정리했습니다.'),
+               ('별도 앱으로 내는 건가요?', '아닙니다. 키보드의 버튼과 키보드 위의 제안, 통화 화면의 검색창으로 들어갑니다. 따로 여는 앱이 없습니다.'),
+               ('어느 기기부터 넣나요?', '임베딩 검색은 가벼워서 넓게 적용하고, sLLM이 필요한 기능은 Gauss가 탑재된 플래그십부터 넣습니다. B-4에 정리했습니다.')],
+         basis=['11차(11-16)에 새로 넣은 장: 팀 검토의 질문("Galaxy AI 안에 이게 편입된다면 어떤 구성 전략을 취할 수 있는지")과 예상 질문 1번(사내 기술 중복성).',
+                '이미 있는 것은 A-2(Writing Assist, Now Nudge, Finder), A-4와 A-5(PDE), B-6(KEEP, Knox Vault), B-8(PDI)의 공개 자료 기준. Weave가 더하는 것의 크기는 B-1.',
+                'Finder 검색 결과에 Weave를 넣는 구성은 적지 않음(Finder의 업그레이드판이라는 인상을 피함).']),
 ]

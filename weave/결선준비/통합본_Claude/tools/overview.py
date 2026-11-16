@@ -26,9 +26,11 @@ def labels():
         for k in ([sp.key for sp in own[item[1]]] if isinstance(item, tuple) else [item]):
             out.append(('main', doc.NAME.get(k, k).split(' (')[0]))
     import qna as Q
+    out += [('appx', 'Q&A')]
     out += [('appx', 'Appendix 목차')] + [('appx', '%s %s' % (p.code, p.toc)) for p in Q.pages()]
     if own['prop']:
         out += [('prop', '제안 장표 가름')] + [('prop', doc.NAME[sp.key]) for sp in own['prop']]
+    out += [('old', '이전 판 (10차) 가름')] + [('old', '이전 판 · 10차 %d쪽' % i) for i in MK.PREV10_KEEP + MK.PREV10_APX]
     out += [('old', '이전 판 (9차 Appendix) 가름')] + [('old', '이전 판 · 9차 %d쪽' % i) for i in MK.PREV9_KEEP]
     out += [('old', '이전 판 (8차) 가름')] + [('old', '이전 판 · 8차 %d쪽' % i) for i in MK.PREV8_KEEP]
     out += [('old', '이전 판 (7차) 가름')] + [('old', '이전 판 · 7차 %d쪽' % i) for i in MK.PREV7_KEEP]

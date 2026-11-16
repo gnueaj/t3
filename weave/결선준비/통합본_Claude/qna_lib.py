@@ -19,7 +19,18 @@ Slide = HW.Slide
 A_NS = 'http://schemas.openxmlformats.org/drawingml/2006/main'
 P_NS = 'http://schemas.openxmlformats.org/presentationml/2006/main'
 
-SECTIONS = {'A': '기존 기술과의 차이', 'B': '상품화', 'C': '동작 방식', 'D': '모델과 학습', 'E': '시나리오 더 보기', 'R': '출처'}
+# 묶음 이름. 11차(11-16): B(상품화)가 길어져 둘로 나눔('B를 두 개로 나누기 (메모리/속도/계획), (온디바이스/데이터 권한/사업 효과)').
+# 코드는 그대로 B-1 … B-10이고(뒤 묶음 C, D, E의 코드가 바뀌지 않게), 목차의 칸과 장 머리의 묶음 이름만 둘로 나뉜다.
+SECTIONS = {'A': '기존 기술과의 차이', 'B1': '상품화: 성능과 계획', 'B2': '상품화: 데이터와 사업', 'C': '동작 방식', 'D': '모델과 학습',
+            'E': '시나리오 더 보기', 'R': '출처'}
+B_SPLIT = 5                             # B-1 ~ B-5는 '성능과 계획', B-6부터는 '데이터와 사업'
+
+
+def group_of(code):
+    """장의 코드(B-7) → 묶음(B2)."""
+    if code[0] != 'B':
+        return code[0]
+    return 'B1' if int(code.split('-')[1]) <= B_SPLIT else 'B2'
 RED_BG, RED_INK = 'FDF0F0', 'B4232B'
 GRAY_BG = 'F7F5FC'
 X0, W0 = 70, 1140                      # 본문이 놓이는 왼쪽 끝과 폭(다른 Appendix 장과 같음)
@@ -35,7 +46,7 @@ class Page:
 
     @property
     def sec(self):
-        return SECTIONS[self.code[0]]
+        return SECTIONS[group_of(self.code)]
 
     def notes(self):
         if self.plain:
@@ -632,7 +643,7 @@ def frame(s, code):
     """코드와 묶음 이름(왼쪽 위), 쪽 번호와 '목차' 단추(오른쪽 위). 본문의 왼쪽 끝(70)과 오른쪽 끝(1210)에 맞춘다.
     쪽 번호는 finish()가 슬라이드 번호 필드로 바꾼다."""
     c, w = chip('qna/code', X0, 28, code, 'fill', pt=10.5, h=24, padx=10)
-    s.add('qna/code', c + [T('qna/sec', X0 + w + 8, 28, 300, 24, SECTIONS[code[0]], size=10.5, color=MUTE, anchor='ctr')])
+    s.add('qna/code', c + [T('qna/sec', X0 + w + 8, 28, 300, 24, SECTIONS[group_of(code)], size=10.5, color=MUTE, anchor='ctr')])
     b, bw = chip('qna/toc', X0 + W0, 28, '목차', 'outline', pt=10, h=24, padx=12, align='r')
     s.add('qna/toc', b)
     s.add('qna/pg', [T('qna/pg', X0 + W0 - bw - 10 - 60, 28, 60, 24, '0', size=11, color=MUTE, weight='b', align='r', anchor='ctr')])

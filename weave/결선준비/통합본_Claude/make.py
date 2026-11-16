@@ -92,6 +92,7 @@ PREV6 = HERE / '원본' / '통합본_6차.pptx'                # 11월 13일 6�
 PREV7 = HERE / '원본' / '통합본_7차.pptx'                # 11월 13일 7차 통합본(7차 뒤의 손질까지, e0a4e14)
 PREV8 = HERE / '원본' / '통합본_8차.pptx'                # 11월 13일 8차 통합본(c3a5b5d)
 PREV9 = HERE / '원본' / '통합본_9차.pptx'                # 11월 15일 9차 통합본(414bf78). Appendix를 질의응답용으로 다시 짜기 전
+PREV10 = HERE / '원본' / '통합본_10차.pptx'              # 11월 16일 10차 통합본(b9e2a03). 11차(팀 검토를 모아 본문과 Appendix를 고침) 전
 INTRO2 = HERE / '원본' / '통합본_인트로수정_87bf80b.pptx'   # 팀원이 7~14쪽을 손본 덱(jjun-0824/t3 87bf80b). 2~5쪽과 7~14쪽을 여기서 옮김
 MG_MP4 = ROOT / '08_인트로영상' / 'Weave_모션그래픽.mp4'      # 모션그래픽 v25(111.1초). 중간본에 든 v23과 길이와 소리가 같음
 COVER_MP4 = ROOT / '10_표지영상' / '표지_루프.mp4'      # 표지 영상 v9(18초)
@@ -190,6 +191,13 @@ PREV8_KEEP = [2, 6, 17, 18, 19, 24, 26, 29, 30, 31, 34, 35, 36, 39]
 # 9차 통합본에서: 10차(11-15)에 질의응답용으로 다시 짜면서 합치거나 고치거나 뺀 Appendix 장. 한눈에 보기(42), 모듈과 역할(43), Reasoning Embedding과 질의 재작성(44),
 # AgentIR 후보 방식(45), 지식 그래프 두 장(46, 47), 검색 방식 비교(48, 뺌), 세 UX 공통 파이프라인(49), PDE 질문(50), 같은 날 사진(51), Apple(52), LLM(53)
 PREV9_KEEP = list(range(42, 54))
+# 10차 통합본에서: 11차(11-16)에 화면이나 대본이 바뀐 본 발표 장. 표지(소속), 통화(2쪽), 수많은 기록(6쪽)과 설문(7쪽)의 검색어, 10쪽(클릭과 글자 크기),
+# 11쪽과 14쪽(글자 크기), 잇는 장(15쪽 대본), How it works(20쪽), 키워드(23), 임베딩(24), step(25), 중간 단서(26), 01 상황 인식(28), Hop 1(30), Hop 2(31),
+# 04 결과 제공(32), 기대효과(33), 연표(34), 미래의 Weave(35). 그 뒤는 10차의 Appendix 가운데 11차에 고치거나 합치거나 뺀 장(PREV10_APX)
+PREV10_KEEP = [1, 2, 6, 7, 10, 11, 14, 15, 20, 23, 24, 25, 26, 28, 30, 31, 32, 33, 34, 35]
+# 10차의 Appendix(40~76쪽) 가운데: 목차(40), Finder(43), LLM에게 전부 읽히면(47, 뺌), Apple과 Google(48), B 묶음 가운데 화면이 바뀐 장(49~54, 56),
+# C 묶음(57~62), 모델 스펙(63), Query Rewriting의 종류(64), 시나리오 더 보기 세 장(71~73). 낱말 하나나 참조 코드만 바뀐 장(42, 44, 46, 55, 66, 74, 75)은 넣지 않음
+PREV10_APX = [40, 43, 47, 48, 49, 50, 51, 52, 53, 54, 56, 57, 58, 59, 60, 61, 62, 63, 64, 71, 72, 73]
 
 
 def own_specs():
@@ -287,6 +295,24 @@ def patch_cover(cover):
     for rp in title.iter('{%s}rPr' % A, '{%s}endParaRPr' % A):
         if rp.get('sz'):
             rp.set('sz', str(round(COVER_PT * 100)))
+    patch_cover_names(cover)
+
+
+COVER_NAMES = ['n00', 'n01', 'n10', 'n11', 'n20']           # 이재웅, 양서윤, 장이준, 이지현, 조성빈
+COVER_NAME_Y = 616                                         # 이름 한 줄의 위 끝(px). 소속 두 줄이 있을 때 맨 아래 줄의 아래 끝(640)에 이름의 아래 끝을 맞춤
+
+
+def patch_cover_names(cover):
+    """11차(11-16) '첫 번째 장표에 소속 빼 줘': 이름 아래의 가는 줄과 소속 두 줄(Samsung Research / AI System Team 등)을 지우고,
+    소속별로 묶여 있던 이름 다섯을 같은 간격(묶음 안에서 쓰던 간격)의 한 줄로 놓는다."""
+    for i in range(3):
+        for part in ('line', 'dept', 'team'):
+            el = by_name(cover, '!!cover/%s%d' % (part, i))
+            el.getparent().remove(el)
+    x0 = box(by_name(cover, '!!cover/n00'))[0]
+    step = box(by_name(cover, '!!cover/n01'))[0] - x0
+    for i, n in enumerate(COVER_NAMES):
+        place(by_name(cover, '!!cover/' + n), x=x0 + i * step, y=COVER_NAME_Y)
 
 
 def patch_mg(mg):
@@ -465,6 +491,58 @@ def patch_heading7(sl):
     hit[0].text = HEAD7[1]
 
 
+Q7_OLD = '지은이네 집들이 때 마셨던 와인'
+
+
+def patch_query7(sl):
+    """11차(11-16): 7쪽 검색 칸의 검색어를 6쪽과 같은 글(slides_new.HK_QUERY)로 바꾸고, 글이 길어진 만큼 칸을 넓힌다.
+    칸의 가운데는 그대로 두고(위의 숫자와 가운데가 같음) 오른쪽의 '일치하는 결과가 없습니다'는 검색어와의 틈을 그대로 둔 채 옮긴다."""
+    qs = by_name(sl, 'Mini query')
+    hit = [r for r in qs.iter('{%s}r' % A) if r.find('{%s}t' % A).text == Q7_OLD]
+    assert len(hit) == 1, len(hit)
+    rp = hit[0].find('{%s}rPr' % A)
+    assert rp.find('{%s}latin' % A).get('typeface').endswith('700')
+    pt = int(rp.get('sz')) / 100
+    d = N.tw(N.HK_QUERY, pt, 'b') - N.tw(Q7_OLD, pt, 'b')
+    hit[0].find('{%s}t' % A).text = N.HK_QUERY
+    for name in ('Mini query', 'Mini search'):
+        el = by_name(sl, name)
+        place(el, w=box(el)[2] + d)
+    for name in ('Mini none', 'Mini none dot', 'Mini none text'):
+        shift(by_name(sl, name), dx=d)
+    gx = by_name(sl, '!!stat1/search').find(q('p:grpSpPr')).find('{%s}xfrm' % A)       # 묶음의 상자와 자식 좌표계도 같은 만큼(배율 1 그대로)
+    off = gx.find('{%s}off' % A)
+    off.set('x', str(int(off.get('x')) - round(d / 2 * 9525)))
+    for e in ('ext', 'chExt'):
+        ext = gx.find('{%s}%s' % (A, e))
+        ext.set('cx', str(int(ext.get('cx')) + round(d * 9525)))
+
+
+# 11차(11-16) '텍스트 크기 반 단계 정도만 크게 (10, 11, 14, 28, 32p)': 옮겨 온 10, 11, 14쪽의 큰 글. {장: (도형, 지금 크기, 새 크기(1/100pt))}
+# 33 → 35pt, 40 → 42pt(PowerPoint의 글자 크기 단계 32 → 36, 40 → 44의 절반). 28쪽과 32쪽은 How it Works 쪽의 CAP_BIG(30 → 32pt)
+CAP_UP = {'in09': ('!!cap8/1', 3300, 3500), 'scat': ('!!cap8/2', 3300, 3500), 'in12': ('!!q8', 4000, 4200)}
+
+
+def patch_cap_size(key):
+    """그 장의 큰 글을 CAP_UP의 크기로. 줄 간격도 같은 비율로 늘리고, 늘어난 높이의 절반만큼 위로 올려 글의 세로 가운데를 그대로 둔다."""
+    def fn(sl):
+        name, a, b = CAP_UP[key]
+        el = by_name(sl, name)
+        rps = [rp for rp in el.iter('{%s}rPr' % A, '{%s}endParaRPr' % A) if rp.get('sz')]
+        assert rps and all(rp.get('sz') == str(a) for rp in rps), (key, [rp.get('sz') for rp in rps])
+        for rp in rps:
+            rp.set('sz', str(b))
+        grown = 0
+        for ls in el.iter('{%s}lnSpc' % A):
+            sp = ls.find('{%s}spcPts' % A)
+            old = int(sp.get('val'))
+            new = round(old * b / a)
+            sp.set('val', str(new))
+            grown += (new - old) / 100 * 4 / 3
+        shift(el, dy=-grown / 2)
+    return fn
+
+
 HUB_PT = {'p': (1550, 1800), 'n': (1200, 1300)}       # 9쪽: 퍼센트와 그 아래 이름의 글자 크기(1/100pt). 지금 → 6차(퍼센트는 한 단계, 이름은 반 단계)
 
 
@@ -618,12 +696,17 @@ def patch_logo_center(sl):
 #   '0.2초 더 주라는 거였는데? 그럼 총 0.7초 정도 되겠지' → 연결음 5.5dB(-8.1 LUFS), 받는 소리를 또렷한 '딸깍'(1.36~1.47초)으로 바꾸고
 #   딸깍이 끝나고 첫마디 '네'까지를 0.43초 → 0.63초로(딸깍의 첫 소리부터는 0.74초). 그래서 첫마디와 그 뒤가 모두 0.43초 늦어지고 길이는 14.02초 → 14.45초
 CALL_MP3 = INTRO_AS / 'call-hook.mp3'
-CALL_LEN = 14.45                                      # 음성의 길이(초)
+#   11차(11-16) '두 번째 장 음성에서도 소속 빼 줘 … 아.. 네.. 음.. 만 말하고 속도 1.1~1.2배 정도로 빠르고 자연스럽게, 편집 힘들면 음성 수정 예정':
+#   tools/call_edit.py로 '삼성리서치'와 '그거요...?'를 덜어 내고 목소리 구간을 1.15배 빠르게 한 뒤 같은 크기 조정을 거침(목소리 -17.8 LUFS).
+#   "네, 양서윤 프로입니다." → "어... 네.." → "아... 잠깐만요, 찾아보고 다시 알려 드릴게요." 길이 14.45초 → 11.62초.
+#   '안녕하세요'는 녹음에 없어 넣지 못함(새 음성을 받으면 파일과 아래 값만 바꿈). 10차의 파일은 out/이전판_10차/call-hook_10차.mp3
+CALL_LEN = 11.62                                      # 음성의 길이(초)
 CALL_AT = 0.3                                         # 장이 열린 뒤 음성이 시작하는 때(초)
 # 화면의 문장 두 줄: (음성 안에서 그 줄의 첫 말을 시작하는 때(초), 한 글자씩 뜨는 간격(ms)).
 #   첫 줄 “잠깐만요, 찾아보고: '잠깐만요' 10.71초, 조금 쉬고 '찾아보고' 11.71초. 둘째 줄 다시 알려 드릴게요.”: '다시' 12.37초, 말이 끝나는 때 13.43초
 #   (받아쓰기로 잰 10.28초, 11.94초에 첫마디를 늦춘 0.43초를 더한 값)
-CALL_LINES = [(10.71, 150), (12.37, 100)]
+#   11차: '잠깐만요' 8.27초, '다시' 9.72초, 말이 끝나는 때 10.85초(원본의 때를 덜어 낸 만큼 당기고 1.15로 나눈 값. 소리 크기로 다시 확인)
+CALL_LINES = [(8.27, 130), (9.72, 95)]
 MEDIA_URI = '{DAA4B4D4-6D71-4841-9C94-3DE7FCFB9230}'
 P14 = 'http://schemas.microsoft.com/office/powerpoint/2010/main'
 
@@ -704,8 +787,54 @@ NOTE_OURS = {'in02', 'in03', 'in04', 'in05', 'in07', 'in08', 'hub2', 'in09', 'sc
 INTRO_PATCH = {                                       # 옮겨 온 장마다 6차부터 더 손보는 일
     'in02': [patch_call],
     'in03': [patch_person_click, patch_floats, patch_aura], 'in04': [patch_floats, patch_aura], 'in05': [patch_floats, patch_aura],
-    'in07': [patch_heading7], 'hub2': [patch_hub], 'in09': [patch_answer], 'gath': [patch_gather], 'bridge': [patch_logo_center],
+    'in07': [patch_heading7, patch_query7], 'hub2': [patch_hub],
+    'in09': [patch_answer, patch_cap_size('in09'), patch_person_click],      # 11차: 큰 글 35pt, 장이 열리면 빈 화면이고 클릭해야 글과 대화 화면이 뜸
+    'scat': [patch_cap_size('scat')], 'gath': [patch_gather], 'in12': [patch_cap_size('in12')], 'bridge': [patch_logo_center],
 }
+
+
+def copy_any(prs, src, note_tpl):
+    """foreign.copy_slide와 같되 영상이나 소리가 딸린 장도 옮긴다(이전 판에 두는 표지와 2쪽). 같은 파일은 덱 안에서 한 번만 저장된다."""
+    import io
+    from pptx.media import Video
+    new = prs.slides.add_slide(F.same_layout(prs, src.slide_layout))
+    rid, media = {}, {}
+    for k, rel in src.part.rels.items():
+        if rel.is_external:
+            continue
+        if rel.reltype.endswith('/image'):
+            rid[k] = new.part.get_or_add_image_part(io.BytesIO(rel.target_part.blob))[1]
+        elif rel.reltype.endswith(('/media', '/video', '/audio')):
+            tp = rel.target_part
+            if tp.partname not in media:
+                # 같은 파일이 이미 덱에 있으면(지금 표지의 영상) 그 파일을 함께 씀: 바탕 덱에서 온 영상은 python-pptx의 목록에 없어 직접 찾음
+                sha = hashlib.sha1(tp.blob).hexdigest()
+                same = [p for p in new.part.package.iter_parts() if str(p.partname).startswith('/ppt/media/') and hashlib.sha1(p.blob).hexdigest() == sha]
+                media[tp.partname] = same[0] if same else new.part.package.get_or_add_media_part(Video.from_blob(tp.blob, tp.content_type))
+            rid[k] = new.part.relate_to(media[tp.partname], rel.reltype)
+    # 다른 장으로 가는 링크(예전 Appendix 목차의 쪽 번호, 장마다의 '목차로')는 떼어 낸다: 이전 판에서는 가리키던 장이 그 자리에 없다
+    jump = {k for k, rel in src.part.rels.items() if not rel.is_external and rel.reltype.endswith('/slide')}
+    el = copy.deepcopy(src._element)
+    for e in list(el.iter()):
+        for k, v in list(e.attrib.items()):
+            if k.startswith(F.RNS):
+                if v == '':                                 # 소리나 영상을 트는 도형의 빈 링크(ppaction://media)는 그대로
+                    continue
+                if v in jump:
+                    e.getparent().remove(e)
+                    break
+                assert v in rid, '옮기지 못하는 관계 %s=%s (%s)' % (k, v, src.part.partname)
+                e.set(k, rid[v])
+    dst = new._element
+    for ch in list(dst):
+        dst.remove(ch)
+    for ch in list(el):
+        dst.append(ch)
+    for k, v in el.attrib.items():
+        dst.set(k, v)
+    if F.note_text(src):
+        F.set_notes(new, F.note_text(src), note_tpl)
+    return new
 
 
 def copy_intro(prs, note_tpl):
@@ -752,12 +881,18 @@ def build(dst):
     for item in SEQ:
         main += own[item[1]] if isinstance(item, tuple) else [cover if item == 'cover' else mg if item == 'mg' else intro[item]]
     n_main = len(main)
+    qa = draw([N.s_qa()])                              # 11차(11-16): 본 발표와 Appendix 사이에 질의응답 동안 띄워 두는 장
     import qna as Q                                    # 10차(11-15): Appendix를 질의응답용으로 다시 짬(목차, 코드, 쪽 번호. qna.py)
-    appx = Q.assemble(prs, layout, note_tpl, draw, n_main + 1)
+    appx = Q.assemble(prs, layout, note_tpl, draw, n_main + len(qa) + 1)
     prop = draw([N.s_divider('p0', '제안 장표', ['본 발표에 넣을지 정하지 않은 장'],
                              '여기부터는 제안 장표입니다. 본 발표에서는 넘기지 않습니다.')] + specs['prop']) if specs['prop'] else []      # 6차: 없음
-    prev9, prev8, prev7, prev6, prev5, prev4, prev3, prev2, prev1 = (list(Presentation(str(f)).slides)
-                                                                     for f in (PREV9, PREV8, PREV7, PREV6, PREV5, PREV4, PREV3, PREV2, PREV))
+    prev10, prev9, prev8, prev7, prev6, prev5, prev4, prev3, prev2, prev1 = (
+        list(Presentation(str(f)).slides) for f in (PREV10, PREV9, PREV8, PREV7, PREV6, PREV5, PREV4, PREV3, PREV2, PREV))
+    old10 = draw([N.s_divider('o10', '이전 판 (10차)', ['11월 16일 10차 통합본에서 11차에 화면이나 대본이 바뀐 장: 표지, 통화(2쪽), 6, 7, 10, 11, 14, 15쪽',
+                                                      'How it works(20쪽), 23~26, 28, 30~32쪽, 기대효과(33쪽), 연표(34쪽), 미래의 Weave(35쪽)',
+                                                      '그 뒤는 10차의 Appendix 가운데 고치거나 합치거나 뺀 장. 노트에 그때의 대본이 그대로 있습니다'],
+                              '여기부터는 바꾸기 전의 장입니다. 본 발표에서는 넘기지 않습니다.')])
+    old10 += [copy_any(prs, prev10[i - 1], note_tpl) for i in PREV10_KEEP + PREV10_APX]
     old9 = draw([N.s_divider('o9', '이전 판 (9차 Appendix)', ['11월 15일 9차 통합본의 Appendix 가운데, 질의응답용으로 다시 짜면서 합치거나 고치거나 뺀 장',
                                                            '한눈에 보기, 모듈과 역할, Reasoning Embedding과 질의 재작성, AgentIR 후보 방식, 지식 그래프 두 장, 검색 방식 비교',
                                                            '세 UX 공통 파이프라인, PDE 질문, 같은 날 사진, Apple, LLM (9차의 42~53쪽)'],
@@ -799,12 +934,12 @@ def build(dst):
                                                     '노트에 그때의 대본이 그대로 있습니다'],
                              '여기부터는 바꾸기 전의 장입니다. 본 발표에서는 넘기지 않습니다.')])
     old1 += [F.copy_slide(prs, prev1[i - 1], note_tpl) for i in PREV_KEEP] + [F.copy_slide(prs, src[12], note_tpl)]
-    order = [*main, *appx, *prop, *old9, *old8, *old7, *old6, *old5, *old4, *old3, *old2, *old1]
+    order = [*main, *qa, *appx, *prop, *old10, *old9, *old8, *old7, *old6, *old5, *old4, *old3, *old2, *old1]
     drop_slides(prs, [s for s in old if s not in (cover, mg)])
     reorder(prs, order)
     samsung_fonts.remap_prs(prs)
     logo_style(own['back'])                             # 맺는 장의 'Weave' 글자를 표지 제목처럼(Samsung Sharp Sans, 보라 그라데이션)
-    build.n_old9 = len(old9)
+    build.n_qa, build.n_old10, build.n_old9 = len(qa), len(old10), len(old9)
     build.n_old8, build.n_old7, build.n_old6, build.n_old5, build.n_old4 = len(old8), len(old7), len(old6), len(old5), len(old4)
     build.n_main, build.n_appx, build.n_prop, build.n_old3, build.n_old2, build.n_old1 = n_main, len(appx), len(prop), len(old3), len(old2), len(old1)
     prs.save(str(dst))
@@ -817,8 +952,19 @@ def build(dst):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--png', action='store_true')
+    ap.add_argument('--internal', action='store_true', help='사내 자료(원본/사내자료.json)를 넣은 덱을 out/에 따로 만든다. 저장소에는 올리지 않는다')
     a = ap.parse_args()
     OUT.mkdir(exist_ok=True)
+    if a.internal:                                      # 공개 저장소에 올리지 않는 판: Finder 사용 통계와 서면 답변을 준 분의 이름이 들어감(B-7)
+        import os
+        os.environ['WEAVE_INTERNAL'] = '1'
+        dst = OUT / 'Weave_통합본_Claude_사내자료포함.pptx'
+        order = build(dst)
+        print('→ out/' + dst.name, '%.1f MB' % (dst.stat().st_size / 1e6), len(order), '장 (저장소에 올리지 않음)')
+        if a.png:
+            pngs = render_c.png(dst, OUT / 'png_internal', 1600, 900)
+            print('png', len(pngs))
+        return
     order = build(DST)
     print('→', DST.name, '%.1f MB' % (DST.stat().st_size / 1e6), len(order), '장')
     if a.png:
