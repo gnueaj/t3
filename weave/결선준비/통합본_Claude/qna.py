@@ -1,7 +1,8 @@
 """Appendix(발표 뒤 질의응답용, 11-15)의 차례와 조립.
 
-차례: 목차 → A 기존 기술과의 차이 → B 상품화 → C 동작 방식 → D 모델과 학습 → E 시나리오 더 보기 → 출처.
-임원이 물을 가능성이 높은 순서다. 장마다 코드(A-2)와 쪽 번호가 있고, 목차의 항목을 누르면 그 장으로 간다.
+차례(13차, 11-17): 목차 → A 기존 기술과의 차이 → B 상품화와 사업성 → C 시나리오 더 보기, 동작 방식 → D 모델과 성능, 학습과 근거 연구 → 출처.
+왜 필요한가(A, B)에서 어떻게 쓰이는가(C의 시나리오), 어떻게 동작하는가(C의 동작 방식), 무엇으로 만드는가(D)로 내려가는 순서다.
+장마다 코드(A-2)와 쪽 번호가 있고, 목차의 항목을 누르면 그 장으로 간다. 장의 차례는 코드의 차례다(모듈이 어디에 있든 pages()가 코드로 정렬).
 make.py(통합본)와 qna_make.py(Appendix만 담은 덱)가 assemble()을 함께 쓴다.
 """
 import copy
@@ -15,7 +16,7 @@ from appendix import head
 from ui import INK, LINE2, MUTE, PURPLE, SUB, R, T
 
 import foreign as F
-from qna_lib import SECTIONS, Slide, box, draw_on, finish, group_of
+from qna_lib import ORDER, SECTIONS, Slide, box, draw_on, finish, group_of
 
 MODULES = ['qna_a', 'qna_b', 'qna_c', 'qna_d', 'qna_e', 'qna_r']
 
@@ -32,6 +33,10 @@ def pages():
         out += m.PAGES
     codes = [p.code for p in out]
     assert len(codes) == len(set(codes)), codes
+    out.sort(key=lambda p: (ORDER.index(p.code[0]), int(p.code.split('-')[1])))      # 묶음의 차례, 그 안에서는 번호의 차례
+    for g in ORDER:                                                                   # 번호가 1부터 빠짐없이 이어지는지
+        ns = [int(p.code.split('-')[1]) for p in out if p.code[0] == g]
+        assert ns == list(range(1, len(ns) + 1)), (g, ns)
     return out
 
 
@@ -42,8 +47,9 @@ def numbers(first, pgs=None):
 
 # ------------------------------------------------------------------ 목차
 TOC_W, TOC_GAP, ROW_H, HEAD_H = 368, 18, 25, 44
-# 묶음이 놓이는 자리(두 줄). 11차(11-16): B를 둘로 나누고, 시나리오 더 보기와 출처는 한 칸에 위아래로('E 시나리오 더 보기 / 출처 한 컬럼에')
-TOC_GRID = [['A', 'B1', 'B2'], ['C', 'D', ('E', 'R')]]
+# 묶음이 놓이는 자리(두 줄). 11차(11-16): 시나리오 더 보기와 출처는 한 칸에 위아래로('E 시나리오 더 보기 / 출처 한 컬럼에')
+# 13차(11-17): 위 줄에 A, B, C(시나리오 더 보기)와 출처, 아래 줄에 C(동작 방식), D 둘
+TOC_GRID = [['A', 'B', ('C1', 'R')], ['C2', 'D1', 'D2']]
 
 
 def s_toc(first, pgs=None):

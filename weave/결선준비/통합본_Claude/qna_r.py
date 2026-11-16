@@ -2,6 +2,7 @@
 
 R-1은 장마다 각주에 적은 논문과 자료를 갈래별로 모은 것(짧은 표기, 두 단). 3판(11-16)에서 D와 A에 새로 쓴 연구를 더했다.
 11차(11-16 저녁): RRF, Vectara 리더보드, 알림 연구 셋(C-7)을 더하고 글자를 9.5 → 9pt로. 오른쪽 단이 장 아래로 넘쳐 Knowledge Graph를 왼쪽 단으로 옮김.
+13차(11-17): 요청을 가려내는 분류기의 선례(Lampert et al., C-7)를 더하고 FunctionGemma 모델 카드를 뺌.
 """
 import appendix as AX
 from ui import BODY, INK, PURPLE, R, T
@@ -46,9 +47,10 @@ REFS_R = [('Multi-hop Retrieval',
           ('알림과 먼저 건네는 제안',
            ['Pielot, Church, de Oliveira, "An In-Situ Study of Mobile Phone Notifications", MobileHCI 2014',
             'Mehrotra et al., "My Phone and Me: Understanding People\'s Receptivity to Mobile Notifications", CHI 2016',
-            'Reuters Institute, "Digital News Report 2025". Apple, Human Interface Guidelines (Notifications)']),
+            'Reuters Institute, "Digital News Report 2025". Apple, Human Interface Guidelines (Notifications)',
+            'Lampert, Dale, Paris, "Detecting Emails Containing Requests for Action", NAACL 2010']),
           ('모델과 기기',
-           ['Google, "EmbeddingGemma 2" (2026. 10)와 LiteRT-LM 모델 카드. FunctionGemma 모델 카드',
+           ['Google, "EmbeddingGemma 2" (2026. 10). LiteRT-LM 모델 카드 (Gemma 4 E2B, Gemma 3 1B)',
             'Android ML Kit GenAI Embeddings API. Android Developers 문서',
             'Apple, "Introducing Apple\'s On-Device and Server Foundation Models" (2024. 06)',
             'Samsung 지원 (Finder), Samsung Newsroom (Galaxy S26, One UI 6.1)'])]

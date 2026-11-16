@@ -2,14 +2,15 @@
 
 기준: EmbeddingGemma 2(텍스트 구성 2.7억 파라미터)를 Galaxy S26 Ultra의 NPU에서 잰 8ms(팀 실측).
 같은 모델의 공개 모델 카드(LiteRT-LM)는 같은 기기에서 GPU 25.9ms, CPU 27.1ms라서, NPU가 GPU의 3.2배, CPU의 3.4배 빠르다.
-sLLM의 공개 측정값 가운데 GPU나 CPU에서 잰 것(Gemma 4 E2B, FunctionGemma 270M)은 이 비율로 NPU 값을 어림하고(사용자의 지시, 11-16),
+sLLM의 공개 측정값 가운데 GPU에서 잰 것(Gemma 4 E2B)은 이 비율로 NPU 값을 어림하고(사용자의 지시, 11-16),
 NPU에서 잰 것(Gemma 3 1B)은 그대로 쓴다. 토큰 수의 가정은 사용자의 검토 자료(Weave 파이프라인 온디바이스 검토, 11-14) 6장의 것.
+13차(11-17): FunctionGemma 270M은 뺌('쿼리 재작성에 알맞지 않은 모델이니 들어간 페이지 모두 빼 줘'). 구성은 둘만 남음: 기준 속도(Gemma 4 E2B 환산)와 Gemma 3 1B 실측.
 
 11차(11-16 저녁): '0.2~1.0초는 범위가 너무 크다. 0.2~0.6초로, 출력 토큰에 따라 다르다고 하자. 답변 생성도 요약은 최대 1초쯤, 짧은 출력이나 자동 완성은 0.1초쯤'이라는
-검토를 받고 내세우는 숫자의 기준을 바꿈. 전에는 세 구성(FunctionGemma 환산, Gemma 4 E2B 환산, Gemma 3 1B 실측)의 가장 빠른 값과 가장 느린 값을 범위로 적어서
+검토를 받고 내세우는 숫자의 기준을 바꿈. 전에는 여러 구성의 가장 빠른 값과 가장 느린 값을 범위로 적어서
 모델이 달라 생기는 차이와 출력 길이가 달라 생기는 차이가 한 범위에 섞였다. 이제 내세우는 숫자는 기준 속도 하나(REF = Gemma 4 E2B의 NPU 환산, 초당 169토큰)에
 출력 토큰 수만 바꿔 셈한다: 검색 계획 40~100토큰 → 0.2~0.6초, 이름 추출 10토큰 → 약 0.1초, 3줄 요약 80~150토큰 → 0.5~0.9초.
-세 구성의 값은 속도 2 장의 표에 그대로 남긴다(가장 느린 줄이 Gemma 3 1B의 NPU 실측).
+두 구성의 값은 속도 2 장(D-4)의 표에 남긴다(느린 줄이 Gemma 3 1B의 NPU 실측).
 
   python qna_num.py        셈한 값을 모두 찍는다
 """
@@ -37,11 +38,10 @@ class Model:
         return n_in / self.pre_npu + n_out / self.dec_npu
 
 
-FG = Model('FunctionGemma 270M', 'Galaxy S25 Ultra', 'CPU', 2238, 154)
 E2B = Model('Gemma 4 E2B', 'Galaxy S26 Ultra', 'GPU', 3808, 52.1)
 G1B = Model('Gemma 3 1B', 'Galaxy S25 Ultra', 'NPU', 5836, 85)
 REF = E2B                                              # 내세우는 숫자의 기준 속도(2B급을 S26 Ultra의 NPU 기준으로 환산: 출력 초당 169토큰)
-CONFIGS = [(FG, E2B), (E2B, E2B), (G1B, G1B)]          # (Query Rewriter, 답변 생성): 속도 2 장의 표
+CONFIGS = [(E2B, E2B), (G1B, G1B)]                    # (Query Rewriter, 답변 생성): 속도 2 장의 표. 앞이 기준 속도, 뒤가 NPU 실측
 # UX마다: 재작성 입력, 검색 계획 출력, Hop 수, 답변 입력, 답변 출력 (토큰)
 UX = {'ux1': (130, 82, 3, 540, 80), 'ux2': (130, 72, 2, 170, 10), 'ux3': (130, 72, 2, 500, 25)}
 RW_IN, RW_OUT = 130, (40, 100)                         # Query Rewriter: 입력, 출력(짧은 계획 ~ 출력 한도)
@@ -88,7 +88,7 @@ T_EXP = '약 %.0f초' % (500 / REF.dec_npu)               # 500토큰을 생성�
 BAR = {'ux1': (parts('ux1', REF, REF)[0], 3 * HOP, AN_SUM[1]), 'ux2': parts('ux2', REF, REF), 'ux3': parts('ux3', REF, REF)}
 SLOW = BAR                                             # (예전 이름)
 BASIS = 'Gemma 4 E2B를 Galaxy S26 Ultra의 GPU에서 잰 공개 측정값을 NPU 기준으로 환산한 속도(출력 초당 %d토큰)' % round(REF.dec_npu)
-# ---- 세 구성의 값(표)
+# ---- 두 구성의 값(표)
 TOT = {ux: [total(ux, rw, an) for rw, an in CONFIGS] for ux in UX}
 REC1 = [parts('ux1', rw, an)[0] + parts('ux1', rw, an)[1] for rw, an in CONFIGS]
 
@@ -100,7 +100,7 @@ def index_mb(n):
 
 if __name__ == '__main__':
     print('비율 GPU %.2f, CPU %.2f' % (R_GPU, R_CPU))
-    for m in (FG, E2B, G1B):
+    for m in (E2B, G1B):
         print('%-20s %s %s  측정 %d / %.1f tok/s → NPU %.0f / %.0f tok/s (%s)' % (m.name, m.dev, m.proc, m.pre, m.dec, m.pre_npu, m.dec_npu, m.kind))
     print('기준 속도:', BASIS)
     print('재작성 %s (%s) | UX1 %s UX2 %s UX3 %s' % (T_RW, ', '.join('%.3f' % v for v in RW_T), T_RW1, T_RW2, T_RW3))

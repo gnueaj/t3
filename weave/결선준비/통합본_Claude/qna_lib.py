@@ -19,18 +19,24 @@ Slide = HW.Slide
 A_NS = 'http://schemas.openxmlformats.org/drawingml/2006/main'
 P_NS = 'http://schemas.openxmlformats.org/presentationml/2006/main'
 
-# 묶음 이름. 11차(11-16): B(상품화)가 길어져 둘로 나눔('B를 두 개로 나누기 (메모리/속도/계획), (온디바이스/데이터 권한/사업 효과)').
-# 코드는 그대로 B-1 … B-10이고(뒤 묶음 C, D, E의 코드가 바뀌지 않게), 목차의 칸과 장 머리의 묶음 이름만 둘로 나뉜다.
-SECTIONS = {'A': '기존 기술과의 차이', 'B1': '상품화: 성능과 계획', 'B2': '상품화: 데이터와 사업', 'C': '동작 방식', 'D': '모델과 학습',
-            'E': '시나리오 더 보기', 'R': '출처'}
-B_SPLIT = 5                             # B-1 ~ B-5는 '성능과 계획', B-6부터는 '데이터와 사업'
+# 묶음 이름과 목차의 칸.
+# 13차(11-17, 사용자의 지시): 상품화의 메모리와 속도 세 장은 D로 옮기고, 계획과 가전 두 장은 '데이터와 사업'과 합쳐 B 하나로(새 이름 '상품화와 사업성').
+#   시나리오 더 보기(11차의 E)는 C로 바꿔 B 옆에 두고, 동작 방식(11차의 C)은 그 뒤에 이어 같은 글자 C를 씀(목차의 칸은 둘: 11차에 B가 두 칸이던 것과 같은 꼴).
+#   모델과 학습(D)은 옮겨 온 세 장을 더해 두 칸으로 나눔: 모델과 성능(무엇이 얼마나 빠르고 가벼운가), 학습과 근거 연구(어떻게 만드는가).
+#   코드는 묶음 글자마다 이어짐: C-1~C-3 시나리오, C-4~C-9 동작 방식, D-1~D-4 모델과 성능, D-5~D-11 학습과 근거 연구.
+SECTIONS = {'A': '기존 기술과의 차이', 'B': '상품화와 사업성', 'C1': '시나리오 더 보기', 'C2': '동작 방식', 'D1': '모델과 성능', 'D2': '학습과 근거 연구', 'R': '출처'}
+SPLIT = {'C': 3, 'D': 4}                # C-1 ~ C-3은 C1(시나리오), C-4부터 C2(동작 방식). D-1 ~ D-4는 D1(모델과 성능), D-5부터 D2(학습과 근거 연구)
+ORDER = 'ABCDR'                         # 묶음의 차례(장의 차례는 qna.pages가 코드로 정렬)
 
 
 def group_of(code):
-    """장의 코드(B-7) → 묶음(B2)."""
-    if code[0] != 'B':
-        return code[0]
-    return 'B1' if int(code.split('-')[1]) <= B_SPLIT else 'B2'
+    """장의 코드(C-7) → 묶음(C2)."""
+    g = code[0]
+    if g not in SPLIT:
+        return g
+    return g + ('1' if int(code.split('-')[1]) <= SPLIT[g] else '2')
+
+
 RED_BG, RED_INK = 'FDF0F0', 'B4232B'
 GRAY_BG = 'F7F5FC'
 X0, W0 = 70, 1140                      # 본문이 놓이는 왼쪽 끝과 폭(다른 Appendix 장과 같음)
@@ -297,6 +303,15 @@ def points(s, key, x, y, w, items, pt=12.5, gap=7, color=BODY, k=1.45, dot=PURPL
     return yy - y - gap
 
 
+def ring_gauge(key, cx, cy, ro, pct, color=PURPLE, track='E4DDF7', k=0.098):
+    """고리 그래프(본 발표 7쪽, 33쪽과 같은 모양): 바탕 고리 + 12시에서 시계 방향으로 pct%만큼의 호. ro = 바깥 반지름, k = 굵기 ÷ 바깥지름. 돌려줌: 원시 목록."""
+    adj = round(k * 100000)
+    end = (16200000 + round(pct / 100 * 21600000)) % 21600000
+    b = (cx - ro, cy - ro, 2 * ro, 2 * ro)
+    return [R(key + '/track', *b, prst='donut', fill=track, line=None, adj=dict(adj=adj)),
+            R(key + '/arc', *b, prst='blockArc', fill=color, line=None, adj=dict(adj1=16200000, adj2=end, adj3=adj))]
+
+
 def panel(key, x, y, w, h, fill=GRAY_BG, radius=14):
     """그림이 들어가는 옅은 바탕."""
     return R(key, x, y, w, h, prst='roundRect', radius=radius, fill=fill, line=None)
@@ -443,8 +458,10 @@ def vis_rows(rows, pt=11, kw=64):
     return draw
 
 
-KIND = {'gen': (PURPLE, 'sLLM 생성'), 'emb': (BLUE, '임베딩 검색'), 'off': ('B9B2C9', 'Rule 기반'),
+TEAL = '14A3A8'
+KIND = {'gen': (PURPLE, 'sLLM 생성'), 'emb': (BLUE, '임베딩 검색'), 'off': ('B9B2C9', 'Rule 기반'), 'cls': (TEAL, '임베딩 + 분류기'),
         'n': ('A996FF', ''), 'kw': ('B9B2C9', ''), 'sem': ('F26B3A', ''), 'rsn': (PURPLE, '')}      # n = 색 뜻이 없는 단계, kw/sem/rsn = 검색의 세 단계(주황은 일반 임베딩)
+# cls(13차): 임베딩 벡터 위에 얹는 작은 분류기(먼저 건네는 기억의 챙길 일 분류기와 Gate 모델, C-7)
 
 
 def legend(s, y, x=X0 + W0, kinds=('off', 'emb', 'gen')):

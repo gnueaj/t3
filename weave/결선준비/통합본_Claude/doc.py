@@ -44,7 +44,7 @@ def main():
     say = {p['key']: ' (클릭) '.join(flat(s) for s in p['segs']) for p in plan}
     rows = tm['rows']
     keys = [r[0] for r in rows]
-    L = ['# Weave 통합본(Claude) 대본과 시간 (12차)', '',
+    L = ['# Weave 통합본(Claude) 대본과 시간 (13차)', '',
          '`Weave_통합본_Claude_미리보기.mp4`에서 잰 시간이에요. 낭독은 이 컴퓨터 안에서 만든 목소리(Supertonic 3, F2F1_70, 속도 1.15)이고, '
          '문장 사이 숨과 클릭 전후의 틈은 How it works 낭독 영상과 같은 값이에요.', '',
          '## 구역별 시간', '', '| 구역 | 쪽 | 시간 | 11차 때 |', '| --- | --- | --- | --- |']
