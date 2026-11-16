@@ -30,16 +30,18 @@ def labels():
     out += [('appx', 'Appendix 목차')] + [('appx', '%s %s' % (p.code, p.toc)) for p in Q.pages()]
     if own['prop']:
         out += [('prop', '제안 장표 가름')] + [('prop', doc.NAME[sp.key]) for sp in own['prop']]
-    out += [('old', '이전 판 (10차) 가름')] + [('old', '이전 판 · 10차 %d쪽' % i) for i in MK.PREV10_KEEP + MK.PREV10_APX]
-    out += [('old', '이전 판 (9차 Appendix) 가름')] + [('old', '이전 판 · 9차 %d쪽' % i) for i in MK.PREV9_KEEP]
-    out += [('old', '이전 판 (8차) 가름')] + [('old', '이전 판 · 8차 %d쪽' % i) for i in MK.PREV8_KEEP]
-    out += [('old', '이전 판 (7차) 가름')] + [('old', '이전 판 · 7차 %d쪽' % i) for i in MK.PREV7_KEEP]
-    out += [('old', '이전 판 (6차) 가름')] + [('old', '이전 판 · 6차 %d쪽' % i) for i in MK.PREV6_KEEP]
-    out += [('old', '이전 판 (5차) 가름')] + [('old', '이전 판 · 5차 %d쪽' % i) for i in MK.PREV5_KEEP]
-    out += [('old', '이전 판 (4차) 가름')] + [('old', '이전 판 · 4차 %d쪽' % i) for i in MK.PREV4_KEEP]
-    out += [('old', '이전 판 (3차) 가름')] + [('old', '이전 판 · 3차 %d쪽' % i) for i in MK.PREV3_KEEP]
-    out += [('old', '이전 판 (2차) 가름')] + [('old', '이전 판 · 2차 %d쪽' % i) for i in MK.PREV2_KEEP]
-    out += [('old', '이전 판 (1차) 가름')] + [('old', '이전 판 · 1차 %d쪽' % i) for i in MK.PREV_KEEP] + [('old', '이전 판 · 인트로 덱 13쪽')]
+    if MK.OLD_GROUPS:                                   # 12차부터 이전 판 묶음은 덱에 없음
+        out += [('old', '이전 판 (11차) 가름')] + [('old', '이전 판 · 11차 %d쪽' % i) for i in MK.PREV11_KEEP]
+        out += [('old', '이전 판 (10차) 가름')] + [('old', '이전 판 · 10차 %d쪽' % i) for i in MK.PREV10_KEEP + MK.PREV10_APX]
+        out += [('old', '이전 판 (9차 Appendix) 가름')] + [('old', '이전 판 · 9차 %d쪽' % i) for i in MK.PREV9_KEEP]
+        out += [('old', '이전 판 (8차) 가름')] + [('old', '이전 판 · 8차 %d쪽' % i) for i in MK.PREV8_KEEP]
+        out += [('old', '이전 판 (7차) 가름')] + [('old', '이전 판 · 7차 %d쪽' % i) for i in MK.PREV7_KEEP]
+        out += [('old', '이전 판 (6차) 가름')] + [('old', '이전 판 · 6차 %d쪽' % i) for i in MK.PREV6_KEEP]
+        out += [('old', '이전 판 (5차) 가름')] + [('old', '이전 판 · 5차 %d쪽' % i) for i in MK.PREV5_KEEP]
+        out += [('old', '이전 판 (4차) 가름')] + [('old', '이전 판 · 4차 %d쪽' % i) for i in MK.PREV4_KEEP]
+        out += [('old', '이전 판 (3차) 가름')] + [('old', '이전 판 · 3차 %d쪽' % i) for i in MK.PREV3_KEEP]
+        out += [('old', '이전 판 (2차) 가름')] + [('old', '이전 판 · 2차 %d쪽' % i) for i in MK.PREV2_KEEP]
+        out += [('old', '이전 판 (1차) 가름')] + [('old', '이전 판 · 1차 %d쪽' % i) for i in MK.PREV_KEEP] + [('old', '이전 판 · 인트로 덱 13쪽')]
     return out
 
 

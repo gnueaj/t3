@@ -12,7 +12,7 @@
   7차(11-13): 3~5쪽 인물 뒤에 아주 옅은 보라 그라데이션(patch_aura).
   4차까지는 원본/Weave_결선_중간본_도입부수정.pptx의 장을 옮겨 손보고(patch_intro) 9, 11~12, 14쪽은 새로 그렸다(slides_new.py의 s_hub2, s_scat, s_link, s_bridge).
 - 6쪽(수많은 기록): 새로 그린다(slides_new.py).
-- 바꾸기 전의 장: 원본/통합본_8차.pptx (git show c3a5b5d:…), 원본/통합본_7차.pptx (git show e0a4e14:…), 원본/통합본_6차.pptx (git show 9c91050:…), 원본/통합본_5차.pptx (git show fcf8346:…), 원본/통합본_4차.pptx (git show 406c351:…), 원본/통합본_3차.pptx (git show ab0c460:…), 원본/통합본_2차.pptx (git show 9a8bddb:…), 원본/통합본_1차.pptx (git show ab7ab74:…)에서 옮겨 덱 맨 뒤에 둔다.
+- 바꾸기 전의 장(12차부터는 덱에 넣지 않음. OLD_GROUPS = True일 때만): 원본/통합본_8차.pptx (git show c3a5b5d:…), 원본/통합본_7차.pptx (git show e0a4e14:…), 원본/통합본_6차.pptx (git show 9c91050:…), 원본/통합본_5차.pptx (git show fcf8346:…), 원본/통합본_4차.pptx (git show 406c351:…), 원본/통합본_3차.pptx (git show ab0c460:…), 원본/통합본_2차.pptx (git show 9a8bddb:…), 원본/통합본_1차.pptx (git show ab7ab74:…)에서 옮겨 덱 맨 뒤에 둔다.
 - 표지와 모션그래픽 영상 장: 02_PPT/Weave_결선_중간본.pptx의 1쪽과 4쪽. 표지는 영상을 v9(10_표지영상/표지_루프.mp4, 18초)로 바꾸고 제목을 조금 줄인다(patch_cover).
   모션그래픽은 영상을 v24(08_인트로영상/Weave_모션그래픽.mp4: 제목의 색과 자간을 표지와 같게)로 바꿔 끼운다(patch_mg).
 - 솔루션 3장 + How it Works 13장 + Appendix 15장: 09_HowItWorks/장표5_claude/build.py의 장을 그대로 그린다.
@@ -26,6 +26,11 @@
   장마다 코드와 쪽 번호가 있고 목차의 항목을 누르면 그 장으로 감. 9차의 Appendix에서 합치거나 고치거나 뺀 장은 덱 뒤쪽 '이전 판 (9차 Appendix)'에.
   9차(11-14): 비즈니스 임팩트(8차 34쪽)를 본 발표에서 빼고 연표 다음에 '미래의 Weave'(next2_new.s_next)를 넣음. 연표의 두 줄 사이를 조금 좁히고,
   맺는 장은 15쪽처럼 앱들이 실로 이어짐(slides_new.s_bye). How it Works 29, 30쪽의 대본은 '핵심 요소'를 짚는 말로(장표5_claude/build.py).
+  11차(11-16): 팀 검토를 본 발표와 대본, Appendix에 넣음. 39쪽 뒤에 Q&A 장(slides_new.s_qa), Appendix 42장(41~82쪽).
+  12차(11-16 밤): 2쪽의 통화 음성을 새로 받은 목소리로 바꾸고(tools/call_build.py) 통화 시간이 받는 소리부터 1초마다 올라가게(call_timer),
+  10쪽 AI 답변을 15pt로(ANSWER_PT, ANS_PAD_B), 33쪽은 한 번의 클릭에 세 칸이 왼쪽부터 차례로(fx_new.FX_STEP),
+  35쪽은 두 줄이 Weave 아이콘 아래에서 뻗어 나오게(next2_new.lane_bends). 덱 뒤쪽에 차수마다 쌓아 두던 '이전 판' 묶음은 덱에서 뺌
+  (OLD_GROUPS = False: 'ppt에서 이전 판 장표는 이제 지워 줘'). 덱은 본 발표 39장 + Q&A + Appendix 42장 = 82장.
 """
 import argparse
 import copy
@@ -93,6 +98,10 @@ PREV7 = HERE / '원본' / '통합본_7차.pptx'                # 11월 13일 7�
 PREV8 = HERE / '원본' / '통합본_8차.pptx'                # 11월 13일 8차 통합본(c3a5b5d)
 PREV9 = HERE / '원본' / '통합본_9차.pptx'                # 11월 15일 9차 통합본(414bf78). Appendix를 질의응답용으로 다시 짜기 전
 PREV10 = HERE / '원본' / '통합본_10차.pptx'              # 11월 16일 10차 통합본(b9e2a03). 11차(팀 검토를 모아 본문과 Appendix를 고침) 전
+PREV11 = HERE / '원본' / '통합본_11차.pptx'              # 11월 16일 저녁 11차 통합본(e48463d). 12차(2쪽의 새 통화 음성과 통화 시간, 대본과 화면 손질) 전
+# 12차(11-16 밤) 'ppt에서 이전 판 장표는 이제 지워 줘': 덱 뒤쪽에 차수마다 쌓아 두던 '이전 판' 묶음(11차 ~ 1차, 가름 장까지 214장)을 덱에 넣지 않는다.
+#   바꾸기 전의 장은 그 차수의 덱(원본/통합본_N차.pptx. README에 git 주소)과 대본.md의 '바꾼 곳', 대본_이전판.md에 남아 있다. 다시 넣으려면 True
+OLD_GROUPS = False
 INTRO2 = HERE / '원본' / '통합본_인트로수정_87bf80b.pptx'   # 팀원이 7~14쪽을 손본 덱(jjun-0824/t3 87bf80b). 2~5쪽과 7~14쪽을 여기서 옮김
 MG_MP4 = ROOT / '08_인트로영상' / 'Weave_모션그래픽.mp4'      # 모션그래픽 v25(111.1초). 중간본에 든 v23과 길이와 소리가 같음
 COVER_MP4 = ROOT / '10_표지영상' / '표지_루프.mp4'      # 표지 영상 v9(18초)
@@ -198,6 +207,9 @@ PREV10_KEEP = [1, 2, 6, 7, 10, 11, 14, 15, 20, 23, 24, 25, 26, 28, 30, 31, 32, 3
 # 10차의 Appendix(40~76쪽) 가운데: 목차(40), Finder(43), LLM에게 전부 읽히면(47, 뺌), Apple과 Google(48), B 묶음 가운데 화면이 바뀐 장(49~54, 56),
 # C 묶음(57~62), 모델 스펙(63), Query Rewriting의 종류(64), 시나리오 더 보기 세 장(71~73). 낱말 하나나 참조 코드만 바뀐 장(42, 44, 46, 55, 66, 74, 75)은 넣지 않음
 PREV10_APX = [40, 43, 47, 48, 49, 50, 51, 52, 53, 54, 56, 57, 58, 59, 60, 61, 62, 63, 64, 71, 72, 73]
+# 11차 통합본에서: 12차(11-16 밤)에 화면이나 대본이 바뀐 본 발표 장. 표지(대본), 통화(2쪽: 음성과 통화 시간), 3쪽(대본), 10쪽(AI 답변의 글자 크기),
+# step(25쪽 대본), 04 결과 제공(32쪽: 커서의 자리), 기대효과(33쪽: 세 칸이 한꺼번에 바뀌던 것), 미래의 Weave(35쪽: Weave 아이콘과 두 줄이 만나는 곳)
+PREV11_KEEP = [1, 2, 3, 10, 25, 32, 33, 35]
 
 
 def own_specs():
@@ -563,12 +575,16 @@ def patch_hub(sl):
 ANSWER = [[('임베딩 모델은 텍스트, 이미지, 오디오 같은 복잡한', 0)],
           [('데이터를 컴퓨터가 이해할 수 있도록 고차원의', 0)],
           [('숫자 배열(벡터)', 1), ('로 변환하는 모델입니다.', 0)]]
-ANSWER_PT, ANSWER_LN = 1600, 130000                   # 글자 크기(1/100pt), 줄 간격(1/1000 %)
-ANS_PAD = 20                                          # 말풍선 가장자리에서 글자까지(px, 1280×720 기준)
-# PowerPoint로 찍어 잰 값(16pt): 본문 잉크 폭 401.6, 높이 85.6, 이름표 잉크 높이 13.6, 이름표와 본문 사이 24.0
-ANS_BOX = (ANS_PAD + 401.6 + ANS_PAD, ANS_PAD + 13.6 + 24.0 + 85.6 + ANS_PAD)      # 말풍선의 폭과 높이(px): 441.6 × 163.2 (17pt 때는 455 × 161.25)
+# 12차(11-16 밤) '글자 크기가 커지면서 박스 여백이 부족(글자 반 단계 정도만 줄이자, 하단 여백 좀만 더 주려고)': 글자를 반 단계 작게(16 → 15pt).
+#   말풍선의 높이는 그대로 두어 줄어든 글의 높이(5.35px)가 모두 아래 여백으로 감(20 → 25.35px). 왼쪽, 오른쪽, 위 여백은 20px 그대로라 폭은 25px 줄어듦
+ANSWER_PT, ANSWER_LN = 1500, 130000                   # 글자 크기(1/100pt), 줄 간격(1/1000 %)
+ANS_PAD = 20                                          # 말풍선 가장자리에서 글자까지(px, 1280×720 기준): 왼쪽, 오른쪽, 위
+ANS_PAD_B = 25.35                                     # 아래 여백(px)
+# PowerPoint로 찍어 잰 값(16pt): 본문 잉크 폭 401.6, 높이 85.6, 이름표 잉크 높이 13.6, 이름표와 본문 사이 24.0. 15pt는 그 15/16
+ANS_INK = (401.6 * ANSWER_PT / 1600, 85.6 * ANSWER_PT / 1600)
+ANS_BOX = (ANS_PAD + ANS_INK[0] + ANS_PAD, ANS_PAD + 13.6 + 24.0 + ANS_INK[1] + ANS_PAD_B)      # 말풍선의 폭과 높이(px): 416.5 × 163.2 (16pt 때는 441.6 × 163.2, 17pt 때는 455 × 161.25)
 ANS_LABEL = (40.4, 14.4)                              # 이름표('AI 답변') 글상자의 왼쪽 위(말풍선 왼쪽 위에서, px). 별은 그 왼쪽에 함께 옮김: 잉크가 왼쪽 20, 위 20
-ANS_TEXT = (19.5, 49.4)                               # 본문 글상자의 왼쪽 위(px): 잉크가 왼쪽 20, 위 57.6
+ANS_TEXT = (20 - 0.5 * ANSWER_PT / 1600, 57.6 - 8.2 * ANSWER_PT / 1600)      # 본문 글상자의 왼쪽 위(px): 잉크가 왼쪽 20, 위 57.6 (16pt 때 19.5, 49.4)
 
 
 def patch_answer(sl):
@@ -700,13 +716,24 @@ CALL_MP3 = INTRO_AS / 'call-hook.mp3'
 #   tools/call_edit.py로 '삼성리서치'와 '그거요...?'를 덜어 내고 목소리 구간을 1.15배 빠르게 한 뒤 같은 크기 조정을 거침(목소리 -17.8 LUFS).
 #   "네, 양서윤 프로입니다." → "어... 네.." → "아... 잠깐만요, 찾아보고 다시 알려 드릴게요." 길이 14.45초 → 11.62초.
 #   '안녕하세요'는 녹음에 없어 넣지 못함(새 음성을 받으면 파일과 아래 값만 바꿈). 10차의 파일은 out/이전판_10차/call-hook_10차.mp3
-CALL_LEN = 11.62                                      # 음성의 길이(초)
+#   12차(11-16 밤) '음성 첨부한 파일로 바꾸고 1.15배속 하기(기존 효과도 해야 함. "프로입니다." 이후 딜레이라든지는 넣어야 하고)':
+#   사용자가 ElevenLabs에서 새로 만든 목소리(Chaerin, Eleven v4, 10.5초)로 바꿈. "네, 양서윤 프로입니다." → (듣는 틈) → "아, 그거요?" → 한숨
+#   → 작게 "어디 적어놨더라" → "음, 잠깐만요. 찾아보고 다시 알려 드릴게요." 새 파일에는 앞선 손질이 없어서 tools/call_build.py가 같은 값으로 다시 입힘:
+#   1.15배, "프로입니다." 뒤의 쉼 1.56초(11차 파일에서 잰 값), 전화 음질, 목소리 -17.8 LUFS, 연결음, 딸깍, 딸깍 뒤 0.63초, 끊는 소리.
+#   작게 말한 "어디 적어놨더라"는 받은 파일에서 다른 말보다 6.5dB 작았고 3dB를 더 낮춤('엄청 작게 하려고'). 길이 11.62초 → 12.38초.
+#   11차의 파일은 out/이전판_11차/call-hook_11차.mp3
+CALL_LEN = 12.38                                      # 음성의 길이(초)
 CALL_AT = 0.3                                         # 장이 열린 뒤 음성이 시작하는 때(초)
+CALL_PICK, CALL_HANG = 1.45, 11.94                    # 음성 안에서 전화를 받는 때(딸깍의 '깍')와 끊는 소리가 시작하는 때(초): 통화 시간 표시가 이 사이에 1초마다 올라감
 # 화면의 문장 두 줄: (음성 안에서 그 줄의 첫 말을 시작하는 때(초), 한 글자씩 뜨는 간격(ms)).
 #   첫 줄 “잠깐만요, 찾아보고: '잠깐만요' 10.71초, 조금 쉬고 '찾아보고' 11.71초. 둘째 줄 다시 알려 드릴게요.”: '다시' 12.37초, 말이 끝나는 때 13.43초
 #   (받아쓰기로 잰 10.28초, 11.94초에 첫마디를 늦춘 0.43초를 더한 값)
 #   11차: '잠깐만요' 8.27초, '다시' 9.72초, 말이 끝나는 때 10.85초(원본의 때를 덜어 낸 만큼 당기고 1.15로 나눈 값. 소리 크기로 다시 확인)
-CALL_LINES = [(8.27, 130), (9.72, 95)]
+#   12차: '잠깐만요' 9.30초, '찾아보고' 10.30초, '다시' 10.98초, 말이 끝나는 때 11.63초(받은 파일에서 0.01초마다 잰 소리 크기로 낱말의 첫 소리를 잡아 옮긴 값).
+#   새 목소리는 '다시 알려 드릴게요'를 0.65초에 말해서 둘째 줄의 글자 간격이 짧음.
+#   간격은 낭독 영상에서 재서 맞춤: 줄마다 글자가 열 개(사이 아홉)이고 줄의 첫 글자는 말보다 0.12초 먼저 뜬다. 처음 넣은 150, 55ms로는 두 줄이 말보다
+#   0.3~0.4초 먼저 다 떠서, 마지막 글자가 말의 끝(10.93초, 11.63초) 바로 앞에 뜨게 185, 80ms로(첫 줄은 '잠깐만요'와 '찾아보고'가 말하는 때에 맞게 뜸)
+CALL_LINES = [(9.30, 185), (10.98, 80)]
 MEDIA_URI = '{DAA4B4D4-6D71-4841-9C94-3DE7FCFB9230}'
 P14 = 'http://schemas.microsoft.com/office/powerpoint/2010/main'
 
@@ -780,6 +807,46 @@ def patch_call(sl):
         if b_.get('spid') == qid:
             b_.set('build', 'p')
             b_.attrib.pop('animBg', None)
+    call_timer(sl, pa, tm, inner, ids)
+
+
+TICK_XML = ('<p:par xmlns:p="%s"><p:cTn id="%%d" presetID="1" presetClass="entr" presetSubtype="0" fill="hold" grpId="0" nodeType="withEffect">'
+            '<p:stCondLst><p:cond delay="%%d"/></p:stCondLst><p:childTnLst><p:set><p:cBhvr><p:cTn id="%%d" dur="1" fill="hold">'
+            '<p:stCondLst><p:cond delay="0"/></p:stCondLst></p:cTn><p:tgtEl><p:spTgt spid="%%d"/></p:tgtEl>'
+            '<p:attrNameLst><p:attrName>style.visibility</p:attrName></p:attrNameLst></p:cBhvr><p:to><p:strVal val="visible"/></p:to></p:set>'
+            '</p:childTnLst></p:cTn></p:par>') % P_NS
+TICK_INSET = 6                                        # 숫자 글상자의 흰 바탕을 위아래로 줄이는 만큼(px): 알약 모양의 테두리를 가리지 않게
+
+
+def call_timer(sl, pa, tm, inner, ids):
+    """12차(11-16 밤) '통화 중 0초에서, 받으면 1, 2, 3.. 이런 식으로 애니메이션 필요(통화음에 맞춰서)':
+    통화 시간 표시를 00:48로 멈춰 두지 않고 00:00에서 시작해, 전화를 받는 소리(CALL_PICK)부터 끊는 소리(CALL_HANG)까지 1초마다 올린다.
+    묶음 안의 도형은 따로 움직일 수 없어서, 묶음 안의 글은 00:00으로 두고 그 위에 00:01, 00:02 …를 적은 글상자를 같은 자리에 차례로 겹쳐 놓는다.
+    글상자마다 알약과 같은 흰 바탕이 있어 뜨는 순간 앞의 숫자를 가린다(사라지는 효과가 필요 없고, 편집 화면과 PNG에는 맨 위의 마지막 숫자만 보임)."""
+    base = by_name(sl, 'Call time')
+    ts = list(base.iter('{%s}t' % A))
+    assert [t.text for t in ts] == ['00:48'], [t.text for t in ts]
+    ts[0].text = '00:00'
+    x, y, w, h = box(base)
+    bl = tm.find(q('p:bldLst'))
+    prev = by_name(sl, '!!call')
+    for k in range(1, int(CALL_HANG - CALL_PICK) + 1):
+        el = copy.deepcopy(base)
+        spid = next(pa.ids)
+        c = el.find(q('p:nvSpPr')).find(q('p:cNvPr'))
+        c.set('id', str(spid))
+        c.set('name', 'Call time %02d' % k)
+        next(el.iter('{%s}t' % A)).text = '00:%02d' % k
+        sp = el.find(q('p:spPr'))
+        no = sp.find('{%s}noFill' % A)
+        fill = etree.Element('{%s}solidFill' % A)
+        etree.SubElement(fill, '{%s}srgbClr' % A, val='FFFFFF')
+        sp.replace(no, fill)
+        place(el, y=y + TICK_INSET, h=h - 2 * TICK_INSET)
+        prev.addnext(el)                                    # 묶음 바로 위에, 숫자가 큰 것이 더 위에
+        prev = el
+        inner.find(q('p:childTnLst')).append(etree.fromstring(TICK_XML % (next(ids), round((CALL_AT + CALL_PICK + k) * 1000), next(ids), spid)))
+        etree.SubElement(bl, q('p:bldP'), spid=str(spid), grpId='0', animBg='1')
 
 
 # 옮겨 온 덱의 노트와 견주지 않는 장: 6차에 우리가 노트를 바꾼 장과, 8차에 발표자가 대본을 다시 쓴 장
@@ -858,36 +925,17 @@ def copy_intro(prs, note_tpl):
     return out
 
 
-def build(dst):
-    prs = Presentation(str(BASE))
-    old = list(prs.slides)
-    cover, mg = old[0], old[3]
-    layout = old[5].slide_layout                       # How it Works 장과 같은 틀
-    note_tpl = [copy.deepcopy(sh._element) for sh in old[5].notes_slide.placeholders]
+def old_groups(prs, draw, note_tpl):
+    """덱 뒤쪽에 두던 '이전 판' 묶음들(11차 ~ 1차): 묶음마다 가름 장 + 그 차수의 덱(원본/통합본_N차.pptx)에서 옮긴 장. 돌려줌: 묶음의 목록(새 차수부터).
+    12차부터는 덱에 넣지 않는다(OLD_GROUPS = False)."""
     src = list(Presentation(str(INTRO)).slides)        # 처음 인트로 덱: '이전 판 (1차)'의 마지막 장에만 씀
-    intro = copy_intro(prs, note_tpl)
-    patch_cover(cover)
-    patch_mg(mg)
-    F.set_notes(cover, N.INTRO_NOTES['cover'], note_tpl)
-    report = []
-
-    def draw(specs):
-        slides, rep, _ = HW.add_slides(prs, layout, note_tpl, specs)
-        report.extend(rep)
-        return slides
-    specs = own_specs()
-    own = {k: draw(v) for k, v in specs.items() if k != 'prop'}
-    main = []
-    for item in SEQ:
-        main += own[item[1]] if isinstance(item, tuple) else [cover if item == 'cover' else mg if item == 'mg' else intro[item]]
-    n_main = len(main)
-    qa = draw([N.s_qa()])                              # 11차(11-16): 본 발표와 Appendix 사이에 질의응답 동안 띄워 두는 장
-    import qna as Q                                    # 10차(11-15): Appendix를 질의응답용으로 다시 짬(목차, 코드, 쪽 번호. qna.py)
-    appx = Q.assemble(prs, layout, note_tpl, draw, n_main + len(qa) + 1)
-    prop = draw([N.s_divider('p0', '제안 장표', ['본 발표에 넣을지 정하지 않은 장'],
-                             '여기부터는 제안 장표입니다. 본 발표에서는 넘기지 않습니다.')] + specs['prop']) if specs['prop'] else []      # 6차: 없음
-    prev10, prev9, prev8, prev7, prev6, prev5, prev4, prev3, prev2, prev1 = (
-        list(Presentation(str(f)).slides) for f in (PREV10, PREV9, PREV8, PREV7, PREV6, PREV5, PREV4, PREV3, PREV2, PREV))
+    prev11, prev10, prev9, prev8, prev7, prev6, prev5, prev4, prev3, prev2, prev1 = (
+        list(Presentation(str(f)).slides) for f in (PREV11, PREV10, PREV9, PREV8, PREV7, PREV6, PREV5, PREV4, PREV3, PREV2, PREV))
+    old11 = draw([N.s_divider('o11', '이전 판 (11차)', ['11월 16일 저녁 11차 통합본에서 12차에 화면이나 대본이 바뀐 장: 표지(대본), 통화(2쪽), 3쪽(대본), 10쪽',
+                                                      'Let’s think step by step!(25쪽 대본), 04 결과 제공(32쪽), 기대효과(33쪽), 미래의 Weave(35쪽)',
+                                                      '노트에 그때의 대본이 그대로 있습니다'],
+                              '여기부터는 바꾸기 전의 장입니다. 본 발표에서는 넘기지 않습니다.')])
+    old11 += [copy_any(prs, prev11[i - 1], note_tpl) for i in PREV11_KEEP]
     old10 = draw([N.s_divider('o10', '이전 판 (10차)', ['11월 16일 10차 통합본에서 11차에 화면이나 대본이 바뀐 장: 표지, 통화(2쪽), 6, 7, 10, 11, 14, 15쪽',
                                                       'How it works(20쪽), 23~26, 28, 30~32쪽, 기대효과(33쪽), 연표(34쪽), 미래의 Weave(35쪽)',
                                                       '그 뒤는 10차의 Appendix 가운데 고치거나 합치거나 뺀 장. 노트에 그때의 대본이 그대로 있습니다'],
@@ -934,14 +982,43 @@ def build(dst):
                                                     '노트에 그때의 대본이 그대로 있습니다'],
                              '여기부터는 바꾸기 전의 장입니다. 본 발표에서는 넘기지 않습니다.')])
     old1 += [F.copy_slide(prs, prev1[i - 1], note_tpl) for i in PREV_KEEP] + [F.copy_slide(prs, src[12], note_tpl)]
-    order = [*main, *qa, *appx, *prop, *old10, *old9, *old8, *old7, *old6, *old5, *old4, *old3, *old2, *old1]
+    return [old11, old10, old9, old8, old7, old6, old5, old4, old3, old2, old1]
+
+
+def build(dst):
+    prs = Presentation(str(BASE))
+    old = list(prs.slides)
+    cover, mg = old[0], old[3]
+    layout = old[5].slide_layout                       # How it Works 장과 같은 틀
+    note_tpl = [copy.deepcopy(sh._element) for sh in old[5].notes_slide.placeholders]
+    intro = copy_intro(prs, note_tpl)
+    patch_cover(cover)
+    patch_mg(mg)
+    F.set_notes(cover, N.INTRO_NOTES['cover'], note_tpl)
+    report = []
+
+    def draw(specs):
+        slides, rep, _ = HW.add_slides(prs, layout, note_tpl, specs)
+        report.extend(rep)
+        return slides
+    specs = own_specs()
+    own = {k: draw(v) for k, v in specs.items() if k != 'prop'}
+    main = []
+    for item in SEQ:
+        main += own[item[1]] if isinstance(item, tuple) else [cover if item == 'cover' else mg if item == 'mg' else intro[item]]
+    n_main = len(main)
+    qa = draw([N.s_qa()])                              # 11차(11-16): 본 발표와 Appendix 사이에 질의응답 동안 띄워 두는 장
+    import qna as Q                                    # 10차(11-15): Appendix를 질의응답용으로 다시 짬(목차, 코드, 쪽 번호. qna.py)
+    appx = Q.assemble(prs, layout, note_tpl, draw, n_main + len(qa) + 1)
+    prop = draw([N.s_divider('p0', '제안 장표', ['본 발표에 넣을지 정하지 않은 장'],
+                             '여기부터는 제안 장표입니다. 본 발표에서는 넘기지 않습니다.')] + specs['prop']) if specs['prop'] else []      # 6차: 없음
+    olds = old_groups(prs, draw, note_tpl) if OLD_GROUPS else []      # 12차(11-16 밤): 이전 판 묶음은 덱에 넣지 않음
+    order = [*main, *qa, *appx, *prop] + [s for g in olds for s in g]
     drop_slides(prs, [s for s in old if s not in (cover, mg)])
     reorder(prs, order)
     samsung_fonts.remap_prs(prs)
     logo_style(own['back'])                             # 맺는 장의 'Weave' 글자를 표지 제목처럼(Samsung Sharp Sans, 보라 그라데이션)
-    build.n_qa, build.n_old10, build.n_old9 = len(qa), len(old10), len(old9)
-    build.n_old8, build.n_old7, build.n_old6, build.n_old5, build.n_old4 = len(old8), len(old7), len(old6), len(old5), len(old4)
-    build.n_main, build.n_appx, build.n_prop, build.n_old3, build.n_old2, build.n_old1 = n_main, len(appx), len(prop), len(old3), len(old2), len(old1)
+    build.n_main, build.n_qa, build.n_appx, build.n_prop, build.n_old = n_main, len(qa), len(appx), len(prop), [len(g) for g in olds]
     prs.save(str(dst))
     for key, nclick, nnote, _ in report:
         if nclick != nnote:

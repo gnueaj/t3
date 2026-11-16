@@ -19,6 +19,7 @@ WINTMP = Path('/mnt/c/Temp/weave-ppt')
 POWERSHELL = '/mnt/c/Windows/System32/WindowsPowerShell/v1.0/powershell.exe'
 PS_EXPORT = ROOT / '07_소스' / 'slides' / 'tools' / 'ppt_export.ps1'
 LOCK = '/tmp/weave-ppt.lock'
+FFMPEG = str(Path.home() / '.cache' / 'weave-tools' / 'bin' / 'ffmpeg')
 
 VIDEO_PS1 = r'''param([string]$Pptx, [string]$Mp4, [string]$Secs, [int]$H = 1080)
 $ErrorActionPreference = "Stop"
@@ -111,7 +112,56 @@ def video(src, mp4, secs):
     shutil.copyfile(out, mp4)
     out.unlink()
     tmp.unlink()
-    return log.strip()[-40:]
+    fixed = repair(mp4)
+    return log.strip()[-40:] + (' (깨진 장면 %d개를 앞 장면으로 바꿈: %s)' % (len(fixed), fixed) if fixed else '')
+
+
+def bad_frames(mp4, w=64, h=36):
+    """PowerPoint가 내보낸 영상에 가끔 한 장씩 끼는 깨진 장면(화면 전체의 색이 자홍, 주황 따위로 뒤집힌 한 장)의 번호들(0부터, 풀린 차례 그대로).
+    글자와 도형의 밝기는 멀쩡하고 색 정보만 틀어져 있어서, 작게 줄여 장면마다 평균 색의 색차(U, V)를 본다:
+    앞의 멀쩡한 장면에서 색차가 크게 튀었다가 세 장 안에 제자리로 돌아오면 그 사이가 깨진 장면이다(장이 바뀌는 것은 돌아오지 않으므로 걸리지 않음).
+    11-16: 2쪽만 담은 17초 영상에 자홍 한 장(14.9초), 11차 낭독 영상에 자홍 두 장(37.8초, 44.7초), 12차 녹화에 주황 한 장(36.9초)과 자홍 한 장(110.5초).
+    풀 때 오류는 없다."""
+    import numpy as np
+    out = subprocess.run([FFMPEG, '-loglevel', 'quiet', '-i', str(mp4), '-vf', 'scale=%d:%d' % (w, h), '-fps_mode', 'passthrough',
+                          '-f', 'rawvideo', '-pix_fmt', 'rgb24', 'pipe:1'], stdout=subprocess.PIPE, stderr=subprocess.DEVNULL).stdout
+    m = np.frombuffer(out, dtype=np.uint8).reshape(-1, w * h, 3).astype(float).mean(1)
+    u = -0.169 * m[:, 0] - 0.331 * m[:, 1] + 0.5 * m[:, 2]
+    v = 0.5 * m[:, 0] - 0.419 * m[:, 1] - 0.081 * m[:, 2]
+
+    def far(a, b):
+        return abs(u[a] - u[b]) + abs(v[a] - v[b])
+    bad, good, i, n = [], 0, 1, len(m)
+    while i < n:
+        if far(i, good) > 40:
+            back = next((k for k in range(i + 1, min(i + 4, n)) if far(k, good) < 8), None)
+            if back is not None:
+                bad += list(range(i, back))
+                i = back
+                continue
+        good = i
+        i += 1
+    return bad
+
+
+def repair(mp4):
+    """깨진 장면(bad_frames)을 바로 앞 장면으로 바꿔 그 파일을 고쳐 쓴다(소리와 장면의 때는 그대로). 돌려줌: 바꾼 장면의 번호들."""
+    bad = bad_frames(mp4)
+    if not bad:
+        return []
+    mp4 = Path(mp4)
+    chain, cur = '', '[0:v]'
+    for k, i in enumerate(bad):          # 앞에서부터 하나씩: 깨진 장면이 이어져 있어도 바로 앞(이미 고친) 장면으로 바뀜
+        chain += '%ssplit[a%d][b%d];[a%d][b%d]freezeframes=first=%d:last=%d:replace=%d[v%d];' % (cur, k, k, k, k, i, i, max(i - 1, 0), k)
+        cur = '[v%d]' % k
+    tmp = mp4.with_name(mp4.stem + '_repair.mp4')
+    subprocess.run([FFMPEG, '-y', '-loglevel', 'quiet', '-i', str(mp4), '-filter_complex', chain.rstrip(';'), '-map', cur, '-map', '0:a?',
+                    '-c:a', 'copy', '-c:v', 'libx264', '-preset', 'veryfast', '-crf', '12', '-pix_fmt', 'yuv420p', '-fps_mode', 'passthrough', str(tmp)],
+                   check=True, stderr=subprocess.DEVNULL)
+    left = bad_frames(tmp)
+    assert not left, '고친 뒤에도 깨진 장면이 남음 %s' % left
+    tmp.replace(mp4)
+    return bad
 
 
 if __name__ == '__main__':
@@ -120,3 +170,5 @@ if __name__ == '__main__':
         print(png(sys.argv[2], sys.argv[3], *(int(v) for v in sys.argv[4:6])))
     elif cmd == 'video':
         print(video(sys.argv[2], sys.argv[3], [float(v) for v in sys.argv[4].split(',')]))
+    elif cmd == 'repair':             # python render_c.py repair <mp4>: 이미 찍어 둔 영상의 깨진 장면을 고침
+        print('깨진 장면', repair(sys.argv[2]))

@@ -138,8 +138,9 @@ TV_SIDE = False
 
 
 # ------------------------------------------------------------------ 지난 연표(34쪽의 부품. 키가 같아 Morph로 이어짐)
-def tl_past(s, dx):
-    """연표를 dx만큼 옮겨 그린다. KEEP에 없는 마디와 줄 이름은 투명하게(옮겨 가며 사라짐), 남는 마디는 KEEP의 값만큼 덜 옮기고 근거 글은 각주 번호 없이."""
+def tl_past(s, dx, under=None):
+    """연표를 dx만큼 옮겨 그린다. KEEP에 없는 마디와 줄 이름은 투명하게(옮겨 가며 사라짐), 남는 마디는 KEEP의 값만큼 덜 옮기고 근거 글은 각주 번호 없이.
+    under: Weave 아이콘(과 그 둘레의 빛)보다 아래 층에 둘 것을 그리는 함수(미래의 두 줄의 굽은 곳)."""
     xf = Xf(0, 0, dx, 0, 1.0)
     yu, yl = N.TL_YU, N.TL_YL                   # 지난 연표의 두 줄은 34쪽의 높이 그대로(Morph로 이어짐)
     s.add('tl/lu', [C('tl/lu', [(N.TL_X0, yu)] * 2 + [(N.TL_X1, yu)] * 2, stops=N.TL_STOPS, w=3)], xf=xf)
@@ -153,6 +154,8 @@ def tl_past(s, dx):
         for x, year, word, ref, icon in rows:
             k = 'tl/%s%d' % ('u' if up else 'd', x)
             s.add(k, N.tl_node(k, x, y, up, year, word, ref.rstrip(SUPS), icon), xf=Xf(0, 0, dx + KEEP.get(k, 0), 0, 1.0), alpha=100 if k in KEEP else 0)
+    if under:
+        under()
     wx = N.TL_WX
     s.add('tl/wglow', [R('tl/wglow', wx - 56, YC - 56, 112, 112, prst='ellipse', fill=None, line=None,
                          grad=dict(stops=[(0, '8B6BFF', 46), (60, 'B9A6FF', 16), (100, 'F2EDFF', 0)], path='circle'))], xf=xf)
@@ -166,16 +169,34 @@ def tl_past(s, dx):
 HL_, HH_ = 12, 11                           # 줄 끝 화살촉의 길이와 높이
 
 
+# 12차(11-16 밤) 'Weave 아이콘과 연결선 사이가 끊어져 있음. 부드럽게 연결될 수 있도록 수정 필요':
+#   두 줄이 아이콘의 오른쪽 끝(FX0)에서 시작하고 아이콘보다 위 층에 있어서, 줄 아래에 받친 옅은 빛(반투명) 둘이 겹친 둥근 끝이 아이콘의 흰 테두리 위에
+#   마디처럼 얹혀 보였고(줄이 아이콘에서 떨어져 시작하는 듯), 굽은 곳과 곧은 곳이 만나는 자리에도 빛이 겹쳐 짙은 마디가 생겼다.
+#   → 줄을 아이콘 안쪽(LANE_IN)에서 시작해 아이콘과 그 둘레의 빛보다 아래 층에 두고(왼쪽에서 모이는 두 줄과 같은 층: 흰 테두리 밖으로 곧바로 뻗어 나옴),
+#     옅은 빛은 반투명 대신 같은 빛깔의 불투명한 색으로(겹쳐도 짙어지지 않음. 그래서 빛 둘을 먼저 깔고 그 위에 줄 둘을 놓음)
+GLOW = 'E4DCFF'                             # 줄 아래에 받치는 옅은 빛: B9A6FF 30%가 이 장의 바탕에 얹혔을 때의 빛깔(PNG에서 잰 값)
+LANE_IN = 16                                # 굽은 곳이 Weave 아이콘 안쪽으로 들어가 시작하는 만큼(px. 아이콘의 반지름은 30)
+
+
 def lane(key, y):
-    """Weave에서 갈라져 오른쪽 끝까지 뻗는 줄을 둘로 나눠 그림. 돌려줌: (굽은 곳, 곧은 곳). 저마다 아래에 옅은 빛을 받침.
+    """Weave에서 갈라져 오른쪽 끝까지 뻗는 줄을 나눠 그림. 돌려줌: (굽은 곳의 옅은 빛, 굽은 곳의 줄, 곧은 곳). 저마다 아래에 옅은 빛을 받침.
     곧은 곳은 얇은 네모: 왼쪽 끝을 붙잡고 늘이면(grow) 끝이 또렷하게 뻗어 나가 화살촉(arrow)과 발이 맞음.
     한 줄로 그려 닦아 내면 끝이 옅게 번져서 화살촉보다 60~120px 앞서 보였음(영상에서 잰 값). 화살촉은 따로 그림."""
     xe = FX1 - HL_ + 2
-    pts = [(FX0, YC), (FX0 + 44, YC), (FXS - 44, y), (FXS, y)]
-    return ([C(key + '/bg', pts, w=11, color='B9A6FF', alpha=30), C(key + '/bl', pts, w=3.4, color='6C4FFF')],
-            [R(key + '/sg', FXS - 1, y - 5.5, xe - FXS + 1, 11, fill='B9A6FF', alpha=30, line=None),
+    pts = [(FX0 - LANE_IN, YC), (FX0 + 44, YC), (FXS - 44, y), (FXS, y)]
+    return ([C(key + '/bg', pts, w=11, color=GLOW)], [C(key + '/bl', pts, w=3.4, color='6C4FFF')],
+            [R(key + '/sg', FXS - 1, y - 5.5, xe - FXS + 1, 11, fill=GLOW, line=None),
              R(key + '/sl', FXS - 1, y - 1.7, xe - FXS + 1, 3.4, fill=None, line=None,
                grad=dict(stops=[(0, '6E51FF', None), (100, 'A48BFF', None)], ang=0))])
+
+
+def lane_bends(s):
+    """미래의 두 줄의 굽은 곳: 옅은 빛 둘을 먼저, 그 위에 줄 둘. tl_past가 Weave 아이콘을 그리기 바로 앞에 부른다(아이콘 아래 층)."""
+    got = [(k_, lane('nx/l%s' % k_, y_)) for k_, y_ in (('u', YU), ('l', YL))]
+    for k_, (g_, _, _) in got:
+        s.add('nx/l%s/g' % k_, g_)
+    for k_, (_, b_, _) in got:
+        s.add('nx/l%s/b' % k_, b_)
 
 
 def arrow(key, y):
@@ -393,10 +414,8 @@ def parts(s, pen=PEN, home=HOME, song=SONG):
     조각 안쪽 여백은 조각마다 네 변이 같게(메모 28, 기록 카드 13, 사진 10)."""
     from PIL import Image
     K = {}
-    for k_, y_ in (('u', YU), ('l', YL)):                    # 미래의 두 줄: 굽은 곳, 곧은 곳, 화살촉
-        b_, s_ = lane('nx/l%s' % k_, y_)
-        s.add('nx/l%s/b' % k_, b_)
-        s.add('nx/l%s/s' % k_, s_)
+    for k_, y_ in (('u', YU), ('l', YL)):                    # 미래의 두 줄: 곧은 곳, 화살촉(굽은 곳은 lane_bends가 Weave 아이콘 아래 층에 먼저 그림)
+        s.add('nx/l%s/s' % k_, lane('nx/l%s' % k_, y_)[2])
         s.add('nx/a%s' % k_, arrow('nx/a%s' % k_, y_))
     # ---- 위(기술): 2027- 그려서 찾는 기억. 줄 위쪽에 왼쪽에서 오른쪽으로: 메모 → 함께 읽는 기록 둘(삼성노트의 일기, 엄마의 문자) → 찾아낸 갤러리 사진
     s.add('nx/u/node', fnode('nx/u/node', NDX, YU, True, YEAR, '그려서 찾는 기억', PEN_SUB, AS / 'ic-pen-line.png'))
@@ -511,7 +530,7 @@ def s_next(key='nx'):
     """연표 다음 장. 연표가 두 줄이 Weave에서 만나는 곳만 남기고 옮겨 가고, 두 줄이 화살촉을 앞세워 다시 뻗는다
     → (클릭) 그려서 찾는 기억 → (클릭) 집에서 건네는 기억 ① 냉장고 → (클릭) ② 스마트 TV."""
     s = Slide(key, trans=('morph', 1100), bar=False, notes=NOTE)
-    tl_past(s, -PAN)
+    tl_past(s, -PAN, under=lambda: lane_bends(s))
     s.add('nx/title', [N.title('nx/title', TITLE)])
     K = parts(s)
     # 장이 열리면(연표가 다 옮겨 간 뒤): 두 줄이 화살촉을 앞세워 오른쪽 끝까지 뻗음. 굽은 곳이 먼저 닦여 나오고,
@@ -519,7 +538,7 @@ def s_next(key='nx'):
     t0, tb, td = 80, 110, 800
     ease = dict(decel=60000)
     s.on('nx/title', 'fade_in', 0, 400)
-    s.on(['nx/lu/b', 'nx/ll/b'], 'wipe_in', t0, tb, dir='left')
+    s.on(['nx/lu/g', 'nx/ll/g', 'nx/lu/b', 'nx/ll/b'], 'wipe_in', t0, tb, dir='left')
     s.on(['nx/lu/s', 'nx/ll/s'], 'grow', t0 + tb - 30, td, **ease)
     s.on(['nx/au', 'nx/al'], 'glide', t0 + tb - 30, td, dx=-(FX1 - HL_ - FXS), dy=0, **ease)
     s.click()      # 1: 위 줄(기술) — 마디 → 메모가 그려지고 → 일기, 문자 기록과 이어지고 → 두 기록에서 뻗은 실이 그날의 사진으로

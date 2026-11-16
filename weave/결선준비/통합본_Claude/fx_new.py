@@ -894,7 +894,9 @@ FX_NOTE = ('직장인은 여러 앱에 흩어진 정보를 찾아 활용하는 �
            '(클릭) Weave는 이러한 불편함을 해결합니다. '
            '(클릭) 어느 앱인지 몰라도 통합 검색으로 바로 찾고, 정확한 이름을 몰라도 단서로 찾고, '
            '챙겨야 할 부탁이나 약속을 필요한 순간에 알려줌으로써, 찾는 시간은 줄이고, 놓친 기억은 되살립니다.')
-FX_CUES = {'fx.title': ('fx', 4, '찾는 시간은')}
+# 11-16 밤 12차: '애니메이션이 3개가 한꺼번에 웃는 게 아니고, 한 번 클릭하되 왼쪽부터 하나씩 웃는 것으로(총 3번 클릭 안 해도 되도록) 하라는 거였어'
+#   → 넷째 클릭 하나에 세 칸이 왼쪽부터 차례로 바뀜(FX_STEP). 클릭 수와 대본은 11차 그대로
+FX_CUES = {'fx.title': ('fx', 4, '찾는 시간은'), 'fx.c2': ('fx', 4, '정확한 이름을 몰라도'), 'fx.c3': ('fx', 4, '챙겨야 할')}
 NOTES['fx'] = FX_NOTE
 CUES.update(FX_CUES)
 HW.NOTES['fx'] = FX_NOTE
@@ -904,6 +906,7 @@ FX_RK = 0.085                       # 고리 굵기 ÷ 바깥지름. 7차 뒤: �
 FX_CY, FX_YN, FX_YST, FX_YG = 236, 326, 392, 338      # 고리 가운데, 숫자, 불편 문장, 달라진 문장의 위 끝
 FX_ICY, FX_YB = 520, 584            # Weave 아이콘의 가운데, 아래 제목의 위 끝
 FX_TC, FX_TURN = 1300, 400          # 숫자가 0까지 줄어드는 시간, 입꼬리가 도는 시간(후보 L은 1100, 330)
+FX_STEP = FX_TC                     # 12차: 한 번의 클릭에 세 칸이 왼쪽부터 차례로 바뀔 때, 칸과 칸 사이(ms). 앞 칸의 숫자가 0이 되면 다음 칸의 숫자가 줄기 시작
 FX_TH = 3.8                         # 실의 굵기(7차: 2.6 → 3.8px. 모션그래픽과 14쪽의 실은 5.6px)
 
 
@@ -915,8 +918,8 @@ def num_mid(key, cx, y, text, color, pt=40, small=20, unit='%'):
 
 def s_fx():
     """기대효과 한 장. 불편 셋이 고리 얼굴로 하나씩 뜨고(위 제목 AS-IS) → (클릭) Weave 아이콘이 뜨며 제목이 TO-BE로 뒤집히고,
-    (클릭 셋) 기능을 말할 때마다 아이콘에서 실이 뻗어 그 칸에 닿는다. 닿은 칸은 숫자가 0까지 줄며 고리가 보라로 닫히고 웃는다.
-    숫자가 0이 되면 곧바로 달라진 두 줄로 바뀌고, '찾는 시간은 …'을 말할 때 아래 제목이 뜬다."""
+    (클릭 한 번) 아이콘에서 실이 왼쪽 칸부터 차례로 뻗어 닿는다. 닿은 칸은 숫자가 0까지 줄며 고리가 보라로 닫히고 웃는다.
+    숫자가 0이 되면 곧바로 달라진 두 줄로 바뀌고, 세 칸이 다 바뀌면(녹화용 사본에서는 '찾는 시간은 …'을 말할 때) 아래 제목이 뜬다."""
     key = 'fx'
     s = Slide(key, trans=('fade', 500), bar=False, notes=NOTES[key], free=True)
     s.add(key + '/to', [N.title(key + '/to', [('TO-BE', PURPLE)])])
@@ -974,11 +977,16 @@ def s_fx():
     s.on(key + '/rg', 'ring', 160, 900, **{'from': 0.4, 'to': 1.0})
     s.on(key + '/as', 'flip_out', 220, 190)
     s.on(key + '/to', 'flip_in', 410, 260)
-    s.click()          # 4(11차: 4~6을 하나로): 실 셋이 함께 그 칸으로 뻗고, 닿으면 숫자가 줄며 고리가 닫힘. 세 칸이 한 번에 바뀜
+    # 4(11차: 4~6을 하나로. 12차: 한 번 누르되 세 칸이 한꺼번에가 아니라 왼쪽부터 하나씩): 실이 그 칸으로 뻗고, 닿으면 숫자가 줄며 고리가 닫히고 웃음.
+    #   직접 누르는 덱에서는 앞 칸의 숫자가 0이 되는 순간 다음 칸의 숫자가 줄기 시작하고(FX_STEP = 숫자가 주는 시간),
+    #   녹화용 사본에서는 그 기능을 말할 때('정확한 이름을 몰라도', '챙겨야 할')
+    s.click()
+    starts = [0, FX_STEP, 2 * FX_STEP] if HW.LIVE else [0, max(cue(key + '.c2', FX_STEP), 700), max(cue(key + '.c3', 2 * FX_STEP), 1400)]
     for i, (k, _, _) in enumerate(cols):
-        s.on(k + '/st0', 'fade_out', 0, 240)                       # 불편 문장이 먼저 물러나고(실 끝이 그 자리를 지남)
-        s.on('%s/th%d' % (key, i + 1), 'wipe_in', 60, 420, dir=('right', 'up', 'left')[i])
-        t2 = 400
+        t0 = starts[i]
+        s.on(k + '/st0', 'fade_out', t0, 240)                      # 불편 문장이 먼저 물러나고(실 끝이 그 자리를 지남)
+        s.on('%s/th%d' % (key, i + 1), 'wipe_in', t0 + 60, 420, dir=('right', 'up', 'left')[i])
+        t2 = t0 + 400
         fr = frames[k]
         dt = FX_TC / len(fr)
         ring_smile(s, k, t2, dur=FX_TC, turn=FX_TC - FX_TURN - 120, spin=FX_TURN)      # 숫자가 0에 가까워질 때 웃음
@@ -990,7 +998,7 @@ def s_fx():
             s.on(fk, 'fade_out', t2 + (j + 2) * dt + (-10 if last else 0), 130 if last else 1)      # 0은 뜨자마자 물러남
         s.on(k + '/st', 'rise', t2 + FX_TC + dt + 50, 400, dy=10)                                  # 그 자리에 달라진 두 줄
     # 아래 제목: 직접 누르는 덱에서는 세 칸이 다 바뀌자마자, 녹화용 사본에서는 '찾는 시간은'을 말할 때
-    t_sub = 400 + FX_TC + 400
+    t_sub = starts[-1] + 400 + FX_TC + 400
     s.on(key + '/sub', 'rise', t_sub if HW.LIVE else max(cue(key + '.title', t_sub, ahead=0.3), 900), 520, dy=12)
     return s
 

@@ -474,8 +474,9 @@ def gallery(key, x, y, w, photos, cols=4, title='갤러리', tag=None, gap=10, p
     return out, h, spots
 
 
-def search_pill(key, x, y, w, h, text, pt=17, icon='mag', cursor=True, text_color=INK, fill='FFFFFF', border=LINE2):
-    """검색창: 돋보기(또는 실타래) + 글. 글과 커서는 따로 키(타이핑·깜빡임 효과)."""
+def search_pill(key, x, y, w, h, text, pt=17, icon='mag', cursor=True, text_color=INK, fill='FFFFFF', border=LINE2, cur_gap=3):
+    """검색창: 돋보기(또는 실타래) + 글. 글과 커서는 따로 키(타이핑·깜빡임 효과).
+    cur_gap: 글의 잰 폭(tw) 뒤에 커서를 띄우는 만큼(px). 잰 폭이 화면의 글보다 조금 넓어서, 3이면 화면에서는 글자 끝에서 5~6px 떨어져 보임(16.5pt)."""
     out = [R(key + '/bg', x, y, w, h, prst='roundRect', fill=fill, line=border, line_w=1.6, shadow=SHADOW_CARD)]
     r = h * 0.15
     if icon == 'mag':
@@ -489,6 +490,6 @@ def search_pill(key, x, y, w, h, text, pt=17, icon='mag', cursor=True, text_colo
         tx = x + h * 0.45
     th = pt * 1.33 * 1.4
     txt = T(key + '/q', tx, y + (h - th) / 2, w - (tx - x) - 20, th, text, size=pt, color=text_color, anchor='ctr')
-    cx = tx + tw(text, pt) + 3
+    cx = tx + tw(text, pt) + cur_gap
     cur = R(key + '/cur', cx, y + h / 2 - pt * 0.66, 2.4, pt * 1.32, fill=PURPLE, line=None)
     return out, txt, (cur if cursor else None), tx
