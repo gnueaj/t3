@@ -1,19 +1,21 @@
 #!/usr/bin/env python3
 """2쪽 통화 음성을 ElevenLabs에서 받은 목소리 파일 하나로 처음부터 만든다 → assets/intro/call-hook.mp3
 
-  python tools/call_build.py <받은 mp3나 wav> --end 9.90 [--tempo 1.15] [--pause 1.56]
+  python tools/call_build.py <받은 mp3나 wav> --end 10.36 --soft 4.20:6.15 --soft-db 3 [--tempo 1.15] [--pause 1.56]
 
 12차(11월 16일 밤): 사용자가 새 목소리를 주며 '첨부한 파일로 바꾸고 1.15배속 하기(기존 효과도 해야 함. "프로입니다." 이후 딜레이라든지는 넣어야 하고)'.
 받은 목소리(10.5초): "네, 양서윤 프로입니다." → "아, 그거요?" → 한숨 → 작게 "어디 적어놨더라" → "음, 잠깐만요. 찾아보고 다시 알려 드릴게요."
 그 전(11차)의 파일은 Carbon이 다듬은 최종후보 B(연결음, 전화 음질, 첫 정적 1.85초, 끊는 소리)에 call_edit.py(말을 덜어 내고 1.15배)와
 call_gain.py(크기, 받는 소리 '딸깍', 첫마디까지 0.63초)를 거친 것이었다. 새 목소리에는 그 손질이 하나도 없으므로 여기서 같은 값으로 한 번에 한다:
-  1) 앞의 빈 곳과 끝의 숨소리를 잘라 내고(--end: 마지막 말이 끝나는 때), 목소리를 --tempo배 빠르게(높낮이는 그대로, 말 사이의 쉼도 함께)
+  1) 앞뒤의 빈 곳을 잘라 내고(--end: 마지막 말이 끝나는 때), 목소리를 --tempo배 빠르게(높낮이는 그대로, 말 사이의 쉼도 함께)
   2) "프로입니다." 뒤의 쉼(상대의 말을 듣는 틈)을 --pause초로. 11차 파일에서 잰 값이 1.56초(Carbon의 1.85초를 1.15배 빠르게 한 길이)
   3) 전화 음질: 285~3550Hz 띠만 남기고 1.15kHz를 조금 올리고 여리게 누름(Carbon의 classic_phone_fx와 같은 값)
   4) 크기: 목소리 전체가 11차 파일과 같은 -17.8 LUFS가 되게 키우고 봉우리는 -1dBFS에서 누름(낭독은 -16 LUFS)
   5) 통화 연결음(440+480Hz, 1초, 봉우리 0.885) → 0.23초 → 받는 소리 '딸깍' → 0.63초 → 목소리 → 0.315초 → 끊는 소리(480Hz 0.22초) → 0.22초
 작게 말한 "어디 적어놨더라"는 받은 파일의 크기 차이를 그대로 둔다(누르는 과정에서 차이가 줄면 그만큼 다시 낮춤).
 끝나면 낱말이 시작하는 때를 찍는다 → make.py의 CALL_LEN, CALL_PICK, CALL_HANG, CALL_LINES에 옮겨 적음.
+주의: --end는 끝말의 여린 소리까지 넣어서 잡는다. 처음에 9.90초로 잡았더니 '드릴' 뒤의 여린 '게요'(9.98~10.33초)가 잘려 "알려드"에서 끝난다는 말을 들었다.
+만든 파일을 받아쓰기로 돌려 끝말까지 나오는지 확인한다.
 """
 import argparse
 import subprocess
@@ -146,7 +148,7 @@ def main():
     ap.add_argument('src')
     ap.add_argument('--tempo', type=float, default=1.15)
     ap.add_argument('--pause', type=float, default=1.56, help='"프로입니다." 뒤의 쉼(초, 빠르게 한 뒤의 길이)')
-    ap.add_argument('--end', type=float, default=0.0, help='받은 파일에서 마지막 말이 끝나는 때(초). 그 뒤의 숨소리는 잘라 냄. 0이면 끝까지')
+    ap.add_argument('--end', type=float, default=0.0, help='받은 파일에서 마지막 말이 끝나는 때(초). 여리게 끄는 끝말까지 넣어서 잡음. 0이면 끝까지')
     ap.add_argument('--soft', default='', help='작게 말한 구간(받은 파일의 초, "4.20:6.15"): 크기 차이를 받은 파일과 같게 지킴')
     ap.add_argument('--soft-db', type=float, default=0.0, help='작게 말한 구간을 더 낮추는 만큼(dB)')
     a = ap.parse_args()

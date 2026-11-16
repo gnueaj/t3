@@ -2,7 +2,7 @@
 
 인트로, 모션그래픽, 솔루션과 How it works, 뒷부분, Appendix를 한 덱으로 합친 판이에요. 11차(11월 16일)에는 팀 검토를 본 발표와 대본, Appendix에 넣었고, 12차(11월 16일 밤)에는 11차를 보고 받은 여덟 가지를 넣었어요.
 
-- **12차에 바꾼 곳**: 2쪽의 통화 음성을 새로 받은 목소리로 바꾸고(12.4초) 통화 시간이 00:00에서 시작해 전화를 받으면 1초마다 올라가게 했어요. 1쪽, 3쪽, 25쪽의 대본을 받은 글로 바꿨어요. 10쪽 AI 답변의 글을 15pt로 줄여 말풍선의 아래 여백을 넓혔고, 32쪽 검색창의 커서를 글자 바로 옆으로 옮겼어요. 33쪽은 넷째 클릭 한 번에 세 칸이 왼쪽부터 하나씩 바뀌고, 35쪽은 두 줄이 Weave 아이콘 아래에서 곧바로 뻗어 나와요. 덱 뒤쪽의 '이전 판' 묶음은 모두 빼서 덱이 287장에서 82장이 됐어요. 쪽마다 바꾼 곳은 `대본.md`의 '11차에서 바꾼 곳'에 있어요.
+- **12차에 바꾼 곳**: 2쪽의 통화 음성을 새로 받은 목소리로 바꾸고(12.8초) 통화 시간이 00:00에서 시작해 전화를 받으면 1초마다 올라가게 했어요. 1쪽, 3쪽, 25쪽의 대본을 받은 글로 바꿨어요. 6쪽과 7쪽의 검색어는 '미국 출장 때 먹었던 멕시칸 음식'이에요. 10쪽 AI 답변의 글을 15pt로 줄여 말풍선의 아래 여백을 넓혔고, 32쪽 검색창의 커서를 글자 바로 옆으로 옮겼어요. 33쪽은 넷째 클릭 한 번에 세 칸이 왼쪽부터 하나씩 바뀌고, 35쪽은 두 줄이 Weave 아이콘 아래에서 곧바로 뻗어 나와요. 덱 뒤쪽의 '이전 판' 묶음은 모두 빼서 덱이 287장에서 82장이 됐어요. 쪽마다 바꾼 곳은 `대본.md`의 '11차에서 바꾼 곳'에 있어요.
 
 - **본 발표 (1~39쪽, 11차에 바꾼 곳)**: 표지에서 소속을 빼고 이름 다섯을 한 줄로 놓았어요. 2쪽의 통화 음성은 소속과 '그거요...?'를 덜어 내고 목소리를 1.15배 빠르게 해서 11.6초였어요(12차에 새 목소리로 바꿈). 6쪽과 7쪽의 검색어는 '미국 출장 때 기내식으로 먹었던 햄버거'예요. 10, 11, 14, 28, 32쪽의 큰 글을 2pt 키웠고, 20쪽은 'How it works'예요(물음표를 뺌). 클릭은 37번에서 33번이 됐어요. 1, 15, 23~26, 28, 33~35쪽의 대본은 받은 글로 바꿨어요. 쪽마다 바꾼 곳은 `대본.md`의 '10차에서 바꾼 곳'에 있어요.
 - **Q&A 장 (40쪽)**: 39쪽 다음에 질의응답 동안 띄워 두는 장이에요. 본 발표가 끝났을 때 Appendix의 목차가 바로 보이지 않아요.
@@ -33,8 +33,8 @@
 | 쪽 | 묶음 | 어디서 왔나 |
 | --- | --- | --- |
 | 1 | 표지 | 우리 중간본의 표지. 영상은 표지 영상 v9(`../10_표지영상`, 18초)로 바꾸고 제목을 48pt로 줄임. 11차에 소속과 가는 줄을 빼고 이름 다섯을 한 줄로(`patch_cover_names`) |
-| 2~5 | 인트로 | 팀원이 손본 덱(jjun-0824/t3 87bf80b)의 2~5쪽. 3쪽의 첫 인물과 말풍선은 클릭해야 뜨고(`patch_person_click`), 3~5쪽의 옅은 기록 조각은 세 층으로 떠다녀요(`patch_floats`). 인물 뒤에는 옅은 보라 그라데이션(`patch_aura`). 4·5쪽의 둘째 말풍선은 '정확한 이름이 뭐였지?'(`patch_ask2`). 2쪽은 장이 열리면 통화 음성이 저절로 나오고 음성의 마지막 말에 맞춰 문장이 떠요(`patch_call`, `assets/intro/call-hook.mp3`). 11차에 음성에서 소속과 '그거요...?'를 덜어 내고 목소리를 1.15배 빠르게 함(11.6초, `tools/call_edit.py`). 12차에 새로 받은 목소리로 바꾸고(12.4초, `tools/call_build.py`) 통화 시간이 00:00에서 전화를 받는 소리부터 1초마다 올라가게 함(`call_timer`) |
-| 6 | 수많은 기록 | 새로 그림(`slides_new.py`의 `s_hook`). 9차에 화면과 대본의 '기억'을 '기록'으로. 11차에 검색어를 '미국 출장 때 기내식으로 먹었던 햄버거'로(`HK_QUERY`, `assets/src/screens.html`) |
+| 2~5 | 인트로 | 팀원이 손본 덱(jjun-0824/t3 87bf80b)의 2~5쪽. 3쪽의 첫 인물과 말풍선은 클릭해야 뜨고(`patch_person_click`), 3~5쪽의 옅은 기록 조각은 세 층으로 떠다녀요(`patch_floats`). 인물 뒤에는 옅은 보라 그라데이션(`patch_aura`). 4·5쪽의 둘째 말풍선은 '정확한 이름이 뭐였지?'(`patch_ask2`). 2쪽은 장이 열리면 통화 음성이 저절로 나오고 음성의 마지막 말에 맞춰 문장이 떠요(`patch_call`, `assets/intro/call-hook.mp3`). 11차에 음성에서 소속과 '그거요...?'를 덜어 내고 목소리를 1.15배 빠르게 함(11.6초, `tools/call_edit.py`). 12차에 새로 받은 목소리로 바꾸고(12.8초, `tools/call_build.py`) 통화 시간이 00:00에서 전화를 받는 소리부터 1초마다 올라가게 함(`call_timer`) |
+| 6 | 수많은 기록 | 새로 그림(`slides_new.py`의 `s_hook`). 9차에 화면과 대본의 '기억'을 '기록'으로. 11차에 검색어를 '미국 출장 때 기내식으로 먹었던 햄버거'로(`HK_QUERY`, `assets/src/screens.html`). 12차에 '미국 출장 때 먹었던 멕시칸 음식'으로 |
 | 7~11 | 설문 두 장, 기록을 남기는 곳, AI에게 묻는데, 정작 내 기록은 | 팀원이 손본 덱의 7~11쪽(도형, 그림, 전환, 효과). 7쪽 머리글(`patch_heading7`), 9쪽 글자 크기(`patch_hub`), 10쪽 AI 답변(`patch_answer`: 8차에 16pt, 말풍선의 네 변 여백 20px). 11차: 7쪽 검색 칸의 검색어를 6쪽과 같게 하고 칸을 넓힘(`patch_query7`), 10쪽은 장이 열리면 빈 화면이고 클릭해야 글과 대화 화면이 뜸(`patch_person_click`), 10쪽과 11쪽의 큰 글을 35pt로(`patch_cap_size`). 12차: 10쪽 AI 답변의 글을 15pt로 줄이고 말풍선의 아래 여백을 24px로(`ANSWER_PT`, `ANS_PAD_B`) |
 | 12 | 기록 그림이 가운데로 | 8차에 나눈 장. 팀원 덱의 11쪽을 한 번 더 옮겨 물음을 빼고 기록 그림만 가운데에 둠(`patch_gather`) |
 | 13~15 | 흩어진 기록이 이어짐, 물을 순 없을까요, 잇는 장 | 팀원이 손본 덱의 12~14쪽. 15쪽 로고는 8차에 오른쪽으로 12px(`patch_logo_center`). 11차에 14쪽의 큰 글을 42pt로 |
@@ -76,7 +76,7 @@
 ~/.cache/weave-tools/venv/bin/python tools/next_try.py --only 미래의Weave   # 35쪽만 따로: 34쪽의 끝부터 말하며 넘긴 영상, 두 장만 담은 덱, 한눈에.jpg → 미래장표_후보/
 ~/.cache/weave-tools/venv/bin/python -I tools/next_assets.py --src <원본 폴더>   # 35쪽의 손그림, 사진, 앱 아이콘, 이모지 (→ assets/next)
 ~/.cache/weave-tools/venv/bin/python tools/pad_audit.py 30 35               # 떠 있는 조각의 안쪽 여백(왼, 위, 오른, 아래)을 장의 그림에서 잼 (→ out/pad_audit)
-~/.cache/weave-tools/venv/bin/python tools/call_build.py <받은 mp3> --end 9.90 --soft 4.20:6.15 --soft-db 3   # 2쪽 통화 음성(12차): ElevenLabs에서 받은 목소리 하나에 1.15배, "프로입니다." 뒤의 쉼 1.56초, 전화 음질, 연결음, 딸깍, 끊는 소리를 입힘 → assets/intro/call-hook.mp3. 찍어 주는 때를 make.py의 CALL_LEN, CALL_PICK, CALL_HANG, CALL_LINES에 옮겨 적음
+~/.cache/weave-tools/venv/bin/python tools/call_build.py <받은 mp3> --end 10.36 --soft 4.20:6.15 --soft-db 3   # 2쪽 통화 음성(12차): ElevenLabs에서 받은 목소리 하나에 1.15배, "프로입니다." 뒤의 쉼 1.56초, 전화 음질, 연결음, 딸깍, 끊는 소리를 입힘 → assets/intro/call-hook.mp3. 찍어 주는 때를 make.py의 CALL_LEN, CALL_PICK, CALL_HANG, CALL_LINES에 옮겨 적음
 ~/.cache/weave-tools/venv/bin/python tools/call_edit.py <원본 wav> --tempo 1.15   # (11차까지) 2쪽 통화 음성에서 '삼성리서치'와 '그거요...?'를 덜어 내고 목소리를 빠르게 → out/_call_edit.wav
 ~/.cache/weave-tools/venv/bin/python tools/call_gain.py out/_call_edit.wav --gain 6.5 --ring 5.5 --click 1.65 --click-gap 0.63   # (11차까지. 받는 소리 '딸깍'은 call_build.py도 여기 것을 씀) 목소리와 연결음을 따로 키우고, 받는 소리 '딸깍'을 넣고, 첫마디를 늦춤 → assets/intro/call-hook.mp3 (길이가 바뀌면 make.py의 CALL_LEN, CALL_LINES도)
 ~/.cache/weave-tools/venv/bin/python tools/exp_search_time.py   # 벡터 검색 시간을 이 컴퓨터에서 잼(256-dim int8, 모두 비교, 상위 20건) → out/exp_search_time.json. qna_num.py의 PC_SEARCH_MS에 옮겨 적음
