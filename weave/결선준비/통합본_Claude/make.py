@@ -486,6 +486,28 @@ def patch_floats(sl):
     old.getparent().remove(old)
     if not any(rid in e.attrib.values() for e in sl._element.iter()):
         sl.part.drop_rel(rid)
+    assert all(abs(a - b) < 1 for a, b in zip((x, y, w, h), FLOAT_BOX)), (x, y, w, h)      # 2쪽에 까는 자리(patch_hook_floats)와 같은지
+    float_drift(sl, spids)
+
+
+FLOAT_BOX = (0, 16, 1280, 236)                        # 3~5쪽의 옅은 기록 조각이 놓인 자리(옮겨 온 장의 '!!floats')
+
+
+def patch_hook_floats(sl):
+    """2쪽(14차 뒤, '그 음성 나올 때 배경은 그 다음 페이지 배경을 그대로 가야 할 거 같아'): 3쪽이 열릴 때의 배경과 같게 옅은 기록 조각 세 층을
+    같은 자리에 깔고 같은 식으로 떠다니게 한다. 바탕의 위, 글의 아래. 층의 이름과 그림이 3쪽과 같다."""
+    pa = painter(sl)
+    prev, spids = by_name(sl, 'Background · lavender'), []
+    for n, *_ in FLOAT_LAYERS:
+        el = pa.el(P('floats/' + n, str(INTRO_AS / ('floats-%s.png' % n)), *FLOAT_BOX))
+        prev.addnext(el)
+        prev = el
+        spids.append(int(el.find(q('p:nvPicPr')).find(q('p:cNvPr')).get('id')))
+    float_drift(sl, spids)
+
+
+def float_drift(sl, spids):
+    """옅은 기록 조각의 층마다 다른 쪽으로 천천히 갔다가 되돌아오기를 되풀이하는 효과를 건다(장이 열리면 저절로)."""
     ids = itertools.count(F._next_id(sl))
     auto = next((g for g, a in F.groups(sl) if a), None)
     if auto is None:                                        # 저절로 시작하는 묶음이 없으면(3쪽) 맨 앞에 만든다
@@ -958,7 +980,7 @@ def call_timer(sl, pa, tm, inner, ids):
 # 옮겨 온 덱의 노트와 견주지 않는 장: 6차에 우리가 노트를 바꾼 장과, 8차에 발표자가 대본을 다시 쓴 장
 NOTE_OURS = {'in02', 'in03', 'in04', 'in05', 'in07', 'in08', 'hub2', 'in09', 'scat', 'gath', 'link', 'bridge'}
 INTRO_PATCH = {                                       # 옮겨 온 장마다 6차부터 더 손보는 일
-    'in02': [patch_call],
+    'in02': [patch_call, patch_hook_floats],              # 14차 뒤: 음성이 나오는 동안에도 다음 장과 같은 배경(떠다니는 옅은 기록 조각)
     'in03': [patch_person_click, patch_floats, patch_aura], 'in04': [patch_floats, patch_aura], 'in05': [patch_floats, patch_aura],
     'in07': [patch_heading7, patch_query7], 'hub2': [patch_hub],
     'in09': [patch_answer, patch_cap_size('in09'), patch_person_click],      # 11차: 큰 글 35pt, 장이 열리면 빈 화면이고 클릭해야 글과 대화 화면이 뜸
