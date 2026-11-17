@@ -60,6 +60,8 @@ FINDER_FOOT = ('Finder 자연어 검색의 공식 대상은 음성 녹음, 통�
 # 사용자의 설명(11-17): '28/51만 다른 용도로 한 번 이상 사용했다는 건데'. 두 지표는 한 사용자가 양쪽에 모두 셈될 수 있어(사용자: '중복 통계도 있는 듯') '이하'로 적음.
 # 처음에는 둘째 숫자를 전체에서 앱 검색을 뺀 33%로 잘못 적었다가 고침. 원래 값과 지표의 이름은 저장소에 올리지 않는 `원본/사내자료.json`에만 둔다(있으면 아래에서 비율을 확인).
 FU_APP, FU_ETC = 67, 55
+# Q2의 셋째 줄(11-17). 처음에는 '통화 화면과 키보드에서 바로 씁니다'로 적었고, 사용자의 말('통화 화면 → 다른 앱 사용 중에서도 진입 가능하며, 키보드 위에서')로 고침
+FINDER_UX = ['진입점도 다릅니다. Weave는 ', '다른 앱 사용 중에도 키보드 위에서 바로', ' 진입합니다. ', '(A-8)']
 FU_Q = '현재 Finder는 주로 어떤 용도로 쓰이나요?'
 FU_A = '현재 Finder 사용 통계를 보면 앱 검색이 %d%%이고, %d%% 이하만 다른 용도로 한 번 이상 사용했습니다.' % (FU_APP, FU_ETC)
 FU_NOTE = '넓은 범위를 검색할 수 있지만 앱 검색 말고는 잘 쓰이지 않습니다.'
@@ -126,6 +128,20 @@ def patch_finder(slide):
     in_answer = [t for t in names if int(t.getparent().find('{%s}rPr' % A_NS).get('sz')) == 1250]      # 답 안의 보라 낱말 둘(12.5pt). 그림 속 이름은 10pt
     assert [t.text for t in in_answer] == ['Reasoning Embedding', 'Query Rewriting'], [t.text for t in in_answer]
     in_answer[0].text, in_answer[1].text = 'Query Rewriting', 'Reasoning Embedding'
+    # 11-17 'Q2에 UX 진입점도 답에 조금 넣으면 좋을 것 같아. 공간 충분하니 한 줄 정도': 답(도형 19)은 세 줄이 들어가는 높이라 줄을 더 놓을 수 없음.
+    # 짧던 둘째, 셋째 줄을 한 줄로 모으고(그래서 '(자세한 설명은 D-5, D-8)'을 '(D-5, D-8)'로 줄임) 셋째 줄에 진입점을 적는다
+    p1, p2 = list(by_id['19'].iter('{%s}p' % A_NS))[1:]
+    r1, r2 = list(p1.findall('{%s}r' % A_NS)), list(p2.findall('{%s}r' % A_NS))
+    got = [r.find('{%s}t' % A_NS).text for r in r1 + r2]
+    assert got == ['Query Rewriting', '과, 단서 추론을 위한', 'Reasoning Embedding', '이 필요합니다. ', '(자세한 설명은 D-5, D-8)'], got
+    settext(r1[1], '과, 단서 추론을 위한 ')
+    line3 = [copy.deepcopy(r1[1]), copy.deepcopy(r1[0]), copy.deepcopy(r1[1]), copy.deepcopy(r2[2])]      # 검정, 보라 굵게, 검정, 회색 작은 글
+    for r in r2:
+        p1.append(r)
+    settext(r2[2], '(D-5, D-8)')
+    for r, text in zip(line3, FINDER_UX):
+        settext(r, text)
+        p2.append(r)
     from make import box as box_of, place
     P_NS = 'http://schemas.openxmlformats.org/presentationml/2006/main'
     sps = {sp.find('.//{%s}cNvPr' % P_NS).get('id'): sp for sp in live_tree(slide).iter('{%s}sp' % P_NS)}
@@ -351,12 +367,15 @@ PAGES = [
            'Finder도 임베딩으로 의미 검색을 합니다. 하지만 검색어 의도 분류가 되지 않아 결과가 일정하지 않습니다. '
            '‘주문’이라고 검색하면 배달의민족과 요기요가 나오지만, ‘음식 주문’이나 ‘배고파’라고 검색하면 나오지 않습니다.',
          more=[('Finder에 검색어 의도 분류가 들어가면 Weave 아닌가요?',
-                '의도 분류가 들어와도 충분하지 않습니다. 말에 숨은 단서를 알아보는 Reasoning Embedding과, 여러 단서를 연달아 찾게 해 주는 Query Rewriting이 함께 있어야 합니다.'),
+                '의도 분류가 들어와도 충분하지 않습니다. 여러 단서를 연달아 찾게 해 주는 Query Rewriting과, 말에 숨은 단서를 알아보는 Reasoning Embedding이 함께 있어야 합니다. '
+                '진입점도 다릅니다. Weave는 다른 앱 사용 중에도 키보드 위에서 바로 진입합니다. A-8에 정리했습니다.'),
                (FU_Q, FU_A + ' ' + FU_NOTE + ' Weave는 이 쓰임을 넓힙니다.'),
                ('Finder에 멀티홉 기능만 붙이면 되는 거 아닌가요?',
                 '멀티홉 기능만 붙이면 연쇄 탐색 한 칸만 생깁니다. 상황 인식, 질의 재작성, 연쇄 탐색이 한 파이프라인으로 돌아야 완성도 높은 결과가 나옵니다. C-4에 정리했습니다.')],
          basis=['장과 대본은 팀원(SB-Jo)의 `Appendix_Finder와의_차별점_QA.pptx`가 바탕. Q1과 Q2는 그대로. 검색 예시는 Galaxy 기기의 Finder에서 직접 검색한 결과(그 장의 각주).',
                 '덧붙인 것: 공식 검색 대상 각주, Q2의 ‘Appendix 참조’를 코드(D-5, D-8)로.',
+                'Q2(11-17, 사용자의 지시): 답에 진입점 한 줄을 더함(‘진입점도 다릅니다. Weave는 다른 앱 사용 중에도 키보드 위에서 바로 진입합니다. (A-8)’). 답의 높이가 세 줄이라 둘째, 셋째 줄을 한 줄로 모았고, '
+                '대본의 답도 화면의 차례(Query Rewriting, Reasoning Embedding)에 맞춤. 진입점은 A-8의 표: 통화 중 Swipe-up 검색창, 키보드의 실타래 버튼, 키보드 위의 제안.',
                 'Q3(11-17, 사용자의 지시): ‘Finder에 멀티홉 기능만 붙이면 되는 거 아닌가요?’를 화면에서 빼고 Finder 사용 통계로 바꿈. 뺀 질문과 답은 위의 ‘더 물으면’에 남김.',
                 '67%와 55% 이하: 사내 Finder 사용 통계(사용자가 11-16에 전달)의 지표로 셈함. 둘 다 Finder 전체 사용 대비이고, 앱 검색이 67%, 다른 용도로 한 번 이상 쓴 것이 55%. '
                 '한 사용자가 양쪽에 모두 셈될 수 있어 둘을 더하면 100%를 넘고, 그래서 ‘이하’로 적음(사용자의 설명, 11-17: ‘28/51만 다른 용도로 한 번 이상 사용했다’).',
