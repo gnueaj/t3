@@ -4,7 +4,7 @@ A-1 비교 지도(cmp_new 그대로), A-2 기능별 비교(표 하나), A-3 Find
 A-5 PDE와 함께 쓰는 방법(주고받는 그림 + 세 단계), A-6 AI Agent(Pickle, Muse)와의 관계, A-7 Apple과 Google의 개인 기록 검색, A-8 Galaxy AI 안에서의 구성.
 11차(팀 검토): 10차의 A-7(LLM에게 전부 읽히는 방식과의 차이)은 Q1만 속도 1 장(D-3)으로 옮기고 뺌. Apple과 Google 장(10차 A-8 → A-7)은 기능마다 무엇을 하는지를
 더 자세히 적고 쓰는 자리(진입점)를 보탬. A-3의 Q2는 Query Rewriting을 Reasoning Embedding 앞으로. 새 장 A-8(Galaxy AI에 들어간다면 어떤 구성인지).
-13차 뒤(11-17, 사용자의 지시): A-3의 Q3('멀티홉 기능만 붙이면')을 현재 Finder 사용 통계(앱 검색 67%, 다른 용도로 한 번 이상 55% 이하)로 바꿈. 뺀 질문은 대본의 '더 물으면'에 남음.
+13차 뒤(11-17, 사용자의 지시. 그날 저녁에 Q2와 자리를 바꿔 지금은 Q2): A-3의 Q3('멀티홉 기능만 붙이면')을 현재 Finder 사용 통계(앱 검색 67%, 다른 용도로 한 번 이상 55% 이하)로 바꿈. 뺀 질문은 대본의 '더 물으면'에 남음.
 3판: 문장 제목과 부제를 버리고, A-6과 A-7은 질문과 답 세 줄 + 작은 그림(A-3과 같은 짜임), A-4와 A-5는 그림 + 짧은 설명, A-2와 A-8은 표 하나.
 (11-15: '가전과 TV에서는 이미 하고 있지 않나요?' 장은 만들었다가 필요 없다는 검토를 받아 뺌.)
 숫자와 출처는 `Appendix_QnA_대본.md`의 근거에 있다.
@@ -67,7 +67,17 @@ FU_Q = '현재 Finder는 주로 어떤 용도로 쓰이나요?'
 FU_A = '현재 Finder 사용 통계를 보면 앱 검색이 %d%%이고, %d%% 이하만 다른 용도로 한 번 이상 사용했습니다.' % (FU_APP, FU_ETC)
 FU_NOTE = '넓은 범위를 검색할 수 있지만 앱 검색 말고는 잘 쓰이지 않습니다.'
 FU_CAP = 'Weave는 기록을 찾는 쓰임을 넓힙니다'
-FU_FOOT = ('   A3의 비율은 사내 Finder 사용 통계에서 셈한 값입니다(Finder 전체 사용 대비. 한 사용자가 양쪽에 모두 셈될 수 있습니다).')
+FU_FOOT = ('   A2의 비율은 사내 Finder 사용 통계에서 셈한 값입니다(Finder 전체 사용 대비. 한 사용자가 양쪽에 모두 셈될 수 있습니다).')
+# 11-17 저녁(사용자의 지시): ① Q2와 Q3의 자리를 바꿈(사용 통계가 Q2, 의도 분류가 Q3. 그래서 각주도 A3 → A2)
+# ② Q1의 답 'Finder도 임베딩 검색을 지원하지만, 검색어 의도 분류가 되지 않아 / 검색 결과가 일정하지 않습니다.'를 아래 두 줄로.
+#    첫 줄은 사용자의 글 그대로. 둘째 줄은 사용자의 초안('Q2(바뀐 Q2)에 따라서 Weave를 통해 고도화하면 좋을것이다?')을 내가 다듬은 문장이고 끝의 (Q2)가 사용 통계를 가리킴
+# ③ Q3의 '단서 추론을 위한' → '더 깊이 있는 단서 추론을 위한'(사용자의 글 '깊이있는'의 띄어쓰기만 고침).
+#    그 줄에 '(D-5, D-8)'을 둘 자리가 없어져(답 상자는 줄이 넘어가지 않음) 오른쪽 그림의 'Weave가 더하는 두 가지' 옆으로 옮김
+FINDER_A1 = ['Finder도 임베딩 검색을 지원하지만, 사용 맥락을 충분히 반영하지는 못하고 있습니다.',
+             'Weave를 통해 고도화하면 더 다양한 용도로 쓰일 수 있습니다. ', '(Q2)']
+FINDER_DEEP = '과, 더 깊이 있는 단서 추론을 위한 '
+FINDER_REF = '  (D-5, D-8)'              # 굵은 글 뒤라 빈칸 하나로는 붙어 보여 둘을 둠
+FINDER_DY = 175.7                      # 카드와 카드 사이(둘째 312.0, 셋째 487.7)
 _fu = HERE / '원본' / '사내자료.json'
 if _fu.exists():
     _u = json.loads(_fu.read_text(encoding='utf-8'))['finder_usage']
@@ -75,7 +85,7 @@ if _fu.exists():
 
 
 def patch_finder(slide):
-    """옮겨 온 Finder 장: Q3을 Finder 사용 통계로 바꾸고 'Appendix 참조'를 코드로 바꾼다. 돌려줌: 틀 위에 더 그릴 Slide."""
+    """옮겨 온 Finder 장: 멀티홉 질문을 Finder 사용 통계로 바꿔 Q2에 두고(의도 분류가 Q3), Q1의 답과 참조를 고친다. 돌려줌: 틀 위에 더 그릴 Slide."""
     from qna_lib import A_NS, P_NS as PN, live_tree
     tree = live_tree(slide)
     by_id = {}
@@ -83,7 +93,7 @@ def patch_finder(slide):
         c = el.find('.//{%s}cNvPr' % PN)
         if c is not None:
             by_id[c.get('id')] = el
-    # Q3의 질문과 답(도형 번호는 팀원 덱의 것): 질문 22, 답 24(문단 셋: 12.5pt 두 줄 + 11.5pt 회색 한 줄), 오른쪽 그림 62 ~ 75
+    # 팀원 덱의 Q3(도형 번호는 팀원 덱의 것. 아래에서 둘째 카드로 옮김): 질문 22, 답 24(문단 셋: 12.5pt 두 줄 + 11.5pt 회색 한 줄), 오른쪽 그림 62 ~ 75
     qt = list(by_id['22'].iter('{%s}t' % A_NS))
     assert [t.text for t in qt] == ['Finder에 멀티홉 기능만 붙이면 되는 거 아닌가요?'], [t.text for t in qt]
     qt[0].text = FU_Q
@@ -135,14 +145,30 @@ def patch_finder(slide):
     r1, r2 = list(p1.findall('{%s}r' % A_NS)), list(p2.findall('{%s}r' % A_NS))
     got = [r.find('{%s}t' % A_NS).text for r in r1 + r2]
     assert got == ['Query Rewriting', '과, 단서 추론을 위한', 'Reasoning Embedding', '이 필요합니다. ', '(자세한 설명은 D-5, D-8)'], got
-    settext(r1[1], '과, 단서 추론을 위한 ')
+    settext(r1[1], FINDER_DEEP)
     line3 = [copy.deepcopy(r1[1]), copy.deepcopy(r1[0]), copy.deepcopy(r1[1]), copy.deepcopy(r2[2])]      # 검정, 보라 굵게, 검정, 회색 작은 글
-    for r in r2:
+    small = copy.deepcopy(r2[2])                                # 회색 작은 글(11.5pt): Q1의 (Q2)에 씀
+    for r in r2[:2]:
         p1.append(r)
-    settext(r2[2], '(D-5, D-8)')
+    settext(r2[1], '이 필요합니다.')
+    p2.remove(r2[2])                                            # '(자세한 설명은 …)'은 이 줄에서 빼고 아래에서 그림의 글 옆에 적음
     for r, text in zip(line3, FINDER_UX):
         settext(r, text)
         p2.append(r)
+    cap = by_id['61'].find('.//{%s}r' % A_NS)                   # 그림 아래의 보라 글 'Weave가 더하는 두 가지'(9pt)
+    assert cap.find('{%s}t' % A_NS).text == 'Weave가 더하는 두 가지', cap.find('{%s}t' % A_NS).text
+    ref = copy.deepcopy(small)                                  # 답 안의 참조와 같은 회색 보통 굵기로, 크기만 그림의 글(9pt)에 맞춤
+    ref.find('{%s}rPr' % A_NS).set('sz', '900')
+    settext(ref, FINDER_REF)
+    cap.addnext(ref)
+    # Q1의 답(도형 14: 12.5pt 두 줄 + 11.5pt 회색 한 줄)
+    a1 = [pp.find('{%s}r' % A_NS) for pp in by_id['14'].iter('{%s}p' % A_NS)]
+    got = [r.find('{%s}t' % A_NS).text for r in a1]
+    assert got == ['Finder도 임베딩 검색을 지원하지만, 검색어 의도 분류가 되지 않아', '검색 결과가 일정하지 않습니다.', '같은 뜻이라도 어떤 말로 검색하느냐에 따라 결과가 달라집니다.'], got
+    settext(a1[0], FINDER_A1[0])
+    settext(a1[1], FINDER_A1[1])
+    settext(small, FINDER_A1[2])
+    a1[1].addnext(small)
     from make import box as box_of, place
     P_NS = 'http://schemas.openxmlformats.org/presentationml/2006/main'
     sps = {sp.find('.//{%s}cNvPr' % P_NS).get('id'): sp for sp in live_tree(slide).iter('{%s}sp' % P_NS)}
@@ -154,12 +180,18 @@ def patch_finder(slide):
     place(plus, x=x0 + w_qr)
     for sp in re_box:
         place(sp, x=x0 + w_qr + w_plus)
+    # Q2와 Q3의 자리 바꾸기: 카드, 'Q2.'와 'Q3.', 'A.', 그림의 바탕은 두고 내용(질문, 답, 그림)만 위아래로 옮긴다
+    from make import shift
+    for i in ['17', '19'] + [str(k) for k in range(48, 62)]:      # 의도 분류의 질문과 답, 그림 → 셋째 카드
+        shift(by_id[i], dy=FINDER_DY)
+    for i in ('22', '24'):                                        # 사용 통계의 질문과 답 → 둘째 카드
+        shift(by_id[i], dy=-FINDER_DY)
     s = Slide('qa_finder', trans=('fade', 400), bar=False, notes='')
     frame(s, 'A-3')
     s.add('qa/ffoot', [T('qa/ffoot', 50, 678, 1180, 18, FINDER_FOOT, size=8.5, color='8E88A0')])   # 옮겨 온 장의 각주(x=50)에 맞춤
-    # Q3의 그림: 그 장의 오른쪽 칸(763.2, 502.1, 424.3 × 130.6) 안에 막대 두 줄(둘 다 Finder 전체 사용 대비라 겹침. 한 줄로 나누지 않음).
+    # 사용 통계(Q2)의 그림: 그 장의 오른쪽 칸(763.2, 326.4, 424.3 × 130.6. 11-17 저녁까지는 셋째 카드의 502.1) 안에 막대 두 줄(둘 다 Finder 전체 사용 대비라 겹침. 한 줄로 나누지 않음).
     # 글씨는 그 장의 다른 그림과 같게(9pt 이름, 보라 굵은 한 줄). 사용자가 가장 중요하다고 한 쪽(다른 용도)을 보라로, 앱 검색은 옅은 색으로
-    px, py, pw = 763.2, 502.1, 424.3
+    px, py, pw = 763.2, 502.1 - FINDER_DY, 424.3
     lx, lw_ = px + 20, 136
     bx = lx + lw_ + 4
     bw = 158
@@ -172,7 +204,7 @@ def patch_finder(slide):
                 R('qa/fu/t%d' % k, bx, ry + 3, bw, 20, prst='roundRect', radius=10, fill='FFFFFF', line='DDD6F3', line_w=1),
                 R('qa/fu/f%d' % k, bx, ry + 3, bw * pct / 100, 20, prst='roundRect', radius=10, fill=col, line=None),
                 T('qa/fu/v%d' % k, vx, ry, px + pw - 10 - vx, 26, val, size=12.5, color=vcol, weight='b', anchor='ctr')]
-    out.append(T('qa/fu/cap', px, 601.0, pw, 19.2, FU_CAP, size=9, color=PURPLE, weight='b', align='c', anchor='ctr'))
+    out.append(T('qa/fu/cap', px, py + 98.9, pw, 19.2, FU_CAP, size=9, color=PURPLE, weight='b', align='c', anchor='ctr'))
     s.add('qa/fu', out)
     return s
 
@@ -365,16 +397,22 @@ PAGES = [
     Page('A-3', 'Finder와의 차이', None, foreign=(FINDER_SRC, 1, patch_finder),
          q='Finder도 의미 검색을 하는데, Finder를 조금 고치면 되는 것 아닌가요?',
          a='Finder는 찾은 기록을 목록으로 보여 주는 검색창이고, Weave는 단서를 이어 답을 만들어 쓰던 자리에 넣어 주는 기능입니다. '
-           'Finder도 임베딩으로 의미 검색을 합니다. 하지만 검색어 의도 분류가 되지 않아 결과가 일정하지 않습니다. '
-           '‘주문’이라고 검색하면 배달의민족과 요기요가 나오지만, ‘음식 주문’이나 ‘배고파’라고 검색하면 나오지 않습니다.',
-         more=[('Finder에 검색어 의도 분류가 들어가면 Weave 아닌가요?',
+           'Finder도 임베딩으로 의미 검색을 합니다. 하지만 사용 맥락을 충분히 반영하지는 못하고 있습니다. '
+           '‘주문’이라고 검색하면 배달의민족과 요기요가 나오지만, ‘음식 주문’이나 ‘배고파’라고 검색하면 나오지 않습니다. '
+           'Weave를 통해 고도화하면 더 다양한 용도로 쓰일 수 있습니다.',
+         more=[(FU_Q, FU_A + ' ' + FU_NOTE + ' Weave는 이 쓰임을 넓힙니다.'),
+               ('Finder에 검색어 의도 분류가 들어가면 Weave 아닌가요?',
                 '의도 분류가 들어와도 충분하지 않습니다. 여러 단서를 연달아 찾게 해 주는 Query Rewriting과, 말에 숨은 단서를 알아보는 Reasoning Embedding이 함께 있어야 합니다. '
                 '진입점도 다릅니다. Weave는 다른 앱 사용 중에도, 키보드 위에서도 바로 진입합니다. A-8에 정리했습니다.'),
-               (FU_Q, FU_A + ' ' + FU_NOTE + ' Weave는 이 쓰임을 넓힙니다.'),
                ('Finder에 멀티홉 기능만 붙이면 되는 거 아닌가요?',
                 '멀티홉 기능만 붙이면 연쇄 탐색 한 칸만 생깁니다. 상황 인식, 질의 재작성, 연쇄 탐색이 한 파이프라인으로 돌아야 완성도 높은 결과가 나옵니다. C-4에 정리했습니다.')],
-         basis=['장과 대본은 팀원(SB-Jo)의 `Appendix_Finder와의_차별점_QA.pptx`가 바탕. Q1과 Q2는 그대로. 검색 예시는 Galaxy 기기의 Finder에서 직접 검색한 결과(그 장의 각주).',
-                '덧붙인 것: 공식 검색 대상 각주, Q2의 ‘Appendix 참조’를 코드(D-5, D-8)로.',
+         basis=['장과 대본은 팀원(SB-Jo)의 `Appendix_Finder와의_차별점_QA.pptx`가 바탕. 검색 예시는 Galaxy 기기의 Finder에서 직접 검색한 결과(그 장의 각주).',
+                '11-17 저녁(사용자의 지시): Q2와 Q3의 자리를 바꿈. 지금은 Q2가 Finder 사용 통계, Q3이 의도 분류(Query Rewriting, Reasoning Embedding, 진입점)이고 각주의 ‘A3의 비율’도 ‘A2의 비율’로 고침. 아래 줄의 Q2, Q3은 바꾸기 전의 번호.',
+                '같은 날 Q1의 답: ‘Finder도 임베딩 검색을 지원하지만, 검색어 의도 분류가 되지 않아 / 검색 결과가 일정하지 않습니다.’ → ‘Finder도 임베딩 검색을 지원하지만, 사용 맥락을 충분히 반영하지는 못하고 있습니다.’(사용자의 글 그대로) / '
+                '‘Weave를 통해 고도화하면 더 다양한 용도로 쓰일 수 있습니다. (Q2)’(사용자의 초안 ‘Q2(바뀐 Q2)에 따라서 Weave를 통해 고도화하면 좋을것이다?’를 내가 다듬은 문장. 사용자의 확인은 아직 없음). 회색 줄은 그대로.',
+                '같은 날 Q3의 답: ‘단서 추론을 위한’ → ‘더 깊이 있는 단서 추론을 위한’(사용자의 글 ‘깊이있는’의 띄어쓰기만 고침). 줄이 길어져 ‘(D-5, D-8)’은 오른쪽 그림의 ‘Weave가 더하는 두 가지’ 옆으로 옮김. '
+                '말할 답의 ‘더 물으면’은 표현이 달라(‘말에 숨은 단서를 알아보는 Reasoning Embedding’) 그대로 둠.',
+                '덧붙인 것: 공식 검색 대상 각주, 팀원 장의 ‘Appendix 참조’를 코드(D-5, D-8)로.',
                 'Q2(11-17, 사용자의 지시): 답에 진입점 한 줄을 더함(‘진입점도 다릅니다. Weave는 다른 앱 사용 중에도, 키보드 위에서도 바로 진입합니다. (A-8)’). 답의 높이가 세 줄이라 둘째, 셋째 줄을 한 줄로 모았고, '
                 '대본의 답도 화면의 차례(Query Rewriting, Reasoning Embedding)에 맞춤. 진입점은 둘: 다른 앱을 쓰는 중에 여는 검색창(UX1, Swipe-up)과 키보드(UX2의 실타래 버튼, UX3의 키보드 위 제안). A-8의 표와 같음.',
                 'Q3(11-17, 사용자의 지시): ‘Finder에 멀티홉 기능만 붙이면 되는 거 아닌가요?’를 화면에서 빼고 Finder 사용 통계로 바꿈. 뺀 질문과 답은 위의 ‘더 물으면’에 남김.',
