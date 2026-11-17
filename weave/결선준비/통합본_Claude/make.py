@@ -1033,19 +1033,8 @@ def build(dst):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--png', action='store_true')
-    ap.add_argument('--internal', action='store_true', help='사내 자료(원본/사내자료.json)를 넣은 덱을 out/에 따로 만든다. 저장소에는 올리지 않는다')
     a = ap.parse_args()
     OUT.mkdir(exist_ok=True)
-    if a.internal:                                      # 공개 저장소에 올리지 않는 판: Finder 사용 통계와 서면 답변을 준 분의 이름이 들어감(B-6)
-        import os
-        os.environ['WEAVE_INTERNAL'] = '1'
-        dst = OUT / 'Weave_통합본_Claude_사내자료포함.pptx'
-        order = build(dst)
-        print('→ out/' + dst.name, '%.1f MB' % (dst.stat().st_size / 1e6), len(order), '장 (저장소에 올리지 않음)')
-        if a.png:
-            pngs = render_c.png(dst, OUT / 'png_internal', 1600, 900)
-            print('png', len(pngs))
-        return
     order = build(DST)
     print('→', DST.name, '%.1f MB' % (DST.stat().st_size / 1e6), len(order), '장')
     if a.png:

@@ -10,7 +10,7 @@
 - **Q&A 장 (40쪽)**: 39쪽 다음에 질의응답 동안 띄워 두는 장이에요. 본 발표가 끝났을 때 Appendix의 목차가 바로 보이지 않아요.
 - **Appendix (41~80쪽, 40장)**: 목차 한 장, A 기존 기술과의 차이 8장, B 상품화와 사업성 8장, C 시나리오 더 보기 3장과 동작 방식 6장, D '모델과 성능, Query Rewriter' 7장과 'Reasoning Embedding과 데이터' 4장, 출처 3장이에요. 장마다 답할 말은 `Appendix_QnA_대본.md`에 있어요.
 - **시간 숫자**: EmbeddingGemma 2를 Galaxy S26 Ultra의 NPU에서 잰 8ms가 기준이에요. 같은 모델의 모델 카드 값(GPU 25.9ms, CPU 27.1ms)과의 비율로 sLLM의 공개 측정값을 NPU 값으로 환산해요(`qna_num.py`). 11차부터 내세우는 숫자는 기준 속도 하나(Gemma 4 E2B의 환산값, 출력 초당 169토큰)에 출력 토큰 수만 바꿔 셈해요: 질의 재작성 0.2~0.6초, 이름 추출 약 0.1초, 3줄 요약 0.5~0.9초. 벡터 검색 시간은 이 컴퓨터에서 직접 쟀어요(`tools/exp_search_time.py`: 기록 10만 건 4.9ms, 100만 건 52ms).
-- **사내 자료**: Finder 사용 통계와 서면 답변을 준 분의 이름은 공개 저장소에 올리지 않아요. `원본/사내자료.json`에 두고 `make.py --internal`로 만든 덱(`out/Weave_통합본_Claude_사내자료포함.pptx`)의 B-6에만 들어가요.
+- **Finder 사용 통계**: A-3(44쪽)의 Q3에 비율로 들어 있어요(앱 검색 67%, 다른 용도로 한 번 이상 쓴 경우 55% 이하). 원래 값과 지표의 이름은 덱과 문서에 적지 않고 `원본/사내자료.json`(저장소에 올리지 않음)에만 둬요. 서면 답변을 준 분의 성함도 적지 않아요.
 
 앞선 차수: 10차(11월 15~16일)에는 Appendix를 발표 뒤 질의응답용으로 다시 짰어요. 장은 세 가지 꼴 가운데 하나예요: 질문과 답 세 줄에 작은 그림, 파이프라인 그림(단계마다 본 발표의 실제 기록)과 시간 띠, 표나 막대 하나와 요점. 화면의 글과 답은 Carbon(Gemini)의 검토를 받아 고쳤어요. 9차에서는 11월 14일에 받은 검토를 넣었어요. 비즈니스 임팩트 장을 본 발표에서 빼고 연표 다음에 '미래의 Weave'(35쪽)를 넣었고, 연표의 두 줄 사이를 조금 좁혔고, 맺는 장(39쪽)에서 앱들이 실로 이어지게 했고, 29쪽과 30쪽의 대본에서 질의 재작성기와 Reasoning Embedding을 핵심 요소로 짚었고, 34쪽과 36쪽의 대본을 다듬었어요. 6쪽의 '기억'은 '기록'으로 바꿨고, 29~31쪽의 Query Rewriting 판 이름 옆에 회색 뱃지 sLLM을 붙였어요. 2쪽에는 장이 열리면 저절로 나오는 통화 음성을 넣었고, 17~19쪽에서 손으로 쓴 듯한 글 '쓱!', '톡!', '반짝!'을 뺐고, 2, 17, 24, 26, 30, 35쪽의 대본을 11월 15일에 받은 글로 바꿨어요. 9차에 바꾼 곳은 `대본.md`의 '8차에서 바꾼 곳'에 쪽마다 적었어요.
 
@@ -48,7 +48,7 @@
 | 36~38 | 마무리 세 장 | 같은 덱 6~8쪽의 문구를 사진 위에(글은 모두 흰색). 사진은 G15, A2, M4 |
 | 39 | 맺는 장 | 새로 그림(`slides_new.py`의 `s_bye`). 15쪽처럼 로고 아래에서 앱들이 실 한 가닥으로 이어져요(클릭 없이) |
 | 40 | Q&A | 새로 그림(`slides_new.py`의 `s_qa`). 질의응답 동안 띄워 두는 장 |
-| 41~80 | Appendix (질의응답용) | 목차(41쪽), A 기존 기술과의 차이 8장(42~49쪽), B 상품화와 사업성 8장(50~57쪽), C 시나리오 더 보기 3장(58~60쪽, 장마다 세 장면)과 동작 방식 6장(61~66쪽), D '모델과 성능, Query Rewriter' 7장(67~73쪽)과 'Reasoning Embedding과 데이터' 4장(74~77쪽), 출처 3장(78~80쪽). `qna.py`가 조립하고(장의 차례는 코드의 차례) 장은 `qna_a.py` ~ `qna_r.py`, 부품은 `qna_lib.py`, 시간 숫자는 `qna_num.py`에 있어요. 44쪽(Finder)은 팀원(SB-Jo)의 장을 옮겨 와 Query Rewriting과 Reasoning Embedding의 차례를 바꿨고, 54쪽(온디바이스)은 팀원(ysy19)의 `apx_new.py`예요 |
+| 41~80 | Appendix (질의응답용) | 목차(41쪽), A 기존 기술과의 차이 8장(42~49쪽), B 상품화와 사업성 8장(50~57쪽), C 시나리오 더 보기 3장(58~60쪽, 장마다 세 장면)과 동작 방식 6장(61~66쪽), D '모델과 성능, Query Rewriter' 7장(67~73쪽)과 'Reasoning Embedding과 데이터' 4장(74~77쪽), 출처 3장(78~80쪽). `qna.py`가 조립하고(장의 차례는 코드의 차례) 장은 `qna_a.py` ~ `qna_r.py`, 부품은 `qna_lib.py`, 시간 숫자는 `qna_num.py`에 있어요. 44쪽(Finder)은 팀원(SB-Jo)의 장을 옮겨 와 Query Rewriting과 Reasoning Embedding의 차례를 바꾸고 Q3을 현재 Finder 사용 통계로 바꿨고, 54쪽(온디바이스)은 팀원(ysy19)의 `apx_new.py`예요 |
 
 ### Appendix의 코드 (13차)
 
@@ -93,7 +93,6 @@
 ~/.cache/weave-tools/venv/bin/python doc.py                 # 대본.md
 ~/.cache/weave-tools/venv/bin/python qna_doc.py             # Appendix_QnA_대본.md
 ~/.cache/weave-tools/venv/bin/python qna_make.py            # Weave_Appendix_Claude.pptx (Appendix만 담은 덱)
-~/.cache/weave-tools/venv/bin/python make.py --internal     # 사내 자료(원본/사내자료.json)를 넣은 덱 → out/Weave_통합본_Claude_사내자료포함.pptx (저장소에 올리지 않음)
 ~/.cache/weave-tools/venv/bin/python tools/overview.py      # 한눈에.jpg
 ~/.cache/weave-tools/venv/bin/python tools/fx_try.py        # 기대효과 한 장(fx_new.py의 s_fx)을 앞뒤 장과 함께 찍은 영상, 그 장만 담은 덱, 한눈에.jpg → 기대효과_후보/ (8차에는 다시 돌리지 않음)
 ~/.cache/weave-tools/venv/bin/python tools/cmp_try.py       # 비교 장 후보 넷(cmp_new.py의 s_cmpa~s_cmpd)의 영상과 덱 → 비교장표_후보/

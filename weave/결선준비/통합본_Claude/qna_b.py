@@ -11,8 +11,6 @@
   설문 장은 210명의 응답을 CSV에서 다시 집계해 한 장에 그림(11차의 '직접 측정하거나 확인한 것' 장을 빼고 넣음).
 시간은 `qna_num.py`가 셈한다. 근거는 `Appendix_QnA_대본.md`.
 """
-import json
-import os
 from pathlib import Path
 
 from ui import (BODY, INK, LAV, LAV2, MUTE, PURPLE, PURPLE2, RING, SUB, C, R, T, chip, tw)
@@ -23,15 +21,6 @@ from qna_lib import (BAR_SOFT, GRAY_BG, Page, arrow, box, data_row, footnote, fr
 
 HERE = Path(__file__).resolve().parent
 X, W = 70, 1140
-
-
-def internal():
-    """공개 저장소에 올리지 않는 사내 자료(원본/사내자료.json). WEAVE_INTERNAL=1로 만들 때만 장에 넣는다(make.py --internal).
-    보통의 덱(저장소에 올리는 것)에는 들어가지 않는다."""
-    f = HERE / '원본' / '사내자료.json'
-    if os.environ.get('WEAVE_INTERNAL') == '1' and f.exists():
-        return json.loads(f.read_text(encoding='utf-8'))
-    return {}
 
 
 # ------------------------------------------------------------------ D-2 메모리와 저장 공간
@@ -343,7 +332,6 @@ B7_FINDER = [['삼성 기본 기능 (1P)', '설치된 앱, 설정, 연락처, �
 
 
 def s_scope():
-    it = internal()
     s = page_slide('qb_scope', 'B-6', [('읽을 수 있는 기록의 범위', INK)])
     y = 100
     y += pipeline(s, 'qb/f', y, None, B7, gap=16, name_pt=13.5, desc_pt=11.5, arrows=False) + 10
@@ -351,29 +339,13 @@ def s_scope():
                     T('qb/no/t', X + 16, y, W - 32, 34, [[('읽지 않는 것  ', dict(color='B4232B', weight='b')), ('통화 내용과 녹음, 알림을 꺼 둔 대화방, 다른 앱의 화면', dict(color=BODY))]],
                       size=12, anchor='ctr')])
     y += 34 + 20
-    who = it.get('finder_person', 'Finder 개발 파트장')
-    lw = 640 if it.get('finder_usage') else W
-    label(s, 'qb/l1', X, y, 'Finder가 지금 검색하는 범위 (%s 서면 답변, 2026. 11)' % who)
-    h1 = tbl(s, 'qb/t', X, y + 30, lw, [30, 70], ['구분', '검색 대상'], B7_FINDER, pady=7, pt=11.5)
-    if it.get('finder_usage'):
-        fu = it['finder_usage']
-        share = fu['app'] / fu['all'] * 100
-        rx, rw_ = X + lw + 24, W - lw - 24
-        label(s, 'qb/l2', rx, y, 'Finder가 실제로 쓰이는 곳 (사내 사용 통계)')
-        lines = rwrap('넓은 범위를 검색할 수 있지만 **앱을 찾는 데** 가장 많이 쓰입니다. Weave는 같은 범위에서 **기록을 이어 찾는 쓰임**을 엽니다.', 11.5, rw_ - 150 - 40)
-        s.add('qb/fu', [panel('qb/fu/bg', rx, y + 30, rw_, h1),
-                        T('qb/fu/n', rx + 14, y + 30, 136, h1 - 22, '%.0f%%' % share, size=34, color=PURPLE, weight='b', align='c', anchor='ctr'),
-                        T('qb/fu/c', rx + 14, y + 30 + h1 - 34, 136, 20, 'Finder 사용 가운데 앱 검색', size=9.5, color=SUB, align='c', anchor='ctr'),
-                        T('qb/fu/t', rx + 160, y + 30 + (h1 - lh_of(11.5, 1.5) * len(lines)) / 2, rw_ - 150 - 40, lh_of(11.5, 1.5) * len(lines) + 4, lines, size=11.5,
-                          color=BODY, lnspc=lh_of(11.5, 1.5) * 0.75)])
+    # Finder 사용 통계는 A-3의 Q3에 있음(11-17: 'Finder 페이지를 따로 만들지 않고 기존 덱에'). 답한 분의 성함은 적지 않음('성함까지는 필요 없고')
+    label(s, 'qb/l1', X, y, 'Finder가 지금 검색하는 범위 (Finder 개발 파트장 서면 답변, 2026. 11)')
+    h1 = tbl(s, 'qb/t', X, y + 30, W, [30, 70], ['구분', '검색 대상'], B7_FINDER, pady=7, pt=11.5)
     y += 30 + h1 + 18
     y += points(s, 'qb/p', X, y, W, ['**Weave는 Finder가 이미 검색하는 범위에서 시작합니다.** 필요한 기록의 대부분은 삼성 기본 앱과 PDE의 개인 정보에 있습니다. 녹음은 색인하지 않습니다.',
                                     '**외부 앱의 기록은 사용자가 허용한 알림으로 읽습니다.** 삼성의 PDI와 Galaxy Watch가 이미 쓰는 권한입니다.'], gap=7, pt=12) + 12
-    foot = ['Finder의 범위는 서면 답변의 내용 그대로임. 알림과 내보낸 파일로 읽는 방법은 B-7, 권한과 사생활 보호는 B-8.']
-    if it.get('finder_usage'):
-        foot.append('사내 사용 통계의 지표: Finder 전체 사용 %.2f, 그 가운데 Finder로 앱을 검색 %.2f (%.2f ÷ %.2f = %.0f%%). 공개 저장소의 덱에는 넣지 않음.'
-                    % (fu['all'], fu['app'], fu['app'], fu['all'], share))
-    footnote(s, foot, y)
+    footnote(s, ['Finder의 범위는 서면 답변의 내용 그대로임. Finder가 실제로 쓰이는 비율은 A-3. 알림과 내보낸 파일로 읽는 방법은 B-7, 권한과 사생활 보호는 B-8.'], y)
     return s
 
 
@@ -613,8 +585,9 @@ PAGES = [
          basis=['11차(11-16)에 새로 넣은 장: 팀 검토의 예상 질문 5번(서드파티 데이터 권한). 어떤 앱은 이미 되고 어떤 앱은 알림으로 간접적으로 되는지를 한 장에.',
                 '11-16 저녁: 서드파티 앱을 장점으로 적은 문장을 뺌(사용자의 지시: 협약이 필요할 수도 있음). ‘외부 메신저는 제휴를 기다리지 않고 알림으로 읽습니다’, ‘제휴하면 그만큼 범위가 넓어집니다’, ‘외부 앱과의 제휴를 기다리지 않아도 시작할 수 있고’를 빼고, 협의를 묻는 물음에는 협의가 필요할 수 있다고 답함.',
                 'Finder의 범위는 Finder 개발 파트장의 서면 답변(2026. 11, 사용자가 전달)을 표로 옮긴 것: 삼성 기본 기능(설치된 앱, 설정, 연락처, 캘린더, 갤러리, 노트, 파일, 음성 녹음 등), '
-                'PDE 개인 정보(예약, 여행, 쿠폰 등), 계약을 맺은 외부 앱(Spotify, Melon, YouTube, Netflix, TikTok), 웨어러블 기기와 스토어. 답변의 원문과 답한 분의 이름은 공개 저장소에 적지 않음.',
-                'Finder 사용 통계(사내 수치)는 공개 저장소의 덱과 이 글에 넣지 않음. `원본/사내자료.json`에 두고 `make.py --internal`로 만든 덱에만 들어감.',
+                'PDE 개인 정보(예약, 여행, 쿠폰 등), 계약을 맺은 외부 앱(Spotify, Melon, YouTube, Netflix, TikTok), 웨어러블 기기와 스토어. 답변의 원문과 답한 분의 이름은 적지 않음(사용자: 성함까지는 필요 없음, 11-17).',
+                'Finder 사용 통계는 A-3의 Q3에 비율(앱 검색 67%, 다른 용도로 한 번 이상 55% 이하)로 넣음(11-17, 사용자의 지시). 11차부터 13차까지는 사내 수치라 따로 만든 덱의 이 장에만 넣었음. '
+                '원래 값은 `원본/사내자료.json`(저장소에 올리지 않음)에만 둠.',
                 '알림으로 읽는 방법과 근거(NotificationListenerService, Samsung PDI)는 B-7. Weave가 읽는 삼성 기본 앱의 목록은 B-8과 시나리오(문자, 연락처)에 맞춤.',
                 'Finder의 범위에는 음성 녹음이 있지만 Weave는 녹음을 색인하지 않는 것으로 적음: 사용자의 기준(통화 녹음과 음성 녹음은 근거로 쓰지 않음, 11-03)과 B-8의 ‘통화 내용은 듣지도 저장하지도 않습니다’에 맞춤(Carbon이 짚은 어긋남, 11-16).']),
     Page('B-7', '카카오톡을 읽는 방법', s_kakao,

@@ -4,10 +4,13 @@ A-1 비교 지도(cmp_new 그대로), A-2 기능별 비교(표 하나), A-3 Find
 A-5 PDE와 함께 쓰는 방법(주고받는 그림 + 세 단계), A-6 AI Agent(Pickle, Muse)와의 관계, A-7 Apple과 Google의 개인 기록 검색, A-8 Galaxy AI 안에서의 구성.
 11차(팀 검토): 10차의 A-7(LLM에게 전부 읽히는 방식과의 차이)은 Q1만 속도 1 장(D-3)으로 옮기고 뺌. Apple과 Google 장(10차 A-8 → A-7)은 기능마다 무엇을 하는지를
 더 자세히 적고 쓰는 자리(진입점)를 보탬. A-3의 Q2는 Query Rewriting을 Reasoning Embedding 앞으로. 새 장 A-8(Galaxy AI에 들어간다면 어떤 구성인지).
+13차 뒤(11-17, 사용자의 지시): A-3의 Q3('멀티홉 기능만 붙이면')을 현재 Finder 사용 통계(앱 검색 67%, 다른 용도로 한 번 이상 55% 이하)로 바꿈. 뺀 질문은 대본의 '더 물으면'에 남음.
 3판: 문장 제목과 부제를 버리고, A-6과 A-7은 질문과 답 세 줄 + 작은 그림(A-3과 같은 짜임), A-4와 A-5는 그림 + 짧은 설명, A-2와 A-8은 표 하나.
 (11-15: '가전과 TV에서는 이미 하고 있지 않나요?' 장은 만들었다가 필요 없다는 검토를 받아 뺌.)
 숫자와 출처는 `Appendix_QnA_대본.md`의 근거에 있다.
 """
+import copy
+import json
 from pathlib import Path
 
 from ui import (BODY, INK, LAV, LAV2, MUTE, PURPLE, PURPLE2, RING, SUB, R, T)
@@ -52,18 +55,62 @@ def s_a2():
 # ------------------------------------------------------------------ A-3 Finder (옮겨 온 장을 손봄)
 FINDER_FOOT = ('Finder 자연어 검색의 공식 대상은 음성 녹음, 통화 녹음, 캘린더, 노트, 리마인더, 내 파일입니다 '
                '(Samsung 지원, "Understanding Finder on Galaxy phones").')
+# Q3(11-17, 사용자의 지시): '현재 finder 사용 통계를 보면 ~~가 67%고, -이하만 다른 용도로 사용한다 … 기존 덱 질문 페이지에서 중요하지 않은 거 하나 지우거나 하나 추가'.
+# 비율은 사내 Finder 사용 통계의 세 지표로 셈함(모두 Finder 전체 사용 대비): 앱 검색 = 67%, 다른 용도로 한 번 이상 사용 = 55%.
+# 사용자의 설명(11-17): '28/51만 다른 용도로 한 번 이상 사용했다는 건데'. 두 지표는 한 사용자가 양쪽에 모두 셈될 수 있어(사용자: '중복 통계도 있는 듯') '이하'로 적음.
+# 처음에는 둘째 숫자를 전체에서 앱 검색을 뺀 33%로 잘못 적었다가 고침. 원래 값과 지표의 이름은 저장소에 올리지 않는 `원본/사내자료.json`에만 둔다(있으면 아래에서 비율을 확인).
+FU_APP, FU_ETC = 67, 55
+FU_Q = '현재 Finder는 주로 어떤 용도로 쓰이나요?'
+FU_A = '현재 Finder 사용 통계를 보면 앱 검색이 %d%%이고, %d%% 이하만 다른 용도로 한 번 이상 사용했습니다.' % (FU_APP, FU_ETC)
+FU_NOTE = '넓은 범위를 검색할 수 있지만 앱 검색 말고는 잘 쓰이지 않습니다.'
+FU_CAP = 'Weave는 기록을 찾는 쓰임을 넓힙니다'
+FU_FOOT = ('   A3의 비율은 사내 Finder 사용 통계에서 셈한 값입니다(Finder 전체 사용 대비. 한 사용자가 양쪽에 모두 셈될 수 있습니다).')
+_fu = HERE / '원본' / '사내자료.json'
+if _fu.exists():
+    _u = json.loads(_fu.read_text(encoding='utf-8'))['finder_usage']
+    assert round(_u['app'] / _u['all'] * 100) == FU_APP and round(_u['etc'] / _u['all'] * 100) == FU_ETC, '사내 자료의 값과 장의 비율이 다름'
 
 
 def patch_finder(slide):
-    """옮겨 온 Finder 장: 'Appendix 참조'를 코드로 바꾼다. 돌려줌: 틀 위에 더 그릴 Slide."""
-    refs = iter(['(자세한 설명은 D-5, D-8)', '(자세한 설명은 C-4)'])
-    from qna_lib import A_NS, live_tree
+    """옮겨 온 Finder 장: Q3을 Finder 사용 통계로 바꾸고 'Appendix 참조'를 코드로 바꾼다. 돌려줌: 틀 위에 더 그릴 Slide."""
+    from qna_lib import A_NS, P_NS as PN, live_tree
+    tree = live_tree(slide)
+    by_id = {}
+    for el in tree:
+        c = el.find('.//{%s}cNvPr' % PN)
+        if c is not None:
+            by_id[c.get('id')] = el
+    # Q3의 질문과 답(도형 번호는 팀원 덱의 것): 질문 22, 답 24(문단 셋: 12.5pt 두 줄 + 11.5pt 회색 한 줄), 오른쪽 그림 62 ~ 75
+    qt = list(by_id['22'].iter('{%s}t' % A_NS))
+    assert [t.text for t in qt] == ['Finder에 멀티홉 기능만 붙이면 되는 거 아닌가요?'], [t.text for t in qt]
+    qt[0].text = FU_Q
+    paras = list(by_id['24'].iter('{%s}p' % A_NS))
+    runs = [list(pp.findall('{%s}r' % A_NS)) for pp in paras]
+    assert [len(r) for r in runs] == [3, 1, 1], [len(r) for r in runs]
+
+    def settext(run, text):
+        run.find('{%s}t' % A_NS).text = text
+    head, tail = FU_A.split('앱 검색이 %d%%' % FU_APP)
+    tail1, tail2 = tail.split('%d%% 이하' % FU_ETC)
+    settext(runs[0][0], head)                                  # '현재 Finder 사용 통계를 보면 '
+    settext(runs[0][1], '앱 검색이 %d%%' % FU_APP)            # 보라, 굵게
+    settext(runs[0][2], tail1.rstrip())                        # '이고,'
+    hi = copy.deepcopy(runs[0][1])
+    settext(hi, '%d%% 이하' % FU_ETC)
+    paras[1].insert(list(paras[1]).index(runs[1][0]), hi)
+    settext(runs[1][0], tail2)                                 # '만 다른 용도로 한 번 이상 사용했습니다.'
+    settext(runs[2][0], FU_NOTE)
+    for i in range(62, 76):                                    # 멀티홉 그림(파이프라인 세 칸과 빨간 테두리, 아래 한 줄)
+        tree.remove(by_id[str(i)])
+    foot = [t for t in tree.iter('{%s}t' % A_NS) if t.text and t.text.startswith('* A1의 검색 예시는')]
+    assert len(foot) == 1, len(foot)
+    foot[0].text += FU_FOOT
     n = 0
-    for t in live_tree(slide).iter('{%s}t' % A_NS):
+    for t in tree.iter('{%s}t' % A_NS):
         if t.text and '(자세한 설명은 Appendix 참조)' in t.text:
-            t.text = t.text.replace('(자세한 설명은 Appendix 참조)', next(refs))
+            t.text = t.text.replace('(자세한 설명은 Appendix 참조)', '(자세한 설명은 D-5, D-8)')
             n += 1
-    assert n == 2, 'Finder 장의 글이 바뀜: Appendix 참조 %d곳' % n
+    assert n == 1, 'Finder 장의 글이 바뀜: Appendix 참조 %d곳' % n
     # 11차(11-16) 'q2 query rewriting이랑 reasoning embedding 순서 바꾸기': 파이프라인의 차례(02 질의 재작성 → 03 연쇄 탐색)대로 Query Rewriting을 앞에.
     # 답의 글 토막 셋을 바꾸고, 오른쪽 그림의 두 칸(Reasoning Embedding 144px, Query Rewriting 119px)과 그 사이의 +를 자리만 맞바꾼다
     swaps = [('검색어 의도 분류만으로는 충분하지 않습니다. 단서 추론을 위한', '검색어 의도 분류만으로는 충분하지 않습니다. 여러 단서를 연달아 찾기 위한'),
@@ -93,6 +140,23 @@ def patch_finder(slide):
     s = Slide('qa_finder', trans=('fade', 400), bar=False, notes='')
     frame(s, 'A-3')
     s.add('qa/ffoot', [T('qa/ffoot', 50, 678, 1180, 18, FINDER_FOOT, size=8.5, color='8E88A0')])   # 옮겨 온 장의 각주(x=50)에 맞춤
+    # Q3의 그림: 그 장의 오른쪽 칸(763.2, 502.1, 424.3 × 130.6) 안에 막대 두 줄(둘 다 Finder 전체 사용 대비라 겹침. 한 줄로 나누지 않음).
+    # 글씨는 그 장의 다른 그림과 같게(9pt 이름, 보라 굵은 한 줄). 사용자가 가장 중요하다고 한 쪽(다른 용도)을 보라로, 앱 검색은 옅은 색으로
+    px, py, pw = 763.2, 502.1, 424.3
+    lx, lw_ = px + 20, 136
+    bx = lx + lw_ + 4
+    bw = 158
+    vx = bx + bw + 10
+    rows_ = [(py + 19, '앱 검색', dict(color=SUB), FU_APP, 'C9C0E6', '%d%%' % FU_APP, INK),
+             (py + 55, '다른 용도 (한 번 이상)', dict(color=PURPLE, weight='b'), FU_ETC, PURPLE, '%d%% 이하' % FU_ETC, PURPLE)]
+    out = []
+    for k, (ry, name, st, pct, col, val, vcol) in enumerate(rows_):
+        out += [T('qa/fu/l%d' % k, lx, ry, lw_, 26, name, size=10, anchor='ctr', **st),
+                R('qa/fu/t%d' % k, bx, ry + 3, bw, 20, prst='roundRect', radius=10, fill='FFFFFF', line='DDD6F3', line_w=1),
+                R('qa/fu/f%d' % k, bx, ry + 3, bw * pct / 100, 20, prst='roundRect', radius=10, fill=col, line=None),
+                T('qa/fu/v%d' % k, vx, ry, px + pw - 10 - vx, 26, val, size=12.5, color=vcol, weight='b', anchor='ctr')]
+    out.append(T('qa/fu/cap', px, 601.0, pw, 19.2, FU_CAP, size=9, color=PURPLE, weight='b', align='c', anchor='ctr'))
+    s.add('qa/fu', out)
     return s
 
 
@@ -288,10 +352,15 @@ PAGES = [
            '‘주문’이라고 검색하면 배달의민족과 요기요가 나오지만, ‘음식 주문’이나 ‘배고파’라고 검색하면 나오지 않습니다.',
          more=[('Finder에 검색어 의도 분류가 들어가면 Weave 아닌가요?',
                 '의도 분류가 들어와도 충분하지 않습니다. 말에 숨은 단서를 알아보는 Reasoning Embedding과, 여러 단서를 연달아 찾게 해 주는 Query Rewriting이 함께 있어야 합니다.'),
+               (FU_Q, FU_A + ' ' + FU_NOTE + ' Weave는 이 쓰임을 넓힙니다.'),
                ('Finder에 멀티홉 기능만 붙이면 되는 거 아닌가요?',
-                '멀티홉 기능만 붙이면 연쇄 탐색 한 칸만 생깁니다. 상황 인식, 질의 재작성, 연쇄 탐색이 한 파이프라인으로 돌아야 완성도 높은 결과가 나옵니다.')],
-         basis=['장과 대본은 팀원(SB-Jo)의 `Appendix_Finder와의_차별점_QA.pptx` 그대로. 검색 예시는 Galaxy 기기의 Finder에서 직접 검색한 결과(그 장의 각주).',
-                '덧붙인 것: 공식 검색 대상 각주, ‘Appendix 참조’ 두 곳을 코드(D-5, D-8과 C-4)로.']),
+                '멀티홉 기능만 붙이면 연쇄 탐색 한 칸만 생깁니다. 상황 인식, 질의 재작성, 연쇄 탐색이 한 파이프라인으로 돌아야 완성도 높은 결과가 나옵니다. C-4에 정리했습니다.')],
+         basis=['장과 대본은 팀원(SB-Jo)의 `Appendix_Finder와의_차별점_QA.pptx`가 바탕. Q1과 Q2는 그대로. 검색 예시는 Galaxy 기기의 Finder에서 직접 검색한 결과(그 장의 각주).',
+                '덧붙인 것: 공식 검색 대상 각주, Q2의 ‘Appendix 참조’를 코드(D-5, D-8)로.',
+                'Q3(11-17, 사용자의 지시): ‘Finder에 멀티홉 기능만 붙이면 되는 거 아닌가요?’를 화면에서 빼고 Finder 사용 통계로 바꿈. 뺀 질문과 답은 위의 ‘더 물으면’에 남김.',
+                '67%와 55% 이하: 사내 Finder 사용 통계(사용자가 11-16에 전달)의 지표로 셈함. 둘 다 Finder 전체 사용 대비이고, 앱 검색이 67%, 다른 용도로 한 번 이상 쓴 것이 55%. '
+                '한 사용자가 양쪽에 모두 셈될 수 있어 둘을 더하면 100%를 넘고, 그래서 ‘이하’로 적음(사용자의 설명, 11-17: ‘28/51만 다른 용도로 한 번 이상 사용했다’).',
+                '원래 값과 지표의 이름은 공개 저장소에 적지 않고 `원본/사내자료.json`에만 둠. 답한 분의 성함도 적지 않음(사용자: 성함까지는 필요 없음).']),
     Page('A-4', 'Personal Data Engine과의 차이', s_a4,
          q='삼성에는 이미 Personal Data Engine, 개인 지식 그래프가 있습니다. 그걸로 되는 것 아닌가요?',
          a='두 기술은 추론하는 시점이 다릅니다. Personal Data Engine은 기록이 들어올 때 분석해서 사람과 일정, 장소 같은 사실을 그래프에 쌓아 두고, '
