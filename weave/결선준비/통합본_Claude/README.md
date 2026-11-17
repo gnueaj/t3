@@ -1,8 +1,9 @@
 # Weave 통합본 (Claude, 2026-11-17 14차)
 
-인트로, 모션그래픽, 솔루션과 How it works, 뒷부분, Appendix를 한 덱으로 합친 판이에요. 11차(11월 16일)에는 팀 검토를 본 발표와 대본, Appendix에 넣었고, 12차(11월 16일 밤)에는 11차를 보고 받은 여덟 가지를 넣었어요. 13차(11월 17일)에는 Appendix만 다시 짰고, 14차(11월 17일 밤)에는 본 발표의 대본 여덟 곳과 33쪽의 효과를 고쳐 영상을 다시 찍었어요(10분 3.7초).
+인트로, 모션그래픽, 솔루션과 How it works, 뒷부분, Appendix를 한 덱으로 합친 판이에요. 11차(11월 16일)에는 팀 검토를 본 발표와 대본, Appendix에 넣었고, 12차(11월 16일 밤)에는 11차를 보고 받은 여덟 가지를 넣었어요. 13차(11월 17일)에는 Appendix만 다시 짰고, 14차(11월 17일 밤)에는 본 발표의 대본과 33쪽의 효과, 2쪽의 음성을 고쳐 영상을 다시 찍었어요(10분 4.0초).
 
 - **14차에 바꾼 곳 (본 발표)**: 1, 2, 3, 17, 18, 27, 33, 35쪽의 대본을 받은 글로 바꿨어요. 18쪽은 진입점과 결과의 꼴을 말해요('어떤 앱에서든 입력창에 단서만 적고 키보드의 Weave 버튼을 누르면, 찾은 답을 자동 완성해 줍니다'). 33쪽은 숫자가 0까지 줄어드는 효과를 없애 실이 닿으면 달라진 글이 곧바로 뜨고(고리가 닫히며 웃는 것은 그대로), 끝 문장이 하나로 줄어 클릭이 네 번에서 세 번이 됐어요. 아래 제목은 셋째 클릭과 함께 곧바로 떠요. 본 발표의 화면 글은 13차 그대로예요. 쪽마다 바꾼 곳은 `대본.md`의 '13차에서 바꾼 곳'에 있어요.
+- **14차에 바꾼 곳 (앞부분)**: 2쪽의 음성이 통화에서 혼자 찾는 말로 바뀌었어요("그 자료... 어디에 있지? 메신저에도 없고, 메일함에도 없는데... 다시 전화해 봐야 하나?", 8.4초). 화면에서는 통화 표시를 빼고 말하는 네 줄이 말에 맞춰 떠요. 1쪽은 인사만 하고('안녕하세요. Weave Assist 발표자 장이준입니다.'), 2쪽에서 음성이 끝나면 '여러분 이런 적 한 번쯤 있으시지 않나요? … 평균 15분을 낭비하고 있습니다. … 단 1초로 줄여 드리겠습니다. 지금부터 Weave Assist, 발표 시작하겠습니다.'를 말해요. 15분은 설문 11번의 일주일 평균(15.1분)이고 B-1에 넣었어요.
 - **14차에 바꾼 곳 (Appendix 다섯 장)**: A-6은 세 물음을 받은 글로 바꿨어요(Context Window에 다 담을 수 없어 검색 도구를 불러야 한다 → 기존 검색 툴은 탐색을 반복한다 → Weave는 Agent가 호출하는 도구). A-7은 아래 세 칸을 UX 진입점, 찾는 방식: Multi-hop 탐색, 처리 위치의 차례로 놓았고, B-2의 Q3은 '해당 AI 서비스를 사용하는 데 비용이 계속 들지 않나요?'가 됐어요. C-7은 아래의 두 칸(작은 모델 둘, 알림 통계)을 빼고 예상 질문과 답 세 토막을 놓았고, D-11에는 평가셋과 출시 기준을 차별점과 더 나아가야 할 부분으로 적은 세 칸을 더했어요.
 
 - **13차에 바꾼 곳 (Appendix)**: 묶음을 다시 묶었어요. 메모리와 속도 세 장은 D로 옮기고, 상품화 계획과 가전 장은 데이터와 사업 장들과 합쳐 B 하나로 만들었어요(새 이름 '상품화와 사업성'). 시나리오 더 보기는 E에서 C로 바꿔 B 다음에 두었고, D는 두 칸으로 나눴어요(D-1 ~ D-7 '모델과 성능, Query Rewriter', D-8 ~ D-11 'Reasoning Embedding과 데이터'). 목차는 위 줄에 A, B, C 시나리오 더 보기, 아래 줄에 C 동작 방식과 D 두 칸이고, 출처는 맨 끝인 오른쪽 아래 칸에 있어요. 새로 그린 장은 B-1 사용자 설문조사 결과(210명의 응답을 한 장에), B-3 1년 상품화 계획(분기마다 데이터 수집, 모델 선정과 학습, 평가, UX와 통합, 검증과 출시에서 할 일), C-7 UX3 먼저 건네는 기억과 Gate(따로 있던 Gate 장을 합치고, Trigger를 시간, 장소, 사람, 기기의 네 종류로 넓히고, 챙길 일 분류기와 Gate 모델을 넣음)예요. C-4에는 RRF의 식을 적었고, D-2에는 Query Rewriter를 전용 모델로 따로 두는 구성을 더했어요. FunctionGemma는 모든 장에서 뺐고(그 장은 삭제), '직접 측정하거나 확인한 것' 장도 뺐어요. 시나리오 더 보기 세 장에서는 기록 칸 위의 이름과 꼬리표를 뺐어요. 코드가 어떻게 바뀌었는지는 아래 'Appendix의 코드'에, 장마다 바꾼 곳은 `대본.md`의 '12차에서 바꾼 곳'에 있어요.
@@ -24,7 +25,6 @@
 | `Appendix_QnA_대본.md` | Appendix의 장마다 물음과 답(실제로 말할 문장, 30초~1분 30초), 이어서 나올 물음과 답, 근거. `qna_doc.py`가 만들어요 |
 | `QnA_재웅.md` | 발표자가 준비한 예상 질문의 답(받은 글 그대로). 물음마다 띄울 Appendix 장의 코드가 적혀 있어요 |
 | `Weave_통합본_Claude_미리보기.mp4` | 본 발표 39장을 처음부터 끝까지 말하며 넘긴 영상(낭독, 자막) |
-| `앞부분_미리보기.mp4` | 바뀐 앞부분(1~3쪽)만 찍은 시험판 영상(11월 17일 밤: 2쪽의 음성이 혼잣말로, 1~3쪽 대본). 전체 영상은 아직 그 전의 앞부분이에요. `tools/front_try.py`가 만들어요 |
 | `대본.md` | 장마다 말할 글과 영상에서 잰 시간, 12차에서 바꾼 곳(Appendix의 묶음과 코드, 새 장, 고친 곳), 11차에서 바꾼 곳(대본, 화면과 소리), 10차에서 바꾼 곳(대본, 클릭, 화면), 앞선 차수에 바꾼 곳, 이전 대본 |
 | `한눈에.jpg` | 80장을 한 장에 모은 그림 |
 | `미래장표_후보/` | 35쪽 '미래의 Weave'만 따로 본 것: 34쪽의 끝부터 말하며 넘긴 영상, 두 장만 담은 덱, 네 순간을 모은 그림, 받은 검토와 고친 곳, 고르지 않은 후보 |
@@ -104,7 +104,9 @@
 ~/.cache/weave-tools/venv/bin/python tools/next_try.py --only 미래의Weave   # 35쪽만 따로: 34쪽의 끝부터 말하며 넘긴 영상, 두 장만 담은 덱, 한눈에.jpg → 미래장표_후보/
 ~/.cache/weave-tools/venv/bin/python -I tools/next_assets.py --src <원본 폴더>   # 35쪽의 손그림, 사진, 앱 아이콘, 이모지 (→ assets/next)
 ~/.cache/weave-tools/venv/bin/python tools/pad_audit.py 30 35               # 떠 있는 조각의 안쪽 여백(왼, 위, 오른, 아래)을 장의 그림에서 잼 (→ out/pad_audit)
-~/.cache/weave-tools/venv/bin/python tools/call_build.py <받은 mp3> --end 10.36 --soft 4.20:6.15 --soft-db 3   # 2쪽 통화 음성(12차): ElevenLabs에서 받은 목소리 하나에 1.15배, "프로입니다." 뒤의 쉼 1.56초, 전화 음질, 연결음, 딸깍, 끊는 소리를 입힘 → assets/intro/call-hook.mp3. 찍어 주는 때를 make.py의 CALL_LEN, CALL_PICK, CALL_HANG, CALL_LINES에 옮겨 적음
+~/.cache/weave-tools/venv/bin/python -I tools/hook_build.py <받은 mp3>     # 2쪽 음성(14차 뒤: 혼자 찾는 말): 1.15배, -17.8 LUFS, 통화음 없이 → assets/intro/call-hook.mp3 (make.HOOK_CALL = False)
+~/.cache/weave-tools/venv/bin/python tools/front_try.py                    # 바뀐 앞부분(1~3쪽)만 빨리 찍어 봄 → out/front/ (3분쯤. 전체 영상의 낭독은 건드리지 않음)
+~/.cache/weave-tools/venv/bin/python tools/call_build.py <받은 mp3> --end 10.36 --soft 4.20:6.15 --soft-db 3   # (12~14차) 2쪽 통화 음성: ElevenLabs에서 받은 목소리 하나에 1.15배, "프로입니다." 뒤의 쉼 1.56초, 전화 음질, 연결음, 딸깍, 끊는 소리를 입힘 → assets/intro/call-hook.mp3. 찍어 주는 때를 make.py의 CALL_LEN, CALL_PICK, CALL_HANG, CALL_LINES에 옮겨 적음
 ~/.cache/weave-tools/venv/bin/python tools/call_edit.py <원본 wav> --tempo 1.15   # (11차까지) 2쪽 통화 음성에서 '삼성리서치'와 '그거요...?'를 덜어 내고 목소리를 빠르게 → out/_call_edit.wav
 ~/.cache/weave-tools/venv/bin/python tools/call_gain.py out/_call_edit.wav --gain 6.5 --ring 5.5 --click 1.65 --click-gap 0.63   # (11차까지. 받는 소리 '딸깍'은 call_build.py도 여기 것을 씀) 목소리와 연결음을 따로 키우고, 받는 소리 '딸깍'을 넣고, 첫마디를 늦춤 → assets/intro/call-hook.mp3 (길이가 바뀌면 make.py의 CALL_LEN, CALL_LINES도)
 ~/.cache/weave-tools/venv/bin/python tools/exp_search_time.py   # 벡터 검색 시간을 이 컴퓨터에서 잼(256-dim int8, 모두 비교, 상위 20건) → out/exp_search_time.json. qna_num.py의 PC_SEARCH_MS에 옮겨 적음

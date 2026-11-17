@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""본 발표의 앞부분(1~N쪽)만 말하며 넘기는 영상으로 찍는다 → 앞부분_미리보기.mp4 (덱 옆). 덱과 전체 영상의 낭독(out/tts)은 건드리지 않는다.
+"""본 발표의 앞부분(1~N쪽)만 말하며 넘기는 영상으로 찍는다 → out/front/앞부분_미리보기.mp4. 덱과 전체 영상의 낭독(out/tts)은 건드리지 않는다.
 
   python tools/front_try.py            1~3쪽(표지, 2쪽의 음성, 3쪽)
   python tools/front_try.py --n 5      1~5쪽
@@ -20,7 +20,7 @@ import talk as TK  # noqa: E402
 
 HW = MK.HW
 WORK = MK.OUT / 'front'
-DST = HERE / '앞부분_미리보기.mp4'
+DST = WORK / '앞부분_미리보기.mp4'             # 시험용이라 저장소에 올리지 않는 out/ 아래에 둠(처음 한 번은 덱 옆에 두고 올렸다가, 전체 영상을 다시 찍은 뒤 뺌)
 
 
 def main():
