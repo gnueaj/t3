@@ -732,7 +732,9 @@ CALL_MP3 = INTRO_AS / 'call-hook.mp3'
 #   텍스트는 알맞게 나오도록': 사용자가 새로 만든 목소리(Chaerin, Eleven v4, 9.4초)는 통화가 아니라 혼자 찾는 말이다.
 #   "그 자료... 어디에 있지?" → "메신저에도 없고" → "메일함에도 없는데?" → "다시 전화해 봐야 하나?"
 #   tools/hook_build.py가 1.15배, 목소리 -17.8 LUFS로 만들고(8.40초) 통화 연결음, 받는 소리, 전화 음질, 끊는 소리는 넣지 않는다(HOOK_CALL = False).
-#   화면에서는 '통화 중 00:00' 알약과 통화 시간을 빼고, 문장 두 줄 대신 말하는 네 줄(HOOK_QUOTE)이 말에 맞춰 한 줄씩 뜬다.
+#   화면에서는 '통화 중 00:00' 알약과 통화 시간을 빼고, 문장 두 줄 대신 말하는 네 구절(HOOK_QUOTE)이 말에 맞춰 차례로 뜬다.
+#   처음에는 구절마다 한 줄씩 네 줄(46pt)이었고, 같은 밤에 '혼잣말 부분 장표 4줄 → 두 줄로, 폰트 필요하면 조금 작게'라는 말을 받아 두 줄(42pt)로 바꿈:
+#   한 줄에 구절이 둘이고 구절마다 글상자가 따로라서(hook_pieces) 뜨는 때는 네 줄일 때와 같다.
 #   통화음을 그대로 둔 판은 out/hook_통화음유지.mp3(덱에는 넣지 않음), 14차까지의 통화 음성은 out/이전판_14차/call-hook_14차.mp3
 HOOK_CALL = False                                     # 2쪽의 음성이 통화인지(12~14차: True). False면 통화 표시(알약, 통화 시간)를 빼고 HOOK_QUOTE를 띄움
 CALL_LEN = 8.40 if not HOOK_CALL else 12.78           # 음성의 길이(초)
@@ -750,8 +752,19 @@ CALL_PICK, CALL_HANG = 1.45, 12.34                    # (통화일 때만) 음�
 #   줄마다 글자 수(빈칸 빼고)는 13, 8, 11, 11이고 말이 끝나는 때는 1.81, 3.22, 5.34, 7.92초. 첫 줄은 '어디에'(여덟째 글자)가 1.03초의 말에 맞게
 CALL_LINES = [(0.20, 120), (2.44, 100), (4.16, 110), (6.82, 100)] if not HOOK_CALL else [(9.30, 185), (10.98, 120)]
 # 혼잣말일 때 화면에 뜨는 줄: (글, 색). 색은 옮겨 온 장의 두 줄(짙은 색, 보라)에서 가져옴
-HOOK_QUOTE = [('“그 자료... 어디에 있지?', 'dark'), ('메신저에도 없고,', 'dark'), ('메일함에도 없는데...', 'dark'), ('다시 전화해 봐야 하나?”', 'purple')]
-HOOK_LINE_PX = 64 * 4 / 3                             # 줄 높이(옮겨 온 글상자의 줄 간격 64pt)
+# 혼잣말일 때 화면에 뜨는 구절: (글, 색, 놓이는 줄). 색은 옮겨 온 장의 두 줄(짙은 색, 보라)에서 가져옴. 구절의 차례는 CALL_LINES의 차례와 같음
+#   색(같은 밤): 처음에는 마지막 구절 '다시 전화해 봐야 하나?'가 보라였고, "'그 자료 어디에 있지?'를 보라색으로"라는 말을 받아 첫 구절만 보라, 나머지는 짙은 색으로
+HOOK_QUOTE = [('“그 자료... 어디에 있지?', 'purple', 0), ('메신저에도 없고,', 'dark', 0), ('메일함에도 없는데...', 'dark', 1), ('다시 전화해 봐야 하나?”', 'dark', 1)]
+HOOK_PT, HOOK_LNPT = 42, 58                           # 글자 크기와 줄 간격(pt). 옮겨 온 글상자는 46pt에 64pt: 두 줄로 놓으면 둘째 줄이 1,079px(화면의 84%)라 42pt로(983px)
+HOOK_SPC = -0.7                                       # 글자 사이(pt. 옮겨 온 글상자의 spc="-70")
+HOOK_FONT = Path.home() / '.cache' / 'weave-tools' / 'fonts' / 'SamsungOneKorean-700.ttf'       # 구절의 나비를 잴 글꼴 파일(덱의 글꼴과 같음)
+
+
+def hook_width(text):
+    """구절의 나비(px): 글자 나비의 합 + 글자 사이. 네 줄일 때의 가장 긴 줄(46pt)이 계산 567px, PowerPoint 그림에서 잰 값 565px."""
+    from PIL import ImageFont
+    px = HOOK_PT * 4 / 3
+    return ImageFont.truetype(str(HOOK_FONT), 1000).getlength(text) / 1000 * px + HOOK_SPC * 4 / 3 * len(text)
 MEDIA_URI = '{DAA4B4D4-6D71-4841-9C94-3DE7FCFB9230}'
 P14 = 'http://schemas.microsoft.com/office/powerpoint/2010/main'
 
@@ -809,6 +822,7 @@ def patch_call(sl):
     par_eff.getparent().remove(par_eff)
     if not len(holder.find(q('p:cTn')).find(q('p:childTnLst'))):
         holder.getparent().remove(holder)
+    spids = None if HOOK_CALL else hook_pieces(sl, pa)             # 혼잣말: 구절마다 글상자가 따로(한 줄에 둘), 통화: 한 글상자의 문단마다
     for i, (at_, gap) in enumerate(CALL_LINES):
         one = copy.deepcopy(par_eff)
         e = one.find(q('p:cTn'))
@@ -818,13 +832,24 @@ def patch_call(sl):
             c.set('id', str(next(ids)))
         for it in one.iter(q('p:tmAbs')):
             it.set('val', str(gap))
-        for t in one.iter(q('p:spTgt')):                            # 이 줄(문단)만
-            rg = etree.SubElement(etree.SubElement(t, q('p:txEl')), q('p:pRg'))
-            rg.set('st', str(i))
-            rg.set('end', str(i))
+        for t in one.iter(q('p:spTgt')):
+            if spids:                                               # 이 구절의 글상자
+                t.set('spid', spids[i])
+            else:                                                   # 이 줄(문단)만
+                rg = etree.SubElement(etree.SubElement(t, q('p:txEl')), q('p:pRg'))
+                rg.set('st', str(i))
+                rg.set('end', str(i))
         inner.find(q('p:childTnLst')).append(one)
-    for b_ in tm.iter(q('p:bldP')):                                 # 글상자를 문단마다 따로 띄운다는 표시
-        if b_.get('spid') == qid:
+    for b_ in list(tm.iter(q('p:bldP'))):
+        if b_.get('spid') != qid:
+            continue
+        if spids:                                                   # 구절의 글상자마다 하나씩(옮겨 온 글상자의 표시를 본떠서)
+            for s_ in spids:
+                nb = copy.deepcopy(b_)
+                nb.set('spid', s_)
+                b_.addprevious(nb)
+            b_.getparent().remove(b_)
+        else:                                                       # 글상자를 문단마다 따로 띄운다는 표시
             b_.set('build', 'p')
             b_.attrib.pop('animBg', None)
     if HOOK_CALL:
@@ -832,7 +857,7 @@ def patch_call(sl):
 
 
 def hook_plain(sl, tm):
-    """2쪽(혼잣말): 통화 표시('통화 중 00:00' 알약)와 그 알약이 뜨는 효과를 빼고, 문장 글상자를 말하는 네 줄(HOOK_QUOTE)로 바꿔 세로 가운데에 놓는다."""
+    """2쪽(혼잣말): 통화 표시('통화 중 00:00' 알약)와 그 알약이 뜨는 효과를 뺀다. 문장은 hook_pieces가 구절마다 글상자로 다시 놓는다."""
     grp = by_name(sl, '!!call')
     gid = grp.find(q('p:nvGrpSpPr')).find(q('p:cNvPr')).get('id')
     for par in list(tm.iter(q('p:par'))):                           # 알약이 뜨는 효과(그 도형만 가리키는 가장 안쪽 묶음)
@@ -843,21 +868,52 @@ def hook_plain(sl, tm):
         if b_.get('spid') == gid:
             b_.getparent().remove(b_)
     grp.getparent().remove(grp)
-    sp = by_name(sl, '!!quote')
-    body = sp.find(q('p:txBody'))
-    ps = body.findall('{%s}p' % A)
+
+
+def hook_pieces(sl, pa):
+    """2쪽(혼잣말): 옮겨 온 문장 글상자를 본떠 구절마다 글상자를 하나씩 만들어 두 줄로 놓고(HOOK_QUOTE), 옮겨 온 글상자는 뺀다.
+    한 줄의 구절들은 빈칸 하나를 사이에 두고 이어 놓아 한 문장처럼 보이게 하고, 줄마다 가로 가운데에 맞춘다. 돌려줌: 구절 글상자의 id(구절의 차례)."""
+    src = by_name(sl, '!!quote')
+    ps = src.find(q('p:txBody')).findall('{%s}p' % A)
     assert len(ps) == 2, len(ps)
     kind = {'dark': ps[0], 'purple': ps[1]}
-    for p_ in ps:
-        body.remove(p_)
-    for text, col in HOOK_QUOTE:
-        one = copy.deepcopy(kind[col])
-        ts = list(one.iter('{%s}t' % A))
-        assert len(ts) == 1, len(ts)
-        ts[0].text = text
-        body.append(one)
-    h = HOOK_LINE_PX * len(HOOK_QUOTE)
-    place(sp, y=round((720 - h) / 2), h=round(h))
+    lh = HOOK_LNPT * 4 / 3
+    nline = max(ln for _, _, ln in HOOK_QUOTE) + 1
+    y0 = (720 - lh * nline) / 2
+    space = hook_width(' ')
+    spids, last = [], src
+    for ln in range(nline):
+        row = [(k, text, col) for k, (text, col, l_) in enumerate(HOOK_QUOTE) if l_ == ln]
+        ws = [hook_width(text) for _, text, _ in row]
+        x = (1280 - sum(ws) - space * (len(row) - 1)) / 2
+        assert x >= 100, '2쪽: %d째 줄이 너무 김(%dpx)' % (ln + 1, 1280 - 2 * x)
+        for (k, text, col), w in zip(row, ws):
+            el = copy.deepcopy(src)
+            spid = str(next(pa.ids))
+            c = el.find(q('p:nvSpPr')).find(q('p:cNvPr'))
+            c.set('id', spid)
+            c.set('name', '!!quote %d' % (k + 1))
+            body = el.find(q('p:txBody'))
+            for p_ in body.findall('{%s}p' % A):
+                body.remove(p_)
+            one = copy.deepcopy(kind[col])
+            one.find('{%s}pPr' % A).set('algn', 'l')
+            for sp_ in one.iter('{%s}spcPts' % A):
+                if sp_.getparent().tag.endswith('}lnSpc'):
+                    sp_.set('val', str(HOOK_LNPT * 100))
+            rs = list(one.iter('{%s}rPr' % A))
+            ts = list(one.iter('{%s}t' % A))
+            assert len(rs) == len(ts) == 1, (len(rs), len(ts))
+            rs[0].set('sz', str(HOOK_PT * 100))
+            ts[0].text = text
+            body.append(one)
+            place(el, x=x, y=y0 + ln * lh, w=w + 2, h=lh)
+            last.addnext(el)
+            last = el
+            spids.append((k, spid))
+            x += w + space
+    src.getparent().remove(src)
+    return [s_ for _, s_ in sorted(spids)]
 
 
 TICK_XML = ('<p:par xmlns:p="%s"><p:cTn id="%%d" presetID="1" presetClass="entr" presetSubtype="0" fill="hold" grpId="0" nodeType="withEffect">'
