@@ -728,9 +728,16 @@ CALL_MP3 = INTRO_AS / 'call-hook.mp3'
 #   처음에는 받은 파일의 9.90초에서 잘라 12.38초로 만들었는데, 그 뒤 9.98~10.33초의 여린 소리는 숨소리가 아니라 끝말 '게요'였다
 #   ('"알려드"에서 끝나잖아!! 수정해') → 끝까지(--end 10.36) 살려 다시 만듦. 자른 파일은 받아쓰기로 끝말까지 확인할 것
 #   11차의 파일은 out/이전판_11차/call-hook_11차.mp3
-CALL_LEN = 12.78                                      # 음성의 길이(초)
+#   14차 뒤(11-17 밤) '이거를 먼저 넣고(통화음 같은 것은 유지) … (ppt도 교체)', 곧이어 '아 통화가 아니니까 통화 아이콘 같은 건 빼서 장표 구성해야 했다.
+#   텍스트는 알맞게 나오도록': 사용자가 새로 만든 목소리(Chaerin, Eleven v4, 9.4초)는 통화가 아니라 혼자 찾는 말이다.
+#   "그 자료... 어디에 있지?" → "메신저에도 없고" → "메일함에도 없는데?" → "다시 전화해 봐야 하나?"
+#   tools/hook_build.py가 1.15배, 목소리 -17.8 LUFS로 만들고(8.40초) 통화 연결음, 받는 소리, 전화 음질, 끊는 소리는 넣지 않는다(HOOK_CALL = False).
+#   화면에서는 '통화 중 00:00' 알약과 통화 시간을 빼고, 문장 두 줄 대신 말하는 네 줄(HOOK_QUOTE)이 말에 맞춰 한 줄씩 뜬다.
+#   통화음을 그대로 둔 판은 out/hook_통화음유지.mp3(덱에는 넣지 않음), 14차까지의 통화 음성은 out/이전판_14차/call-hook_14차.mp3
+HOOK_CALL = False                                     # 2쪽의 음성이 통화인지(12~14차: True). False면 통화 표시(알약, 통화 시간)를 빼고 HOOK_QUOTE를 띄움
+CALL_LEN = 8.40 if not HOOK_CALL else 12.78           # 음성의 길이(초)
 CALL_AT = 0.3                                         # 장이 열린 뒤 음성이 시작하는 때(초)
-CALL_PICK, CALL_HANG = 1.45, 12.34                    # 음성 안에서 전화를 받는 때(딸깍의 '깍')와 끊는 소리가 시작하는 때(초): 통화 시간 표시가 이 사이에 1초마다 올라감
+CALL_PICK, CALL_HANG = 1.45, 12.34                    # (통화일 때만) 음성 안에서 전화를 받는 때(딸깍의 '깍')와 끊는 소리가 시작하는 때(초): 통화 시간 표시가 이 사이에 1초마다 올라감
 # 화면의 문장 두 줄: (음성 안에서 그 줄의 첫 말을 시작하는 때(초), 한 글자씩 뜨는 간격(ms)).
 #   첫 줄 “잠깐만요, 찾아보고: '잠깐만요' 10.71초, 조금 쉬고 '찾아보고' 11.71초. 둘째 줄 다시 알려 드릴게요.”: '다시' 12.37초, 말이 끝나는 때 13.43초
 #   (받아쓰기로 잰 10.28초, 11.94초에 첫마디를 늦춘 0.43초를 더한 값)
@@ -739,7 +746,12 @@ CALL_PICK, CALL_HANG = 1.45, 12.34                    # 음성 안에서 전화�
 #   (받은 파일에서 0.01초마다 잰 소리 크기로 낱말의 첫 소리를 잡아 옮긴 값).
 #   간격은 낭독 영상에서 재서 맞춤: 줄마다 글자가 열 개(사이 아홉)이고 줄의 첫 글자는 말보다 0.12초 먼저 뜬다. 처음 넣은 150, 55ms로는 두 줄이 말보다
 #   0.3~0.4초 먼저 다 떠서, 마지막 글자가 말의 끝(10.93초, 12.03초) 바로 앞에 뜨게 185, 120ms로(첫 줄은 '잠깐만요'와 '찾아보고'가 말하는 때에 맞게 뜸)
-CALL_LINES = [(9.30, 185), (10.98, 120)]
+#   14차 뒤(혼잣말): 받은 파일에서 구절이 시작하는 때 0.20, 2.78, 4.76, 7.82초를 만든 파일의 때로 옮김(0.10 + (t - 0.09) / 1.15).
+#   줄마다 글자 수(빈칸 빼고)는 13, 8, 11, 11이고 말이 끝나는 때는 1.81, 3.22, 5.34, 7.92초. 첫 줄은 '어디에'(여덟째 글자)가 1.03초의 말에 맞게
+CALL_LINES = [(0.20, 120), (2.44, 100), (4.16, 110), (6.82, 100)] if not HOOK_CALL else [(9.30, 185), (10.98, 120)]
+# 혼잣말일 때 화면에 뜨는 줄: (글, 색). 색은 옮겨 온 장의 두 줄(짙은 색, 보라)에서 가져옴
+HOOK_QUOTE = [('“그 자료... 어디에 있지?', 'dark'), ('메신저에도 없고,', 'dark'), ('메일함에도 없는데...', 'dark'), ('다시 전화해 봐야 하나?”', 'purple')]
+HOOK_LINE_PX = 64 * 4 / 3                             # 줄 높이(옮겨 온 글상자의 줄 간격 64pt)
 MEDIA_URI = '{DAA4B4D4-6D71-4841-9C94-3DE7FCFB9230}'
 P14 = 'http://schemas.microsoft.com/office/powerpoint/2010/main'
 
@@ -785,6 +797,8 @@ def patch_call(sl):
     stop = etree.SubElement(etree.SubElement(at, q('p:endCondLst')), q('p:cond'), evt='onStopAudio', delay='0')
     etree.SubElement(etree.SubElement(stop, q('p:tgtEl')), q('p:sldTgt'))
     etree.SubElement(etree.SubElement(node, q('p:tgtEl')), q('p:spTgt'), spid=spid)
+    if not HOOK_CALL:
+        hook_plain(sl, tm)
     qid = by_name(sl, '!!quote').find(q('p:nvSpPr')).find(q('p:cNvPr')).get('id')
     # 문장이 한 글자씩 뜨는 효과(글상자 전체에 하나)를 떼어 내, 줄(문단)마다 하나씩 음성과 같은 묶음에 '앞 효과와 함께 + 지연'으로 다시 건다.
     # 원래 효과는 '앞 효과 다음에' 묶음에 따로 들어 있어서, 그대로 두면 PowerPoint가 음성이 끝난 뒤에야 시작한다(시험: 지연 값을 바꿔도 음성이 끝난 뒤)
@@ -813,7 +827,37 @@ def patch_call(sl):
         if b_.get('spid') == qid:
             b_.set('build', 'p')
             b_.attrib.pop('animBg', None)
-    call_timer(sl, pa, tm, inner, ids)
+    if HOOK_CALL:
+        call_timer(sl, pa, tm, inner, ids)
+
+
+def hook_plain(sl, tm):
+    """2쪽(혼잣말): 통화 표시('통화 중 00:00' 알약)와 그 알약이 뜨는 효과를 빼고, 문장 글상자를 말하는 네 줄(HOOK_QUOTE)로 바꿔 세로 가운데에 놓는다."""
+    grp = by_name(sl, '!!call')
+    gid = grp.find(q('p:nvGrpSpPr')).find(q('p:cNvPr')).get('id')
+    for par in list(tm.iter(q('p:par'))):                           # 알약이 뜨는 효과(그 도형만 가리키는 가장 안쪽 묶음)
+        c = par.find(q('p:cTn'))
+        if c is not None and c.get('presetClass') and {x.get('spid') for x in par.iter(q('p:spTgt'))} == {gid}:
+            par.getparent().remove(par)
+    for b_ in list(tm.iter(q('p:bldP'))):
+        if b_.get('spid') == gid:
+            b_.getparent().remove(b_)
+    grp.getparent().remove(grp)
+    sp = by_name(sl, '!!quote')
+    body = sp.find(q('p:txBody'))
+    ps = body.findall('{%s}p' % A)
+    assert len(ps) == 2, len(ps)
+    kind = {'dark': ps[0], 'purple': ps[1]}
+    for p_ in ps:
+        body.remove(p_)
+    for text, col in HOOK_QUOTE:
+        one = copy.deepcopy(kind[col])
+        ts = list(one.iter('{%s}t' % A))
+        assert len(ts) == 1, len(ts)
+        ts[0].text = text
+        body.append(one)
+    h = HOOK_LINE_PX * len(HOOK_QUOTE)
+    place(sp, y=round((720 - h) / 2), h=round(h))
 
 
 TICK_XML = ('<p:par xmlns:p="%s"><p:cTn id="%%d" presetID="1" presetClass="entr" presetSubtype="0" fill="hold" grpId="0" nodeType="withEffect">'

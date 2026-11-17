@@ -121,8 +121,9 @@ def talkify(specs, says, k, plan):
 PART = {'proposal': ['prop'], 'new': ['hook', 'back', 'prop']}       # 따로 찍는 묶음
 
 
-def build_auto(dst, fu, says, part=None):
-    """녹화용 사본: 본 발표 장만(part를 주면 그 묶음만), 클릭 없이 저절로. 돌려줌: (장마다 머무는 초, 장 계획)."""
+def build_auto(dst, fu, says, part=None, seq=None):
+    """녹화용 사본: 본 발표 장만(part를 주면 그 묶음만, seq를 주면 MK.SEQ 대신 그 차례의 장만: tools/front_try.py), 클릭 없이 저절로.
+    돌려줌: (장마다 머무는 초, 장 계획)."""
     prs = Presentation(str(MK.BASE))
     old = list(prs.slides)
     cover, mg = old[0], old[3]
@@ -155,7 +156,7 @@ def build_auto(dst, fu, says, part=None):
     MK.patch_mg(mg)                 # 덱과 같은 모션그래픽(v24)
     say_of = {key: say for key, _, say in fu}
     order, logos = [], []
-    for item in MK.SEQ:
+    for item in (seq or MK.SEQ):
         if isinstance(item, tuple):
             slides, k = draw(own[item[1]], k)
             order += slides
@@ -198,7 +199,8 @@ def build_auto(dst, fu, says, part=None):
                          trans=F.trans_ms(slide) / 1000))
         order.append(slide)
         k += len(segs)
-    MK.drop_slides(prs, [s for s in old if s not in (cover, mg)])
+    keep = {s.part for s in order}
+    MK.drop_slides(prs, [s for s in prs.slides if s.part not in keep] if seq else [s for s in old if s not in (cover, mg)])
     MK.reorder(prs, order)
     MK.samsung_fonts.remap_prs(prs)
     MK.logo_style(logos)
