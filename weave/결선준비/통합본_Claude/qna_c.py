@@ -227,10 +227,13 @@ def s_c4():
                                                         '**Gate 모델**: 유사도, 사람 일치, 기한, 최근성, 처리 여부의 다섯 값으로 점수를 냅니다. 기준값은 평가셋에서 정합니다. (D-11)',
                                                         '**sLLM은 Gate 2를 통과한 뒤에만** 실행합니다. 백그라운드에서 %s입니다.' % NUM.T_UX3], gap=7, pt=11)
     # 알림 피로의 근거 넷은 11차(11-16)에 사용자가 장에 넣으라고 준 자료. 13차에 장을 합치며 ³과 ⁴를 화면에서 뺐던 것을 되돌림(11-17).
-    s.add('qc/t2', col_head('qc/t2', xs[2], y, cw3, '제안 기준과 알림 피로'))
-    h2 = HB + points(s, 'qc/p2', xs[2], y + HB, cw3, ['**하루 3회**까지만 제안하고 닫은 제안은 다시 띄우지 않습니다. 상한과 기준값은 사용자가 조절합니다.',
-                                                        '알림은 이미 **하루 평균 63.5건**입니다.¹ 뉴스 알림을 받지 않는 사람의 43%는 직접 껐고, 가장 많이 든 이유는 ‘너무\u00a0많아서’였습니다.²',      # 따옴표 안이 줄에서 갈리지 않게 붙임
-                                                        '같은 일을 여러 번 알리면 그 앱의 **알림을 모두 끌 수 있고**,³ 유용한 알림도 **방해가 될 수 있습니다.**⁴'], gap=7, pt=11)
+    # 11-17 밤(사용자: 예상 질문 '자주 오작동하면 스팸 알림처럼 귀찮아지지 않을까요?'의 답을 이 장 아래에서 말하기 쉽게): 칸의 제목을 답의 첫마디로 바꾸고
+    #   글머리를 답하는 차례(알림은 이미 많다 → 그래서 적게, 닫으면 다시 띄우지 않음)로 놓음. 글은 그대로. Gate 넷은 위 카드의 Gate 1~4를 짚으며 말함.
+    #   그 전: 제목 '제안 기준과 알림 피로', 차례는 하루 3회 → 63.5건 → 알림을 모두 끌 수 있고
+    s.add('qc/t2', col_head('qc/t2', xs[2], y, cw3, '많이 건네기보다 틀린 제안을 줄입니다'))
+    h2 = HB + points(s, 'qc/p2', xs[2], y + HB, cw3, ['알림은 이미 **하루 평균 63.5건**입니다.¹ 뉴스 알림을 받지 않는 사람의 43%는 직접 껐고, 가장 많이 든 이유는 ‘너무\u00a0많아서’였습니다.²',      # 따옴표 안이 줄에서 갈리지 않게 붙임
+                                                        '같은 일을 여러 번 알리면 그 앱의 **알림을 모두 끌 수 있고**,³ 유용한 알림도 **방해가 될 수 있습니다.**⁴',
+                                                        '**하루 3회**까지만 제안하고 닫은 제안은 다시 띄우지 않습니다. 상한과 기준값은 사용자가 조절합니다.'], gap=7, pt=11)
     y += max(h0, h1, h2) + 14
     footnote(s, ['¹ Pielot et al., "An In-Situ Study of Mobile Phone Notifications", MobileHCI 2014   ² Reuters Institute, "Digital News Report 2025"   '
                  '³ Apple, Human Interface Guidelines, Notifications   기록의 글은 본 발표 19쪽의 화면과 같음.',
@@ -416,6 +419,7 @@ PAGES = [
                 'Pielot, Church, de Oliveira, "An In-Situ Study of Mobile Phone Notifications", MobileHCI 2014: "our participants had to deal with 63.5 notifications on average per day, mostly from messengers and email"(15명, 일주일). 원문 PDF에서 확인(11-16).',
                 'Reuters Institute, "Digital News Report 2025"의 알림 장: "Across countries, more than four in ten (43%) of those that do not get alerts say they actively disabled them". 평소 한 주에 뉴스 알림을 받지 않는 사람은 79%. '
                 '끈 이유는 너무 많아서 19%, 앱을 받을 때 꺼서 15%, 쓸모가 없어서 10%(Press Gazette가 옮긴 표). 조사한 나라 수는 자료마다 달라(28개국, 8개국) 적지 않음.',
+                '11-17 밤(사용자의 지시: 예상 질문 ‘자주 오작동하면 스팸 알림처럼 귀찮아지지 않을까요?’의 답을 이 장 아래에서 말하기 쉽게): 오른쪽 아래 칸의 제목 ‘제안 기준과 알림 피로’ → ‘많이 건네기보다 틀린 제안을 줄입니다’, 글머리의 차례를 답하는 차례로(63.5건과 43% → 알림을 모두 끌 수 있고 → 하루 3회). 글은 그대로. 발표자가 준비한 40초 답: 알림은 이미 많아서 틀린 제안을 줄이는 것이 중요 → Gate 1~4(위 카드) → 키보드 위에 보낼 말로만, 닫은 제안은 다시 뜨지 않음.',
                 '알림 피로의 근거 넷은 11-16에 사용자가 장에 넣으라고 준 자료(63.5건, 43%와 ‘너무 많아서’, Apple의 지침, Mehrotra). 13차에 두 장을 합치며 뒤의 둘과 ‘너무 많아서’를 화면에서 뺐던 것을 11-17에 되돌림(오른쪽 아래 칸의 둘째, 셋째 줄과 각주 ³, ⁴. sLLM 줄은 가운데 칸으로 옮김). 원문: Apple, Human Interface Guidelines, Notifications("If you send multiple notifications for the same thing, you fill up Notification Center, and people may turn off all notifications from your app."), '
                 'Mehrotra et al., CHI 2016(알림 10,372건, 설문 474건, 20명): "We found that even a notification that contains important or useful content can cause disruption."']),
     Page('C-8', '질의를 나누는 기준, 멈추는 기준', s_c5,
