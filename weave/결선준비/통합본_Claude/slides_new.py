@@ -273,7 +273,8 @@ def hero_prims(key, fail):
             R(key + '/field', x + 16 * k, fy, w - 32 * k, fh, prst='roundRect', fill='F1F1F5', line=None)]
     out += magnifier(key + '/mag', x + 41.6 * k, y + 67.6 * k, r=5.96 * k, color='4A4A52', w=1.74 * k)
     out += [T(key + '/q', x + 63 * k, fy, qw + 8, fh, HK_QUERY, size=qpt, color='4A4A52', weight='m', anchor='ctr'),
-            R(key + '/cur', x + 63 * k + qw + 3 * k, fy + (fh - 19 * k) / 2, 2 * k, 19 * k, fill=PURPLE, line=None),
+            # 11-18(사용자: "6페이지 멕시칸 음식 뒤에 커서가 너무 멀리 떨어져 있는데 바로 옆으로"): 커서가 글자 끝에서 5.6px 떨어져 있었음(PNG에서 잰 값) → 2px. 그 전: qw + 3 * k
+            R(key + '/cur', x + 63 * k + qw - 1.1, fy + (fh - 19 * k) / 2, 2 * k, 19 * k, fill=PURPLE, line=None),
             R(key + '/home', x + w / 2 - 54 * k, y + h - 12 * k, 108 * k, 4 * k, prst='roundRect', fill='B8B8B8', line=None)]
     if fail:
         fw = tw(HK_FAIL, fpt, 'b')
