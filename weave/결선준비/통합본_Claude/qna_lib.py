@@ -6,6 +6,7 @@
 """
 import copy
 import itertools
+import math
 from pathlib import Path
 
 from lxml import etree
@@ -347,6 +348,29 @@ def qrow(s, key, y, h, q, a, n=None, vis=None, vw=420, q_pt=15, a_pt=13, ref=Non
     s.add(key, out)
 
 
+def qrow_h(a, vis=True, vw=420, a_pt=13):
+    """qrow의 답이 넘치지 않는 가장 낮은 카드 높이(qrow의 assert와 같은 셈)."""
+    aw = W0 - 76 - 24 - ((vw + 16) if vis else 0)
+    lh = lh_of(a_pt, 1.5)
+    pars = a if isinstance(a, list) else [a]
+    n = sum(len(rwrap(par, a_pt, aw)) for par in pars)
+    return math.ceil(52 + (24 - lh) / 2 + 1 + n * lh + 3 * len(pars) + 8)
+
+
+def qrows(s, key, y, rows, gap=10, vw=420, a_pt=13, lo=141, total=None):
+    """질문과 답 줄을 답의 길이에 맞는 높이로 차례로 놓는다(18차 뒤, 11-18: 받은 글이 길어져 줄마다 높이가 달라짐).
+    rows = [(질문, 답, 그림)]. lo = 가장 낮은 카드 높이, total = 줄들의 높이와 틈을 더한 값을 이만큼으로(남는 높이를 줄마다 고르게 나눔). 돌려줌: 마지막 카드 아래의 y."""
+    hs = [max(lo, qrow_h(a, vis is not None, vw, a_pt)) for _, a, vis in rows]
+    if total is not None:
+        spare = total - sum(hs) - gap * (len(rows) - 1)
+        assert spare >= 0, '%s: 줄들이 %d만큼 넘침' % (key, -spare)
+        hs = [h + spare / len(rows) for h in hs]
+    for i, ((q, a, vis), h) in enumerate(zip(rows, hs)):
+        qrow(s, '%s%d' % (key, i + 1), y, h, q, a, n=i + 1 if len(rows) > 1 else None, vis=vis, vw=vw, a_pt=a_pt)
+        y += h + gap
+    return y - gap
+
+
 def hbars(key, x, y, w, items, vmax=None, pt=11, bar_h=14, gap=9, label_w=None, val_w=None, unit=''):
     """가로 막대. items = [(이름, 값, 값 글 또는 None, 강조 여부)]. 돌려줌: (원시 목록, 높이)."""
     vmax = vmax or max(v for _, v, _, _ in items)
@@ -552,13 +576,16 @@ def timebar(s, key, x, y, w, segs, total, h=22, pt=10.5, title='걸리는 시간
     return 20 + h + (30 if pins else 0)
 
 
-def notes3(s, key, y, items, x=X0, w=W0, pt=12, gap=28, title_pt=13):
-    """그림 아래에 놓는 짧은 설명 칸들(상자 없이 윗줄만). items = [(이름, '**강조**'가 든 글)]. 돌려줌: 높이."""
+def notes3(s, key, y, items, x=X0, w=W0, pt=12, gap=28, title_pt=13, weights=None):
+    """그림 아래에 놓는 짧은 설명 칸들(상자 없이 윗줄만). items = [(이름, '**강조**'가 든 글)]. weights = 칸의 폭 비율(없으면 같은 폭). 돌려줌: 높이."""
     n = len(items)
-    cw = (w - gap * (n - 1)) / n
-    hh = 0
+    weights = weights or [1] * n
+    unit = (w - gap * (n - 1)) / sum(weights)
+    hh, cx = 0, x
     for i, (a, b) in enumerate(items):
-        cx = x + i * (cw + gap)
+        if i:
+            cx += cw + gap
+        cw = unit * weights[i]
         lines = rwrap(b, pt, cw)
         lh = lh_of(pt, 1.5)
         s.add('%s/%d' % (key, i), [R('%s/%d/ln' % (key, i), cx, y, cw, 2, fill='D9CFFF', line=None),
